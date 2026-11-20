@@ -107,6 +107,7 @@ const App = () => {
 					<a href="#dashboard">Dashboard</a>
 					<a href="#quick-reference">Quick reference</a>
 					<a href={storybookUrl}>Storybook</a>
+					<a href="https://github.com/damianobarbati/nano-ux">GitHub</a>
 				</Nav>
 				<a
 					href="#top"
