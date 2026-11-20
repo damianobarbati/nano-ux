@@ -1,0 +1,59 @@
+@layer components {
+  .prism-code > code {
+    color: inherit;
+    font: inherit;
+  }
+
+  .prism-code :is(.comment, .prolog, .doctype, .cdata) {
+    @apply text-fg-muted;
+  }
+
+  .prism-code :is(.tag, .deleted, .keyword, .boolean, .constant) {
+    @apply text-violet;
+  }
+
+  .prism-code :is(.string, .char, .attr-value, .inserted) {
+    @apply text-success;
+  }
+
+  .prism-code :is(.function, .class-name, .selector, .attr-name) {
+    @apply text-cyan;
+  }
+
+  .prism-code :is(.number, .property, .regex, .variable) {
+    @apply text-cocoa;
+  }
+
+  .prism-code .bold {
+    @apply font-bold;
+  }
+
+  .prism-code .italic {
+    @apply italic;
+  }
+}
+
+@keyframes nano-snackbar-in {
+  from {
+    transform: translateX(calc(100% + 1.25rem));
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes nano-snackbar-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(100% + 1.25rem));
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nano-snackbar {
+    animation: nano-snackbar-in 300ms ease-out both;
+  }
+  .nano-snackbar[data-closing="true"] {
+    animation: nano-snackbar-out 300ms ease-in both;
+  }
+}

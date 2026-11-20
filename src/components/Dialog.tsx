@@ -1,0 +1,118 @@
+"use client";
+
+import cx from "clsx-tw";
+import React from "react";
+import { Button } from "./Button.tsx";
+
+export type DialogProps = {
+	className?: string;
+	open: boolean;
+	title: string;
+	children: React.ReactNode;
+	confirmLabel?: string;
+	fullscreen?: boolean;
+	closeOnBackdrop?: boolean;
+	closeLabel?: string;
+	cancelLabel?: string;
+	onConfirm?: () => void;
+	onClose: () => void;
+	busy?: boolean;
+};
+
+export const Dialog = ({
+	className,
+	open,
+	title,
+	children,
+	confirmLabel = "Confirm",
+	fullscreen = false,
+	closeOnBackdrop = false,
+	closeLabel = "Close",
+	cancelLabel = "Cancel",
+	onConfirm,
+	onClose,
+	busy = false,
+}: DialogProps) => {
+	const ref = React.useRef<HTMLDialogElement>(null);
+
+	React.useEffect(() => {
+		const dialog = ref.current;
+		if (!dialog) return;
+
+		if (open && !dialog.open) dialog.showModal();
+
+		if (!open && dialog.open) dialog.close();
+	}, [open]);
+
+	React.useEffect(() => {
+		const dialog = ref.current;
+		return () => {
+			if (dialog?.open) dialog.close();
+		};
+	}, []);
+
+	const layoutClassName = fullscreen
+		? "m-0 h-dvh max-h-none w-full max-w-none px-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+		: "m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md rounded-card border p-6";
+
+	return (
+		<dialog
+			ref={ref}
+			className={cx(
+				"flex-col border-border bg-surface text-fg shadow-xl backdrop:bg-fg/50 open:flex",
+				layoutClassName,
+				className,
+			)}
+			data-nano-dialog=""
+			onClick={(event) => {
+				if (
+					!closeOnBackdrop ||
+					busy ||
+					event.target !== event.currentTarget ||
+					event.detail === 0
+				)
+					return;
+
+				const rect = event.currentTarget.getBoundingClientRect();
+
+				if (
+					event.clientX < rect.left ||
+					event.clientX >= rect.right ||
+					event.clientY < rect.top ||
+					event.clientY >= rect.bottom
+				)
+					onClose();
+			}}
+			onCancel={(event) => {
+				event.preventDefault();
+
+				if (!busy) onClose();
+			}}
+			onClose={() => {
+				if (open && !ref.current?.open) onClose();
+			}}
+		>
+			<header className="flex shrink-0 items-center justify-between gap-3">
+				<h2>{title}</h2>
+				{!onConfirm && (
+					<Button variant="ghost" disabled={busy} onClick={onClose} autoFocus>
+						{closeLabel}
+					</Button>
+				)}
+			</header>
+			<div className="mt-3 min-h-0 overflow-y-auto overscroll-contain text-sm text-fg-muted">
+				{children}
+			</div>
+			{onConfirm && (
+				<footer className="mt-6 flex shrink-0 justify-end gap-3">
+					<Button variant="ghost" disabled={busy} onClick={onClose} autoFocus>
+						{cancelLabel}
+					</Button>
+					<Button loading={busy} onClick={onConfirm}>
+						{confirmLabel}
+					</Button>
+				</footer>
+			)}
+		</dialog>
+	);
+};

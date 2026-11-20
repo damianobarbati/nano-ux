@@ -1,0 +1,74 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    "useIgnoreFile": true
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2
+    },
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/assets"
+    ]
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "formatter": {
+      "enabled": true,
+      "indentScriptAndStyle": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 120
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "none",
+      "nursery": {
+        "noTailwindRawColors": "error",
+        "useTailwindSortedClasses": "error",
+        "useTailwindStaticClassStrings": "error"
+      },
+      "style": {
+        "noNonNullAssertion": "error"
+      }
+    }
+  },
+  "tailwind": {
+    "stylesheet": "./src/style/theme.css",
+    "attributes": [
+      "class",
+      "className"
+    ],
+    "mergeFunctions": [
+      "cx",
+      "cn"
+    ]
+  }
+}

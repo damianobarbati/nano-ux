@@ -1,0 +1,224 @@
+@import "tailwindcss" source(none);
+@import "./colors.css";
+@import "./spinner.css";
+@import "./typography.css";
+@import "./spacing.css";
+@import "./button.css";
+@import "./form.css";
+@import "./code.css";
+@source "../components";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  @media (width < 64rem) {
+    html:has([data-nano-nav-open]),
+    body:has([data-nano-nav-open]) {
+      overflow: hidden;
+    }
+  }
+
+  :root {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 20rem;
+    margin: 0;
+    background-color: var(--color-bg);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :root {
+      transition: color 180ms ease;
+    }
+
+    :where(
+        body,
+        header,
+        .card,
+        .card-outline,
+        .card-ghost,
+        .control-field,
+        .control-label,
+        .control-checkbox,
+        .table-head,
+        .table-shell,
+        .table-row,
+        .table-header-cell,
+        .bg-bg,
+        .bg-surface,
+        .bg-layer,
+        .text-fg,
+        .text-fg-muted,
+        .border-border
+      ) {
+      transition:
+        background-color 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    transition-duration: 0.01ms;
+  }
+}
+
+@layer components {
+  .nano-tooltip {
+    opacity: 0;
+    transition:
+      opacity 150ms ease,
+      display 150ms allow-discrete,
+      overlay 150ms allow-discrete;
+  }
+
+  .nano-tooltip:popover-open {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .nano-tooltip:popover-open {
+      opacity: 0;
+    }
+  }
+
+  .card,
+  .card-outline,
+  .card-ghost {
+    @apply rounded-card border p-6 text-fg;
+  }
+  .card,
+  .card-outline {
+    @apply border-border;
+  }
+  .card {
+    @apply bg-surface dark:shadow-sm;
+  }
+  .card-outline {
+    @apply bg-transparent shadow-none;
+  }
+  .card-ghost {
+    @apply border-transparent bg-transparent shadow-none;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full bg-layer px-2.5 py-1 text-xs font-medium text-fg-muted;
+  }
+  .badge-success {
+    @apply bg-success-surface text-success;
+  }
+  .badge-warning {
+    @apply bg-warning-surface text-warning;
+  }
+  .badge-error {
+    @apply bg-danger-surface text-danger;
+  }
+  .empty-state {
+    @apply grid justify-items-center gap-3 rounded-card border border-dashed border-border bg-surface p-8 text-center text-fg;
+  }
+  .empty-state > p,
+  .empty-state-description {
+    @apply max-w-md text-sm text-fg-muted;
+  }
+  .table-footer {
+    @apply flex shrink-0 flex-wrap items-center justify-center gap-3 px-4 pt-2 text-center text-sm text-fg-muted empty:hidden;
+  }
+  .table-shell {
+    @apply min-w-0 overflow-hidden rounded-control border border-border text-fg;
+  }
+  .table-shell .table-shell {
+    @apply rounded-none border-0;
+  }
+  .table-scroll {
+    @apply min-w-0 overflow-auto;
+  }
+  .table-head {
+    @apply bg-layer text-fg;
+  }
+  .table-header-cell {
+    @apply border-b border-border px-4 py-3 text-sm leading-6 font-semibold whitespace-nowrap;
+  }
+  .table-row {
+    @apply border-b border-border last:border-0 hover:bg-layer;
+  }
+  .table-row-progress {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-fg) 8%, transparent) var(--table-progress),
+      transparent var(--table-progress)
+    );
+  }
+  .table-cell {
+    @apply px-4 py-2.5 align-middle;
+  }
+}
+
+html:has(dialog[data-nano-dialog][open]),
+html:has(dialog[data-nano-dialog][open]) body {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  dialog[data-nano-dialog],
+  dialog[data-nano-dialog]::backdrop {
+    opacity: 0;
+    transition:
+      opacity 160ms ease-out,
+      translate 160ms ease-out,
+      display 160ms allow-discrete,
+      overlay 160ms allow-discrete;
+  }
+
+  dialog[data-nano-dialog] {
+    translate: 0 0.5rem;
+  }
+
+  dialog[data-nano-dialog][open],
+  dialog[data-nano-dialog][open]::backdrop {
+    opacity: 1;
+    translate: none;
+  }
+
+  @starting-style {
+    dialog[data-nano-dialog][open],
+    dialog[data-nano-dialog][open]::backdrop {
+      opacity: 0;
+    }
+
+    dialog[data-nano-dialog][open] {
+      translate: 0 0.5rem;
+    }
+  }
+
+  .robinson-map path {
+    transition: fill 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+}
+
+.robinson-map path:hover {
+  fill: var(--theme-fg-muted);
+}
+
+.robinson-tooltip {
+  position: absolute;
+  pointer-events: none;
+  padding: 10px;
+  border-radius: 4px;
+  background: var(--theme-surface);
+  color: var(--theme-fg);
+  font-size: 14px;
+  line-height: 1.5;
+  box-shadow: 1px 2px 10px rgb(0 0 0 / 20%);
+}
