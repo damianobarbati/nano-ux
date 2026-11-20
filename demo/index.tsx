@@ -1,9 +1,7 @@
-import "@fontsource-variable/montserrat";
-
 import cx from "clsx-tw";
 import React from "react";
-import { createRoot } from "react-dom/client";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { IArrowUpRight, IGitHub } from "../src/icons.tsx";
 
 import {
 	Button,
@@ -80,7 +78,7 @@ type BrandProps = {
 const brandValue = (brand: string) =>
 	brand === "Default" ? "" : `var(--theme-${brand.toLowerCase()})`;
 
-const App = () => {
+export const App = () => {
 	const [brand, setBrand] = React.useState("Default");
 
 	const changeBrand = (name: string) => {
@@ -107,7 +105,16 @@ const App = () => {
 					<a href="#dashboard">Dashboard</a>
 					<a href="#quick-reference">Quick reference</a>
 					<a href={storybookUrl}>Storybook</a>
-					<a href="https://github.com/damianobarbati/nano-ux">GitHub</a>
+					<a
+						className="inline-flex items-center gap-2 max-lg:mt-auto"
+						href="https://github.com/damianobarbati/nano-ux"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<IGitHub aria-hidden="true" size="1em" />
+						<span>GitHub</span>
+						<IArrowUpRight aria-hidden="true" size="1em" />
+					</a>
 				</Nav>
 				<a
 					href="#top"
@@ -1059,8 +1066,3 @@ const DashboardContent = () => {
 		</>
 	);
 };
-
-const root = document.getElementById("root");
-if (!root) throw new Error("Missing #root element in the demo page.");
-
-createRoot(root).render(<App />);

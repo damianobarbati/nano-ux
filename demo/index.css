@@ -86,3 +86,14 @@ body {
   font-display: swap;
   src: url("./fonts/science-gothic-latin-wght-normal.woff2") format("woff2");
 }
+
+@media (scripting: none) {
+  .prism-code > span:has(+ noscript) {
+    display: none;
+  }
+
+  #root section.opacity-0 {
+    opacity: 1;
+    translate: none;
+  }
+}

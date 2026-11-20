@@ -69,7 +69,14 @@ export const Code = ({
 	let code;
 
 	if (prism === undefined) {
-		code = <Spinner centered label={strings?.loading} />;
+		code = (
+			<>
+				<Spinner centered label={strings?.loading} />
+				<noscript>
+					<code>{text}</code>
+				</noscript>
+			</>
+		);
 	} else if (prism && grammar && typeof grammar === "object") {
 		code = (
 			<code
