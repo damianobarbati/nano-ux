@@ -1,20 +1,12 @@
 "use client";
 
 import cx from "clsx-tw";
-import Prism from "prismjs";
+import type PrismInstance from "prismjs";
 import React from "react";
 import { createPortal } from "react-dom";
 import { ICopy } from "../icons.tsx";
-import "prismjs/components/prism-bash.js";
-import "prismjs/components/prism-http.js";
-import "prismjs/components/prism-json.js";
-import "prismjs/components/prism-jsx.js";
-import "prismjs/components/prism-typescript.js";
-import "prismjs/components/prism-tsx.js";
-
+import { Spinner } from "./Spinner.tsx";
 import { Toast } from "./Toast.tsx";
-
-Prism.manual = true;
 
 const codeClassName =
 	"prism-code min-w-0 overflow-x-auto rounded-control bg-layer p-6 font-mono text-sm leading-6 whitespace-pre text-fg";
@@ -29,6 +21,7 @@ export type CodeProps = {
 	language: string;
 	className?: string;
 	strings?: {
+		loading?: string;
 		copy?: string;
 		copied?: string;
 		copyFailed?: string;
@@ -44,19 +37,44 @@ export const Code = ({
 	copyable = true,
 	strings,
 }: CodeProps) => {
+	const [prism, setPrism] = React.useState<typeof PrismInstance | null>();
+
+	React.useEffect(() => {
+		let mounted = true;
+
+		const loadPrism = async () => {
+			try {
+				const { Prism } = await import("../helpers/prismLanguages.ts");
+
+				if (mounted) setPrism(Prism);
+			} catch {
+				if (mounted) setPrism(null);
+			}
+		};
+
+		void loadPrism();
+
+		return () => {
+			mounted = false;
+		};
+	}, []);
+
 	const grammarName = grammarNames[language] ?? language;
 
-	const grammar = Object.hasOwn(Prism.languages, grammarName)
-		? Prism.languages[grammarName]
-		: undefined;
+	const grammar =
+		prism && Object.hasOwn(prism.languages, grammarName)
+			? prism.languages[grammarName]
+			: undefined;
 
 	let code;
 
-	if (grammar && typeof grammar === "object") {
+	if (prism === undefined) {
+		code = <Spinner centered label={strings?.loading} />;
+	} else if (prism && grammar && typeof grammar === "object") {
 		code = (
 			<code
 				dangerouslySetInnerHTML={{
-					__html: Prism.highlight(text, grammar, grammarName),
+					__html: prism.highlight(text, grammar, grammarName),
 				}}
 			/>
 		);
