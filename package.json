@@ -5,7 +5,7 @@
   "author": "Damiano Barbati <damiano.barbati@gmail.com> (https://github.com/damianobarbati)",
   "repository": "https://github.com/damianobarbati/nano-ux",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "node": "24"
   },
