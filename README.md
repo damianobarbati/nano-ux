@@ -65,6 +65,6 @@ Preview at <http://localhost:9001>.
 ```sh
 npm run build
 npm publish --dry-run
-npm version patch 
+npm version patch
 npm publish
 ```
