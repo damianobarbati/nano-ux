@@ -1,0 +1,149 @@
+:root {
+  color-scheme: light dark;
+  --theme-bg: light-dark(#fafafa, #0b0b0b); /* App and page canvas. */
+  --theme-surface: light-dark(
+    #ffffff,
+    #202020
+  ); /* Cards, panels, and controls. */
+  --theme-layer: light-dark(
+    #f5f5f5,
+    #2c2c2c
+  ); /* Nested surfaces and hover states. */
+  --theme-border: light-dark(
+    #bfbfbf,
+    #606060
+  ); /* Default borders and dividers. */
+  --theme-focus: var(
+    --color-brand,
+    light-dark(#525252, #d4d4d4)
+  ); /* Keyboard focus indicators. */
+  --theme-fg: light-dark(#121212, #f7f7f7); /* Primary text and icons. */
+  --theme-fg-muted: light-dark(
+    #626262,
+    #a3a3a3
+  ); /* Muted text on canvas and surface backgrounds. */
+  --theme-success: light-dark(
+    #087443,
+    #4ade80
+  ); /* Success actions and status text. */
+  --theme-success-surface: light-dark(
+    #e7f6ee,
+    #123c2b
+  ); /* Success alert and status surfaces. */
+  --theme-warning: light-dark(
+    #a16207,
+    #ffc93c
+  ); /* Warning actions and status text. */
+  --theme-warning-surface: light-dark(
+    #fef3c7,
+    #422006
+  ); /* Warning alert and status surfaces. */
+  --theme-danger: light-dark(
+    #b42318,
+    #ff6b6b
+  ); /* Danger actions and status text. */
+  --theme-danger-surface: light-dark(
+    #fee2e2,
+    #451a19
+  ); /* Danger alert and status surfaces. */
+  --theme-cocoa: light-dark(#6b4423, #f2b877);
+  --theme-mint: light-dark(#116b4c, #38efb0);
+  --theme-lime: light-dark(#4d7c0f, #c4f26a);
+  --theme-cyan: light-dark(#0e7490, #22d3ee);
+  --theme-ocean: light-dark(#1d4ed8, #60a5fa);
+  --theme-violet: light-dark(#5b21b6, #cbb8ff);
+  --theme-berry: light-dark(#a21caf, #e879f9);
+  --theme-cocoa-tint: light-dark(
+    color-mix(in srgb, var(--theme-cocoa) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-cocoa) 11%, var(--theme-bg))
+  );
+  --theme-mint-tint: light-dark(
+    color-mix(in srgb, var(--theme-mint) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-mint) 11%, var(--theme-bg))
+  );
+  --theme-lime-tint: light-dark(
+    color-mix(in srgb, var(--theme-lime) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-lime) 11%, var(--theme-bg))
+  );
+  --theme-cyan-tint: light-dark(
+    color-mix(in srgb, var(--theme-cyan) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-cyan) 11%, var(--theme-bg))
+  );
+  --theme-ocean-tint: light-dark(
+    color-mix(in srgb, var(--theme-ocean) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-ocean) 11%, var(--theme-bg))
+  );
+  --theme-violet-tint: light-dark(
+    color-mix(in srgb, var(--theme-violet) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-violet) 11%, var(--theme-bg))
+  );
+  --theme-berry-tint: light-dark(
+    color-mix(in srgb, var(--theme-berry) 8%, var(--theme-bg)),
+    color-mix(in srgb, var(--theme-berry) 11%, var(--theme-bg))
+  );
+}
+
+@theme {
+  --color-device-frame: var(--color-neutral-800);
+  --color-terminal-border: light-dark(
+    var(--color-neutral-300),
+    var(--color-neutral-700)
+  );
+  --color-terminal-surface: light-dark(
+    var(--color-neutral-50),
+    var(--color-neutral-900)
+  );
+  --color-terminal-fg: light-dark(
+    var(--color-neutral-900),
+    var(--color-neutral-100)
+  );
+  --color-bg: var(--theme-bg); /* App and page canvas. */
+  --color-surface: var(--theme-surface); /* Cards, panels, and controls. */
+  --color-layer: var(--theme-layer); /* Nested surfaces and hover states. */
+  --color-fg: var(--theme-fg); /* Primary text and icons. */
+  --color-fg-muted: var(--theme-fg-muted); /* Secondary and disabled text. */
+  --color-border: var(--theme-border); /* Default borders and dividers. */
+  --color-focus: var(--theme-focus); /* Keyboard focus indicators. */
+  --color-cocoa: var(--theme-cocoa);
+  --color-mint: var(--theme-mint);
+  --color-lime: var(--theme-lime);
+  --color-cyan: var(--theme-cyan);
+  --color-ocean: var(--theme-ocean);
+  --color-violet: var(--theme-violet);
+  --color-berry: var(--theme-berry);
+  --color-cocoa-tint: var(--theme-cocoa-tint);
+  --color-mint-tint: var(--theme-mint-tint);
+  --color-lime-tint: var(--theme-lime-tint);
+  --color-cyan-tint: var(--theme-cyan-tint);
+  --color-ocean-tint: var(--theme-ocean-tint);
+  --color-violet-tint: var(--theme-violet-tint);
+  --color-berry-tint: var(--theme-berry-tint);
+  --color-danger: var(--theme-danger); /* Danger actions and status text. */
+  --color-danger-surface: var(
+    --theme-danger-surface
+  ); /* Danger alert and status surfaces. */
+  --color-success: var(--theme-success); /* Success actions and status text. */
+  --color-success-surface: var(
+    --theme-success-surface
+  ); /* Success alert and status surfaces. */
+  --color-warning: var(--theme-warning); /* Warning actions and status text. */
+  --color-warning-surface: var(
+    --theme-warning-surface
+  ); /* Warning alert and status surfaces. */
+}
+
+.light {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.invert {
+  background-color: var(
+    --color-fg
+  ); /* Filled surfaces, such as primary table headers. */
+  color: var(--color-bg); /* Text on filled color surfaces. */
+  filter: none;
+}

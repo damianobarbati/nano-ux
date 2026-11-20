@@ -1,0 +1,223 @@
+@theme {
+  --font-sans: var(
+    --font-family,
+    var(--nano-font-family, system-ui, sans-serif)
+  ); /* Default text font stack. */
+  --font-brand: var(--font-sans); /* Brand text font stack. */
+  --font-weight-body: 400; /* Default text weight. */
+  --font-weight-label: 500; /* Label and small text weight. */
+  --font-weight-heading: 600; /* Heading weight. */
+  --font-weight-strong: 650; /* Strong text weight. */
+  --leading-heading: 1.12; /* Line height for the heading utility. */
+  --leading-meta: 1.45; /* Small text line height. */
+  --leading-code: 1.5; /* Code block line height. */
+}
+
+@theme inline {
+  --tracking-display: calc(var(--tracking) * 3);
+  --tracking-heading: calc(var(--tracking) * 2);
+  --tracking-dashboard: calc(var(--tracking) * 1.5);
+  --tracking-body: var(--tracking); /* Default text letter spacing. */
+  --tracking-label: var(--tracking); /* Label and small text letter spacing. */
+}
+
+@layer base {
+  :root {
+    --tracking: 0em; /* Base letter spacing for text and headings. */
+    --body-size: 1rem; /* Default body text size. */
+    --body-size-lg: 1.0625rem; /* Body text size for the large scale. */
+    --body-line-height: 1.55; /* Default body line height relative to its font size. */
+    --body-line-height-lg: 1.65; /* Body line height for the large scale. */
+    --h1-hero: clamp(
+      3.5rem,
+      3rem +
+      2.25vw,
+      5rem
+    ); /* Hero heading size that scales with viewport width within fixed limits. */
+    --h1-size: 1.75rem; /* Default level 1 heading size. */
+    --h1-size-lg: clamp(
+      3rem,
+      2.5rem +
+      2vw,
+      4rem
+    ); /* Level 1 heading size for the large scale. */
+    --h1-line-height: 1.1; /* Level 1 heading line height relative to its font size. */
+    --h2-size: 1.375rem; /* Default level 2 heading size. */
+    --h2-size-lg: clamp(
+      2rem,
+      1.5rem +
+      2vw,
+      3rem
+    ); /* Level 2 heading size for the large scale. */
+    --h2-line-height: 1.2; /* Level 2 heading line height relative to its font size. */
+    --h3-size: 1.125rem; /* Default level 3 heading size. */
+    --h3-size-lg: clamp(
+      1.5rem,
+      1.25rem +
+      1vw,
+      2rem
+    ); /* Level 3 heading size for the large scale. */
+    --h3-line-height: 1.3; /* Level 3 heading line height relative to its font size. */
+    --content-spacing: 0.5em; /* Space after text blocks that have a following sibling. */
+    --font-code:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; /* Code font stack. */
+    --small-size: 0.875em; /* Small text size relative to its parent. */
+    --code-size: 0.875em; /* Code size relative to its parent. */
+    --code-padding: 0.25em; /* Horizontal padding for inline code. */
+    --pre-padding: 1.25rem; /* Code block padding. */
+    --list-indent: 1.5rem; /* List marker indentation. */
+    --link-underline-offset: 0.2em; /* Distance between link text and its underline. */
+    --blockquote-border-width: 0.1875rem; /* Quote border width. */
+    --blockquote-padding: 1em; /* Space between quote text and its border. */
+  }
+
+  :root {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-weight: var(--font-weight-body);
+    @apply tracking-body;
+  }
+
+  body,
+  :where(.typo-lg) {
+    font-size: var(--body-size);
+    line-height: var(--body-line-height);
+  }
+
+  .typo-lg {
+    --body-size: var(--body-size-lg); /* Use the large scale for body size. */
+    --body-line-height: var(
+      --body-line-height-lg
+    ); /* Use the large scale for body line height. */
+    --h1-size: var(--h1-size-lg); /* Use the large scale for h1 size. */
+    --h2-size: var(--h2-size-lg); /* Use the large scale for h2 size. */
+    --h3-size: var(--h3-size-lg); /* Use the large scale for h3 size. */
+  }
+
+  .prose {
+    max-width: 60ch;
+  }
+
+  .heading-hero {
+    --h1-size: var(
+      --h1-hero
+    ); /* Use the responsive hero size for this heading. */
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    font-weight: var(--font-weight-heading);
+    overflow-wrap: break-word;
+  }
+
+  h1 {
+    font-size: var(--h1-size);
+    line-height: var(--h1-line-height);
+    @apply tracking-display;
+  }
+
+  h2 {
+    font-size: var(--h2-size);
+    line-height: var(--h2-line-height);
+    @apply tracking-heading;
+  }
+
+  h3 {
+    font-size: var(--h3-size);
+    line-height: var(--h3-line-height);
+    @apply tracking-dashboard;
+  }
+
+  :is(h1, h2, h3, p, ul, ol, small, pre, blockquote):not(:last-child) {
+    margin-block-end: var(--content-spacing);
+  }
+
+  p a {
+    color: var(--color-fg);
+    text-decoration: underline;
+    text-underline-offset: var(--link-underline-offset);
+  }
+
+  small {
+    display: block;
+    color: var(--color-fg-muted);
+    font-size: var(--small-size);
+    font-weight: var(--font-weight-label);
+    @apply tracking-label;
+    line-height: var(--leading-meta);
+  }
+
+  pre {
+    background-color: var(--color-layer);
+    color: var(--color-fg);
+    overflow-x: auto;
+    padding: var(--pre-padding);
+    @apply rounded-card;
+    font-size: var(--code-size);
+    line-height: var(--leading-code);
+  }
+
+  pre,
+  code {
+    font-family: var(--font-code);
+  }
+
+  p code {
+    padding-inline: var(--code-padding);
+    @apply rounded-control;
+    background-color: var(--color-layer);
+    color: var(--color-fg);
+    font-size: var(--code-size);
+  }
+
+  strong {
+    font-weight: var(--font-weight-strong);
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  ul,
+  ol {
+    padding-inline-start: var(--list-indent);
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  blockquote {
+    margin-block-start: 0;
+    margin-inline: 0;
+    border-inline-start: var(--blockquote-border-width) solid
+      var(--color-border);
+    padding-inline-start: var(--blockquote-padding);
+    color: var(--color-fg-muted);
+  }
+
+  @supports (text-box-trim: trim-both) {
+    .text-box-trim {
+      text-box-trim: trim-both;
+      text-box-edge: cap alphabetic;
+    }
+  }
+}
+@source inline("trim-ex");
+
+@utility trim-ex {
+  text-box-trim: trim-both;
+  text-box-edge: ex alphabetic;
+}

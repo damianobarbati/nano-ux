@@ -1,0 +1,16 @@
+@import "../src/style/theme.css";
+@source "../src/stories";
+
+@media (max-width: 1800px) {
+  .theme-panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  :root.light .theme-panel-dark {
+    display: none;
+  }
+
+  :root.dark .theme-panel-light {
+    display: none;
+  }
+}

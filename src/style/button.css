@@ -1,0 +1,323 @@
+@property --button-pulse-resolved-color {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --button-icon-surface {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: color(xyz-d65 0 0.5 0);
+}
+
+@layer base {
+  button:enabled {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@layer components {
+  .button {
+    display: inline-flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--color-border);
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 200ms,
+      border-color 200ms,
+      color 200ms;
+    outline-color: var(--button-pulse-color);
+    --button-tone: var(--color-fg);
+    --button-surface: var(--color-surface);
+    --button-edge: var(--color-border);
+    --button-state-surface: var(--color-bg);
+    --button-state-color: var(--color-fg);
+    --button-border-color: var(--color-border);
+  }
+
+  .button:hover:not(:disabled),
+  .button.button-preview-hover:not(:disabled) {
+    --button-fill: color-mix(
+      in srgb,
+      var(--button-state-surface) 90%,
+      var(--button-state-color)
+    );
+    background-color: var(--button-fill);
+    border-color: var(--button-border-color);
+  }
+  .button:active:not(:disabled) {
+    --button-fill: color-mix(
+      in srgb,
+      var(--button-state-surface) 80%,
+      var(--button-state-color)
+    );
+    background-color: var(--button-fill);
+    border-color: var(--button-border-color);
+  }
+  .button:focus-visible,
+  .button.button-preview-focus {
+    outline: 2px solid var(--button-pulse-color);
+    outline-offset: 2px;
+  }
+  .button:disabled:not([aria-busy="true"]) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .button[aria-busy="true"] {
+    cursor: wait;
+  }
+
+  .button-content {
+    --button-icon-space: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: inherit;
+    translate: calc(
+        var(--button-left-offset, 0rem) +
+        var(--button-right-offset, 0rem)
+      )
+      0;
+  }
+
+  .button-content:has(> .button-icon[data-side="left"][data-visible="false"]) {
+    --button-left-offset: calc(var(--button-icon-space) / -2);
+  }
+  .button-content:has(> .button-icon[data-side="right"][data-visible="false"]) {
+    --button-right-offset: calc(var(--button-icon-space) / 2);
+  }
+
+  .button-icon {
+    display: inline-flex;
+    width: 1rem;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .button-icon[data-visible="false"] {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .button-content {
+      transition: translate 200ms ease;
+    }
+    .button-icon {
+      transition: opacity 200ms ease;
+    }
+  }
+
+  .button-primary {
+    --button-tone: var(--theme-primary, var(--color-brand, var(--color-fg)));
+    --button-on-solid: var(--theme-on-primary, var(--color-bg));
+    --button-edge: var(
+      --theme-primary,
+      var(--color-brand, var(--color-border))
+    );
+    --button-surface: color-mix(
+      in srgb,
+      var(--theme-primary, var(--color-brand, var(--color-surface))) 12%,
+      var(--color-surface)
+    );
+  }
+  @supports (color: contrast-color(black)) {
+    .button-primary {
+      --button-on-solid: var(
+        --theme-on-primary,
+        contrast-color(var(--button-tone))
+      );
+    }
+  }
+  .button-secondary {
+    --button-on-solid: var(--theme-on-secondary, var(--color-bg));
+    --button-tone: var(--theme-secondary, var(--color-fg));
+    --button-surface: var(--color-surface);
+    --button-edge: var(--color-border);
+  }
+  .button-success {
+    --button-tone: var(--color-success);
+    --button-surface: var(--color-success-surface);
+    --button-edge: var(--color-success);
+  }
+  .button-warning {
+    --button-tone: var(--color-warning);
+    --button-surface: var(--color-warning-surface);
+    --button-edge: var(--color-warning);
+  }
+  .button-danger {
+    --button-tone: var(--color-danger);
+    --button-surface: var(--color-danger-surface);
+    --button-edge: var(--color-danger);
+  }
+  .button-cocoa {
+    --button-tone: var(--color-cocoa);
+    --button-surface: var(--color-cocoa-tint);
+    --button-edge: var(--color-cocoa);
+  }
+  .button-mint {
+    --button-tone: var(--color-mint);
+    --button-surface: var(--color-mint-tint);
+    --button-edge: var(--color-mint);
+  }
+  .button-cyan {
+    --button-tone: var(--color-cyan);
+    --button-surface: var(--color-cyan-tint);
+    --button-edge: var(--color-cyan);
+  }
+  .button-ocean {
+    --button-tone: var(--color-ocean);
+    --button-surface: var(--color-ocean-tint);
+    --button-edge: var(--color-ocean);
+  }
+  .button-violet {
+    --button-tone: var(--color-violet);
+    --button-surface: var(--color-violet-tint);
+    --button-edge: var(--color-violet);
+  }
+  .button-berry {
+    --button-tone: var(--color-berry);
+    --button-surface: var(--color-berry-tint);
+    --button-edge: var(--color-berry);
+  }
+  .button-solid {
+    /* Classify the fill as dark, intermediate, or light using its relative luminance. */
+    --button-icon-surface: color(
+      from var(--button-fill) xyz-d65 0
+        calc((sign(y - 0.06) + sign(y - 0.6) + 2) / 4) 0
+    );
+    container-name: button-fill;
+    --button-success: var(--color-success);
+    --button-danger: var(--color-danger);
+    --button-warning: var(--color-warning);
+    border-color: var(--button-tone);
+    --button-fill: var(--button-tone);
+    background-color: var(--button-fill);
+    color: var(--button-on-solid, var(--color-bg));
+    --button-pulse-color: var(--button-tone);
+    --button-state-surface: var(--button-tone);
+    --button-state-color: var(--button-on-solid, var(--color-bg));
+    --button-border-color: var(--button-tone);
+  }
+  .button-solid .button-icon {
+    --icon-contrast: var(--button-on-solid, var(--color-bg));
+    /* Restore chroma after mixing so the status hue stays recognizable. */
+    --color-success: oklch(
+      from color-mix(in oklch, var(--button-success) 25%, var(--icon-contrast))
+        l calc(c * 2) h
+    );
+    --color-warning: oklch(
+      from color-mix(in oklch, var(--button-warning) 25%, var(--icon-contrast))
+        l calc(c * 2) h
+    );
+    --color-danger: oklch(
+      from color-mix(in oklch, var(--button-danger) 25%, var(--icon-contrast)) l
+        calc(c * 2) h
+    );
+  }
+  @supports (color: contrast-color(black)) {
+    .button-solid .button-icon {
+      --icon-contrast: contrast-color(var(--button-fill));
+    }
+  }
+  /* On light and dark fills, use the corresponding theme palette at full chroma. */
+  @container button-fill style(--button-icon-surface: color(xyz-d65 0 1 0)) {
+    .button-icon :is(.text-success, .text-warning, .text-danger) {
+      color-scheme: light;
+      --color-success: var(--button-success);
+      --color-warning: var(--button-warning);
+      --color-danger: var(--button-danger);
+    }
+  }
+  @container button-fill style(--button-icon-surface: color(xyz-d65 0 0 0)) {
+    .button-icon :is(.text-success, .text-warning, .text-danger) {
+      color-scheme: dark;
+      --color-success: var(--button-success);
+      --color-warning: var(--button-warning);
+      --color-danger: var(--button-danger);
+    }
+  }
+  .button-outline {
+    border-color: var(--button-tone);
+    background-color: transparent;
+    color: var(--button-tone);
+    --button-pulse-color: var(--button-tone);
+    --button-state-surface: var(--button-surface);
+    --button-state-color: var(--button-tone);
+    --button-border-color: var(--button-edge);
+  }
+  .button-ghost {
+    border-color: transparent;
+    background-color: transparent;
+    color: var(--button-tone);
+    --button-pulse-color: var(--button-tone);
+    --button-state-surface: var(--color-bg);
+    --button-state-color: var(--button-tone);
+    --button-border-color: var(--button-edge);
+  }
+
+  .button-sm {
+    min-height: 2rem;
+    padding-inline: 0.75rem;
+    font-size: 0.875rem;
+  }
+  .button-md {
+    min-height: 2.5rem;
+    padding-inline: 1rem;
+    font-size: 0.875rem;
+  }
+  .button-lg {
+    min-height: 3rem;
+    padding-inline: 1.25rem;
+    font-size: 1rem;
+  }
+
+  @media (min-width: 64rem) {
+    .button-desktop-sm {
+      min-height: 2rem;
+      padding-inline: 0.75rem;
+      font-size: 0.875rem;
+    }
+    .button-desktop-md {
+      min-height: 2.5rem;
+      padding-inline: 1rem;
+      font-size: 0.875rem;
+    }
+    .button-desktop-lg {
+      min-height: 3rem;
+      padding-inline: 1.25rem;
+      font-size: 1rem;
+    }
+  }
+
+  .button-pulse {
+    --button-pulse-resolved-color: var(--button-pulse-color);
+  }
+
+  @keyframes button-pulse {
+    0% {
+      box-shadow: 0 0 0 2px
+        color-mix(in srgb, var(--button-pulse-resolved-color) 65%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 10px
+        color-mix(in srgb, var(--button-pulse-resolved-color) 25%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 14px
+        color-mix(in srgb, var(--button-pulse-resolved-color) 0%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .button-pulse:not(:disabled) {
+      animation: button-pulse 1.8s ease-out infinite;
+    }
+  }
+}

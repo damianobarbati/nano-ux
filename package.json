@@ -1,0 +1,82 @@
+{
+  "name": "nano-ux",
+  "license": "MIT",
+  "description": "Nano sized UI kit.",
+  "author": "Damiano Barbati <damiano.barbati@gmail.com> (https://github.com/damianobarbati)",
+  "repository": "https://github.com/damianobarbati/nano-ux",
+  "type": "module",
+  "version": "0.0.2",
+  "engines": {
+    "node": "24"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.js"
+    },
+    "./helpers": {
+      "types": "./dist/helpers.d.ts",
+      "import": "./dist/helpers.js"
+    },
+    "./theme.css": "./dist/theme.css",
+    "./theme": "./dist/components/theme.js"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "lint": "oxlint --fix && biome check --write --unsafe && tsc --noEmit",
+    "prepack": "rm -rf dist && npm run build",
+    "build": "tsc && tailwindcss -i src/style/theme.css -o dist/theme.css --minify",
+    "build:storybook": "storybook build",
+    "stop": "for port in 9000 9001; do lsof -nP -tiTCP:$port -sTCP:LISTEN | while read -r pid; do kill \"$pid\"; done; done",
+    "dev": "storybook dev --quiet --port 9000 --exact-port",
+    "demo": "vite dev --port 9001 ./demo",
+    "build:demo": "vite build ./demo --base /nano-ux/",
+    "start": "http-server demo-dist -a 0.0.0.0 -p 9001 -c-1"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "^9.3.1",
+    "clsx-tw": "^1.0.9",
+    "echarts": "^6.1.0",
+    "prismjs": "^1.30.0",
+    "react-icons": "^5.7.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.8",
+    "@fontsource-variable/montserrat": "^5.3.0",
+    "@storybook/react-vite": "^10.6.8",
+    "@tailwindcss/cli": "^4.3.5",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/prismjs": "^1.26.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "esbuild": "^0.28.2",
+    "http-server": "^14.1.1",
+    "oxlint": "^1.94.0",
+    "oxlint-better": "^1.0.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.92.0",
+    "rollup-plugin-visualizer": "^7.1.3",
+    "storybook": "^10.6.8",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.8"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.92.0",
+    "swr": "^2.4.1"
+  }
+}

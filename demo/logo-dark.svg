@@ -1,0 +1,10 @@
+<svg height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg">
+  <rect fill="#0b0b0b" height="100" rx="8.5" width="100" />
+  <g fill="#c4f26a">
+    <path
+      d="m46 18c2 21 7 27 26 30-18 4-24 10-27 30-3-19-8-25-26-28 17-4 23-11 27-32z"
+      transform="matrix(1.08 0 0 1.08 .86 -1.84)"
+    />
+    <path d="m72 19q1 9 10 11-9 2-10 11-2-9-10-11 8-2 10-11z" />
+  </g>
+</svg>
