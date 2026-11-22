@@ -64,6 +64,8 @@ export {
 	SpinnerProvider,
 } from "./components/Spinner.tsx";
 
+export { Swiper, type SwiperProps } from "./components/Swiper.tsx";
+
 export {
 	type SpinnerRendererProps,
 	spinnerVariants,

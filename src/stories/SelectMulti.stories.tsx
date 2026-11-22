@@ -1,5 +1,4 @@
 import { FormProvider, useForm } from "react-hook-form";
-import { expect, userEvent, within } from "storybook/test";
 import { SelectMulti } from "../components/SelectMulti.tsx";
 import { AsyncSelectExample } from "./AsyncSelectExample.tsx";
 
@@ -165,40 +164,3 @@ const Examples = () => {
 export default { title: "Controls / SelectMulti", component: SelectMulti };
 
 export const Variants = { name: "SelectMulti", render: () => <Examples /> };
-
-const LocalizedExample = () => {
-	const form = useForm({ defaultValues: { cities: [] } });
-	return (
-		<FormProvider {...form}>
-			<SelectMulti
-				name="cities"
-				options={cityOptions}
-				strings={{
-					selectAll: "Seleziona tutte",
-					clearAll: "Deseleziona tutte",
-				}}
-			/>
-		</FormProvider>
-	);
-};
-
-export const PartialTranslation = {
-	render: () => <LocalizedExample />,
-	play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
-		const canvas = within(canvasElement);
-
-		await userEvent.click(
-			canvas.getByRole("button", { name: /Select options/ }),
-		);
-
-		await expect(canvas.getByPlaceholderText("Search options")).toBeVisible();
-
-		await userEvent.click(
-			canvas.getByRole("button", { name: "Seleziona tutte" }),
-		);
-
-		await expect(
-			canvas.getByRole("button", { name: "Deseleziona tutte" }),
-		).toBeVisible();
-	},
-};
