@@ -1,5 +1,6 @@
 export { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 export { Accordion, type AccordionProps } from "./components/Accordion.tsx";
+export { Badge, type BadgeProps } from "./components/Badge.tsx";
 export { Button, type ButtonProps } from "./components/Button.tsx";
 
 export {

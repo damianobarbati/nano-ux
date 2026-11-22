@@ -318,7 +318,11 @@ export const SelectMulti = (props: SelectMultiProps) => {
 
 	if (loading) {
 		indicator = (
-			<Spinner size="sm" label={strings?.loading ?? "Loading options"} />
+			<Spinner
+				centered={false}
+				size="sm"
+				label={strings?.loading ?? "Loading options"}
+			/>
 		);
 	} else {
 		indicator = <IChevronDown className="size-4 shrink-0 text-fg-muted" />;

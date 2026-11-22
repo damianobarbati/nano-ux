@@ -78,7 +78,7 @@ export const TableFrame = ({
 					)}
 				</div>
 				{loading && (
-					<div className="pointer-events-none absolute inset-x-0 top-[var(--table-header-height)] bottom-0 z-20 grid place-items-center bg-surface/75 text-fg">
+					<div className="absolute inset-x-0 top-[var(--table-header-height)] bottom-0 z-20 grid place-items-center text-fg">
 						<Spinner label={strings?.loading} size="lg" />
 					</div>
 				)}

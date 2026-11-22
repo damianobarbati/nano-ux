@@ -114,7 +114,10 @@
     @apply border-transparent bg-transparent shadow-none;
   }
   .badge {
-    @apply inline-flex items-center rounded-full bg-layer px-2.5 py-1 text-xs font-medium text-fg-muted;
+    @apply inline-flex items-center rounded-control bg-layer px-2.5 py-1 text-[length:var(--body-size)] font-medium text-fg-muted;
+  }
+  .badge-sm {
+    @apply text-sm;
   }
   .badge-success {
     @apply bg-success-surface text-success;

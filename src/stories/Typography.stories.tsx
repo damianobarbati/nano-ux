@@ -25,6 +25,7 @@ export const Typography = {
 					Use <strong>strong text</strong> to highlight a key phrase and{" "}
 					<a href="/docs">read the documentation</a> for more detail.
 				</p>
+				<hr />
 				<ul>
 					<li>Shared project notes</li>
 					<li>Quick task updates</li>
@@ -63,6 +64,7 @@ export const Typography = {
 					Review <strong>approved sessions</strong> or{" "}
 					<a href="/docs">open the documentation</a> for the full workflow.
 				</p>
+				<hr />
 				<ul>
 					<li>Approved sessions</li>
 					<li>Rejected sessions</li>

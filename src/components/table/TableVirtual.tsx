@@ -170,6 +170,7 @@ export const TableVirtual = <T extends object>({
 					))}
 				</thead>
 				<tbody
+					inert={loading}
 					ref={bodyRef}
 					className="block min-h-0 [scrollbar-gutter:stable] overflow-auto"
 					onScroll={(event) => {

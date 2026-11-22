@@ -88,7 +88,7 @@ export const Table = <Row extends object>({
 						))}
 					</tr>
 				</thead>
-				<tbody>
+				<tbody inert={loading}>
 					{sorting.rows.map((row) => {
 						const percentage =
 							bar && Math.max(1, Math.min(100, bar.getPercentage(row)));

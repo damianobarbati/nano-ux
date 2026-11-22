@@ -288,3 +288,22 @@
     animation: none !important;
   }
 }
+
+:has(> [data-spinner-centered]) {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+:has(> [data-spinner-centered]) > :not([data-spinner-centered]) {
+  interactivity: inert;
+}
+
+.spinner-position {
+  @apply pointer-events-none absolute size-full -translate-1/2;
+  left: var(--spinner-x, 50%);
+  top: var(--spinner-y, 50%);
+}
+
+.spinner-overlay {
+  @apply bg-surface/75 shadow-[0_0_0_100vmax] shadow-surface/75;
+}

@@ -3,6 +3,8 @@
 import cx from "clsx-tw";
 import React from "react";
 
+import { mountCenteredSpinner } from "./mountCenteredSpinner.ts";
+
 import {
 	type SpinnerRendererProps,
 	spinnerVariants,
@@ -39,6 +41,7 @@ export type SpinnerProps = {
 	strings?: { loading?: string };
 	className?: string;
 	centered?: boolean;
+	overlay?: boolean;
 	size?: SpinnerRendererProps["size"];
 	variant?: string;
 	label?: string;
@@ -49,11 +52,27 @@ const sizes = { sm: "size-4", md: "size-6", lg: "size-10", xl: "size-16" };
 export const Spinner = ({
 	strings,
 	className,
-	centered,
+	centered = true,
+	overlay = true,
 	size = "md",
 	variant,
 	label = strings?.loading ?? "Loading",
 }: SpinnerProps) => {
+	const anchorRef = React.useRef<HTMLSpanElement>(null);
+
+	React.useLayoutEffect(() => {
+		const anchor = anchorRef.current;
+
+		if (centered && anchor?.parentElement) {
+			const cleanup = mountCenteredSpinner({
+				anchor,
+				parent: anchor.parentElement,
+			});
+
+			return cleanup;
+		}
+	}, [centered]);
+
 	const registry = React.useContext(SpinnerContext);
 	const key = variant ?? registry.defaultVariant;
 
@@ -61,17 +80,26 @@ export const Spinner = ({
 		? registry.variants[key]
 		: spinnerVariants.arc;
 
+	const icon = <Renderer size={size} className="block size-full" />;
 	return (
 		<span
+			ref={anchorRef}
+			data-spinner-centered={centered || undefined}
 			title={label}
 			className={cx(
 				"inline-block shrink-0",
 				sizes[size],
-				centered && "mx-auto block",
+				centered && "relative z-1",
 				className,
 			)}
 		>
-			<Renderer size={size} className="block size-full" />
+			{centered ? (
+				<span className={cx("spinner-position", overlay && "spinner-overlay")}>
+					{icon}
+				</span>
+			) : (
+				icon
+			)}
 		</span>
 	);
 };

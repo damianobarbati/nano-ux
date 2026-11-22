@@ -728,7 +728,7 @@ const Feedback = () => {
 							key={name}
 							className="flex shrink-0 flex-col items-center gap-2 text-center"
 						>
-							<Spinner variant={name} size="lg" />
+							<Spinner centered={false} variant={name} size="lg" />
 							<code className="text-xs">{name}</code>
 						</li>
 					))}

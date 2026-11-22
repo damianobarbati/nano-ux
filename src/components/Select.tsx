@@ -85,7 +85,11 @@ export const Select = ({
 
 	if (loading) {
 		indicator = (
-			<Spinner size="sm" label={strings?.loading ?? "Loading options"} />
+			<Spinner
+				centered={false}
+				size="sm"
+				label={strings?.loading ?? "Loading options"}
+			/>
 		);
 	} else {
 		indicator = <IChevronDown className="size-4" />;

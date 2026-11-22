@@ -133,7 +133,7 @@ const IconSlot = ({ icon, side, loading, loadingLabel }: IconSlotProps) => {
 			data-side={side}
 			data-visible={!!loading || (showIcon && !expired)}
 		>
-			{loading && <Spinner label={loadingLabel} size="sm" />}
+			{loading && <Spinner centered={false} label={loadingLabel} size="sm" />}
 			{!loading && Icon && <Icon size="1rem" />}
 		</span>
 	);
