@@ -9,6 +9,28 @@ export type SwiperProps = {
 	index?: number;
 	onChangeIndex?: (next: number, previous: number) => void;
 	autoHeight?: boolean;
+	swipeMany?: boolean;
+};
+
+type ScrollToSlideOptions = {
+	element: HTMLDivElement;
+	index: number;
+	animate: boolean;
+};
+
+const scrollToSlide = ({ element, index, animate }: ScrollToSlideOptions) => {
+	const slide = element.children[index];
+	const first = element.firstElementChild;
+	if (!slide || !first) return;
+
+	const smooth =
+		animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+	element.scrollTo({
+		left:
+			slide.getBoundingClientRect().left - first.getBoundingClientRect().left,
+		behavior: smooth ? "smooth" : "instant",
+	});
 };
 
 export const Swiper = ({
@@ -17,6 +39,7 @@ export const Swiper = ({
 	index,
 	onChangeIndex,
 	autoHeight = false,
+	swipeMany = false,
 }: SwiperProps) => {
 	const slides = React.Children.toArray(children);
 	const count = slides.length;
@@ -38,8 +61,7 @@ export const Swiper = ({
 		const animate =
 			index !== undefined &&
 			previousIndex.current !== index &&
-			selected.current !== next &&
-			!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+			selected.current !== next;
 
 		animating.current = animate;
 
@@ -47,18 +69,51 @@ export const Swiper = ({
 		selected.current = next;
 		setActive(next);
 
-		const slide = element.children[next];
-		const first = element.firstElementChild;
-
-		if (slide && first) {
-			element.scrollTo({
-				left:
-					slide.getBoundingClientRect().left -
-					first.getBoundingClientRect().left,
-				behavior: animate ? "smooth" : "instant",
-			});
-		}
+		scrollToSlide({ element, index: next, animate });
 	}, [index, count]);
+
+	React.useEffect(() => {
+		const element = viewport.current;
+		if (!element || swipeMany) return;
+
+		let lastWheelTime = -Infinity;
+		let distance = 0;
+		let moved = false;
+
+		const handleWheel = (event: WheelEvent) => {
+			if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY))
+				return;
+
+			event.preventDefault();
+
+			if (event.timeStamp - lastWheelTime > 180) {
+				distance = 0;
+				moved = false;
+			}
+
+			lastWheelTime = event.timeStamp;
+
+			if (moved) return;
+
+			distance += event.deltaX;
+
+			if (
+				event.deltaMode === WheelEvent.DOM_DELTA_PIXEL &&
+				Math.abs(distance) < 12
+			)
+				return;
+
+			moved = true;
+
+			const direction = getComputedStyle(element).direction === "rtl" ? -1 : 1;
+			const index = selected.current + Math.sign(distance) * direction;
+
+			scrollToSlide({ element, index, animate: true });
+		};
+
+		element.addEventListener("wheel", handleWheel, { passive: false });
+		return () => element.removeEventListener("wheel", handleWheel);
+	}, [swipeMany]);
 
 	const settle = React.useEffectEvent(() => {
 		const element = viewport.current;
@@ -165,7 +220,10 @@ export const Swiper = ({
 			>
 				{React.Children.map(slides, (child, position) => (
 					<div
-						className="flow-root min-w-0 flex-[0_0_100%] snap-start"
+						className={cx(
+							"flow-root min-w-0 flex-[0_0_100%] snap-start",
+							!swipeMany && "snap-always",
+						)}
 						inert={position !== active}
 						ref={autoHeight && position === active ? measureSlide : undefined}
 					>
