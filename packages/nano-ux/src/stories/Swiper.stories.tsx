@@ -70,36 +70,37 @@ const CalendarExample = () => {
 
 export const Default = { name: "Swiper", render: CalendarExample };
 
-export const RapidSwipes: StoryObj<typeof Swiper> = {
+export const ScrollSettlement: StoryObj<typeof Swiper> = {
 	render: CalendarExample,
-	play: async ({ canvas }) => {
-		const slide = canvas.getByRole("region", { name: days[0] });
+	play: async ({ canvas, canvasElement }) => {
+		const viewport =
+			canvasElement.querySelector<HTMLDivElement>(".snap-mandatory");
 
-		for (const deltaX of [8, 18, 32, 17, 8, 3, 2, 8, 23, 32, 9, 3]) {
-			slide.dispatchEvent(
-				new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaX }),
-			);
-		}
+		if (!viewport) throw new Error("Missing Swiper viewport");
 
-		await waitFor(() =>
-			expect(canvas.getByRole("heading")).toHaveTextContent(days[2]),
-		);
-	},
-};
-
-export const SwipeMomentum: StoryObj<typeof Swiper> = {
-	render: CalendarExample,
-	play: async ({ canvas }) => {
-		const slide = canvas.getByRole("region", { name: days[0] });
-
-		for (const deltaX of [8, 18, 32, 17, 8, 3, 2, 1]) {
-			slide.dispatchEvent(
-				new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaX }),
-			);
-		}
+		viewport.scrollTo({ left: viewport.clientWidth, behavior: "instant" });
 
 		await waitFor(() =>
 			expect(canvas.getByRole("heading")).toHaveTextContent(days[1]),
+		);
+
+		await expect(canvas.getByRole("region", { name: days[1] })).toBeVisible();
+	},
+};
+
+export const InterruptedNavigation: StoryObj<typeof Swiper> = {
+	render: CalendarExample,
+	play: async ({ canvas, canvasElement, userEvent }) => {
+		const viewport =
+			canvasElement.querySelector<HTMLDivElement>(".snap-mandatory");
+
+		if (!viewport) throw new Error("Missing Swiper viewport");
+
+		await userEvent.click(canvas.getByRole("button", { name: "Next" }));
+		viewport.scrollTo({ left: viewport.clientWidth * 3, behavior: "instant" });
+
+		await waitFor(() =>
+			expect(canvas.getByRole("heading")).toHaveTextContent(days[3]),
 		);
 	},
 };
