@@ -1,4 +1,6 @@
+import type { StoryObj } from "@storybook/react-vite";
 import React from "react";
+import { expect, waitFor } from "storybook/test";
 import { Button } from "../components/Button.tsx";
 import { Swiper } from "../components/Swiper.tsx";
 
@@ -67,3 +69,37 @@ const CalendarExample = () => {
 };
 
 export const Default = { name: "Swiper", render: CalendarExample };
+
+export const RapidSwipes: StoryObj<typeof Swiper> = {
+	render: CalendarExample,
+	play: async ({ canvas }) => {
+		const slide = canvas.getByRole("region", { name: days[0] });
+
+		for (const deltaX of [8, 18, 32, 17, 8, 3, 2, 8, 23, 32, 9, 3]) {
+			slide.dispatchEvent(
+				new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaX }),
+			);
+		}
+
+		await waitFor(() =>
+			expect(canvas.getByRole("heading")).toHaveTextContent(days[2]),
+		);
+	},
+};
+
+export const SwipeMomentum: StoryObj<typeof Swiper> = {
+	render: CalendarExample,
+	play: async ({ canvas }) => {
+		const slide = canvas.getByRole("region", { name: days[0] });
+
+		for (const deltaX of [8, 18, 32, 17, 8, 3, 2, 1]) {
+			slide.dispatchEvent(
+				new WheelEvent("wheel", { bubbles: true, cancelable: true, deltaX }),
+			);
+		}
+
+		await waitFor(() =>
+			expect(canvas.getByRole("heading")).toHaveTextContent(days[1]),
+		);
+	},
+};

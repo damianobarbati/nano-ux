@@ -18,19 +18,47 @@ type ScrollToSlideOptions = {
 	animate: boolean;
 };
 
-const scrollToSlide = ({ element, index, animate }: ScrollToSlideOptions) => {
+type SlideOffsetOptions = Pick<ScrollToSlideOptions, "element" | "index">;
+
+type TouchGesture = {
+	pointerId: number;
+	x: number;
+	y: number;
+	startOffset: number;
+	minOffset: number;
+	maxOffset: number;
+	dragging: boolean;
+};
+
+const getSlideOffset = ({ element, index }: SlideOffsetOptions) => {
 	const slide = element.children[index];
 	const first = element.firstElementChild;
 	if (!slide || !first) return;
 
+	const offset =
+		slide.getBoundingClientRect().left - first.getBoundingClientRect().left;
+
+	return offset;
+};
+
+const scrollToSlide = ({ element, index, animate }: ScrollToSlideOptions) => {
+	const left = getSlideOffset({ element, index });
+	if (left === undefined) return;
+
 	const smooth =
-		animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		animate &&
+		Math.abs(element.scrollLeft - left) >= 1 &&
+		!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 	element.scrollTo({
-		left:
-			slide.getBoundingClientRect().left - first.getBoundingClientRect().left,
+		left,
 		behavior: smooth ? "smooth" : "instant",
 	});
+};
+
+const getDirection = (element: HTMLDivElement) => {
+	const direction = getComputedStyle(element).direction === "rtl" ? -1 : 1;
+	return direction;
 };
 
 export const Swiper = ({
@@ -46,7 +74,8 @@ export const Swiper = ({
 	const viewport = React.useRef<HTMLDivElement>(null);
 	const selected = React.useRef(0);
 	const previousIndex = React.useRef(index);
-	const animating = React.useRef(false);
+	const destination = React.useRef<number | null>(null);
+	const touch = React.useRef<TouchGesture | null>(null);
 	const [active, setActive] = React.useState(0);
 
 	React.useLayoutEffect(() => {
@@ -63,14 +92,59 @@ export const Swiper = ({
 			previousIndex.current !== index &&
 			selected.current !== next;
 
-		animating.current = animate;
+		touch.current = null;
+		element.style.removeProperty("scroll-snap-type");
+		destination.current = animate ? next : null;
 
 		previousIndex.current = index;
 		selected.current = next;
 		setActive(next);
 
 		scrollToSlide({ element, index: next, animate });
-	}, [index, count]);
+	}, [index, count, swipeMany]);
+
+	const settle = React.useEffectEvent(() => {
+		const element = viewport.current;
+		const first = element?.firstElementChild;
+		if (!element || !first || touch.current?.dragging) return;
+
+		const width = first.getBoundingClientRect().width;
+		if (!width) return;
+
+		const target = destination.current;
+
+		if (target !== null) {
+			const offset = getSlideOffset({ element, index: target });
+
+			if (offset === undefined || Math.abs(element.scrollLeft - offset) >= 1)
+				return;
+		}
+
+		destination.current = null;
+
+		const next =
+			target ??
+			Math.min(count - 1, Math.round(Math.abs(element.scrollLeft) / width));
+
+		const previous = selected.current;
+		if (next === previous) return;
+
+		selected.current = next;
+		setActive(next);
+		onChangeIndex?.(next, previous);
+	});
+
+	const moveBy = React.useEffectEvent((direction: number) => {
+		const element = viewport.current;
+		if (!element || !count) return;
+
+		const from = destination.current ?? selected.current;
+		const next = Math.max(0, Math.min(from + direction, count - 1));
+
+		destination.current = next;
+		scrollToSlide({ element, index: next, animate: true });
+		settle();
+	});
 
 	React.useEffect(() => {
 		const element = viewport.current;
@@ -78,7 +152,9 @@ export const Swiper = ({
 
 		let lastWheelTime = -Infinity;
 		let distance = 0;
-		let moved = false;
+		let direction = 0;
+		let peak = 0;
+		let trough = Infinity;
 
 		const handleWheel = (event: WheelEvent) => {
 			if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY))
@@ -86,58 +162,128 @@ export const Swiper = ({
 
 			event.preventDefault();
 
+			if (touch.current?.dragging) return;
+
 			if (event.timeStamp - lastWheelTime > 180) {
 				distance = 0;
-				moved = false;
+				direction = 0;
 			}
 
 			lastWheelTime = event.timeStamp;
 
-			if (moved) return;
+			const delta = event.deltaX;
+			const magnitude = Math.abs(delta);
+			const threshold = event.deltaMode === WheelEvent.DOM_DELTA_PIXEL ? 12 : 0;
 
-			distance += event.deltaX;
+			if (Math.sign(delta) === direction) {
+				distance = 0;
+				peak = Math.max(peak, magnitude);
 
-			if (
-				event.deltaMode === WheelEvent.DOM_DELTA_PIXEL &&
-				Math.abs(distance) < 12
-			)
-				return;
+				// A new swipe can accelerate before the previous momentum stops.
+				if (magnitude <= peak / 3) trough = Math.min(trough, magnitude);
 
-			moved = true;
+				if (magnitude < Math.max(threshold, 3 * trough)) return;
+			}
 
-			const direction = getComputedStyle(element).direction === "rtl" ? -1 : 1;
-			const index = selected.current + Math.sign(distance) * direction;
+			distance += delta;
 
-			scrollToSlide({ element, index, animate: true });
+			if (Math.abs(distance) < threshold) return;
+
+			direction = Math.sign(distance);
+			distance = 0;
+			peak = magnitude;
+			trough = Infinity;
+			moveBy(direction * getDirection(element));
 		};
 
 		element.addEventListener("wheel", handleWheel, { passive: false });
 		return () => element.removeEventListener("wheel", handleWheel);
 	}, [swipeMany]);
 
-	const settle = React.useEffectEvent(() => {
+	React.useEffect(() => {
 		const element = viewport.current;
-		const first = element?.firstElementChild;
-		if (!element || !first) return;
+		if (!element || swipeMany) return;
 
-		const width = first.getBoundingClientRect().width;
-		if (!width) return;
+		const start = (event: PointerEvent) => {
+			if (event.pointerType !== "touch" || !event.isPrimary) return;
 
-		const next = Math.min(
-			count - 1,
-			Math.round(Math.abs(element.scrollLeft) / width),
-		);
+			touch.current = {
+				pointerId: event.pointerId,
+				x: event.clientX,
+				y: event.clientY,
+				startOffset: 0,
+				minOffset: 0,
+				maxOffset: 0,
+				dragging: false,
+			};
+		};
 
-		const previous = selected.current;
-		if (animating.current && next !== previous) return;
-		animating.current = false;
+		const drag = (event: PointerEvent) => {
+			const gesture = touch.current;
+			if (!gesture || gesture.pointerId !== event.pointerId) return;
 
-		if (next === previous) return;
+			const distance = gesture.x - event.clientX;
 
-		selected.current = next;
-		setActive(next);
-		onChangeIndex?.(next, previous);
-	});
+			if (!gesture.dragging) {
+				if (
+					Math.abs(distance) <= Math.max(8, Math.abs(gesture.y - event.clientY))
+				)
+					return;
+
+				const from = destination.current ?? selected.current;
+				const offset = element.scrollLeft;
+				const previous = getSlideOffset({ element, index: from - 1 }) ?? offset;
+				const next = getSlideOffset({ element, index: from + 1 }) ?? offset;
+
+				gesture.startOffset = offset;
+				gesture.minOffset = Math.min(offset, previous, next);
+				gesture.maxOffset = Math.max(offset, previous, next);
+				gesture.dragging = true;
+				element.setPointerCapture(event.pointerId);
+				element.style.setProperty("scroll-snap-type", "none");
+			}
+
+			element.scrollTo({
+				left: Math.min(
+					gesture.maxOffset,
+					Math.max(gesture.minOffset, gesture.startOffset + distance),
+				),
+				behavior: "instant",
+			});
+		};
+
+		const finish = (event: PointerEvent) => {
+			const gesture = touch.current;
+			if (!gesture || gesture.pointerId !== event.pointerId) return;
+
+			touch.current = null;
+
+			if (!gesture.dragging) return;
+
+			element.style.removeProperty("scroll-snap-type");
+
+			const distance = gesture.x - event.clientX;
+
+			const direction =
+				event.type === "pointerup" && Math.abs(distance) >= 24
+					? Math.sign(distance) * getDirection(element)
+					: 0;
+
+			moveBy(direction);
+		};
+
+		element.addEventListener("pointerdown", start);
+		element.addEventListener("pointermove", drag);
+		element.addEventListener("pointerup", finish);
+		element.addEventListener("pointercancel", finish);
+
+		return () => {
+			element.removeEventListener("pointerdown", start);
+			element.removeEventListener("pointermove", drag);
+			element.removeEventListener("pointerup", finish);
+			element.removeEventListener("pointercancel", finish);
+		};
+	}, [swipeMany]);
 
 	React.useEffect(() => {
 		const element = viewport.current;
@@ -201,18 +347,19 @@ export const Swiper = ({
 	}, []);
 
 	const interruptAnimation = () => {
-		animating.current = false;
+		destination.current = null;
 	};
 
 	return (
 		<div className={cx("min-w-0", className)}>
 			<div
 				ref={viewport}
-				onPointerDownCapture={interruptAnimation}
-				onWheelCapture={interruptAnimation}
+				onPointerDownCapture={swipeMany ? interruptAnimation : undefined}
+				onWheelCapture={swipeMany ? interruptAnimation : undefined}
 				onKeyDownCapture={interruptAnimation}
 				className={cx(
 					"flex w-full snap-x snap-mandatory [scrollbar-width:none] items-start overflow-x-auto overflow-y-hidden",
+					!swipeMany && "[touch-action:pan-y_pinch-zoom]",
 					autoHeight &&
 						count > 0 &&
 						"h-(--swiper-height) motion-safe:transition-[height] motion-safe:duration-300 motion-safe:ease-in-out",
