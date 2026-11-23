@@ -43,6 +43,7 @@ export const ThemeSelector = ({
 	const themeRef = React.useRef<Theme>("system");
 	const Icon = themeIcons[theme];
 	const label = strings?.[theme] ?? themeLabels[theme];
+	const themeLabel = strings?.themeLabel?.(label) ?? `Theme: ${label}`;
 
 	React.useEffect(() => {
 		const savedTheme = getTheme();
@@ -131,12 +132,10 @@ export const ThemeSelector = ({
 
 	return (
 		<div className={cx("fixed right-4 bottom-4 z-50", className)}>
-			<Tooltip
-				content={strings?.themeLabel?.(label) ?? `Theme: ${label}`}
-				placement={tooltipPlacement}
-			>
+			<Tooltip content={themeLabel} placement={tooltipPlacement}>
 				<button
 					className="relative grid size-11 cursor-pointer place-items-center rounded-control border border-border bg-surface text-fg hover:bg-layer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+					aria-label={themeLabel}
 					onClick={handleClick}
 					type="button"
 				>

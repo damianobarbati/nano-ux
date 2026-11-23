@@ -18,6 +18,7 @@ test("demo build includes readable content before JavaScript runs", async () => 
 		const html = await readFile(join(outDir, "index.html"), "utf8");
 
 		assert.match(html, /<div id="root"><header\b/);
+		assert.match(html, /<button\b[^>]*\baria-label="Theme: System"/);
 		assert.match(html, /<noscript><code>import /);
 		assert.match(html, /href="\.\/storybook-static\/index\.html"/);
 		assert.match(html, /src="\/nano-ux\/assets\/[^"]+\.js"/);
