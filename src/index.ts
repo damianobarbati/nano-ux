@@ -17,6 +17,12 @@ export {
 	type ChartLineSeries,
 } from "./components/ChartLine.tsx";
 
+export {
+	ChartPie,
+	type ChartPieData,
+	type ChartPieProps,
+} from "./components/ChartPie.tsx";
+
 export { Checkbox, type CheckboxProps } from "./components/Checkbox.tsx";
 export { Code, type CodeProps } from "./components/Code.tsx";
 

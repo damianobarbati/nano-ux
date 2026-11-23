@@ -16,6 +16,8 @@ export type TableColumn<Row> = {
 
 export type TableProps<Row extends object> = TableSortingProps & {
 	className?: string;
+	/** Fill the remaining height in a flex column with a defined height. Defaults to false. */
+	fillHeight?: boolean;
 	columns: TableColumn<Row>[];
 	data: Row[];
 	getRowKey: (row: Row) => string;
@@ -30,6 +32,7 @@ export type TableProps<Row extends object> = TableSortingProps & {
 
 export const Table = <Row extends object>({
 	className,
+	fillHeight,
 	columns,
 	data,
 	getRowKey,
@@ -65,6 +68,7 @@ export const Table = <Row extends object>({
 	return (
 		<TableFrame
 			className={className}
+			fillHeight={fillHeight}
 			count={data.length}
 			strings={strings}
 			emptyMessage={emptyMessage}

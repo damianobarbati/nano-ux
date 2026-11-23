@@ -1,10 +1,11 @@
 "use client";
 
 import cx from "clsx-tw";
-import { BarChart, LineChart, MapChart } from "echarts/charts";
+import { BarChart, LineChart, MapChart, PieChart } from "echarts/charts";
 
 import {
 	GridComponent,
+	LegendComponent,
 	TooltipComponent,
 	VisualMapComponent,
 } from "echarts/components";
@@ -17,7 +18,9 @@ use([
 	BarChart,
 	LineChart,
 	MapChart,
+	PieChart,
 	GridComponent,
+	LegendComponent,
 	TooltipComponent,
 	VisualMapComponent,
 	CanvasRenderer,

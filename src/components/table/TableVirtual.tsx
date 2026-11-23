@@ -24,6 +24,8 @@ const getSortValue = (row: { getValue: (id: string) => unknown }, id: string) =>
 
 export type TableVirtualProps<T extends object> = TableSortingProps & {
 	className?: string;
+	/** Fill the remaining height in a flex column with a defined height. Defaults to false. */
+	fillHeight?: boolean;
 	columns: ColumnDef<typeof tableVirtualFeatures, T>[];
 	data: T[];
 	getRowId?: (row: T) => string;
@@ -38,6 +40,7 @@ export type TableVirtualProps<T extends object> = TableSortingProps & {
 
 export const TableVirtual = <T extends object>({
 	className,
+	fillHeight,
 	columns,
 	data,
 	getRowId,
@@ -131,6 +134,7 @@ export const TableVirtual = <T extends object>({
 	return (
 		<TableFrame
 			className={className}
+			fillHeight={fillHeight}
 			count={rows.length}
 			strings={strings}
 			emptyMessage={emptyMessage}

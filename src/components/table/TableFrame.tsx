@@ -13,6 +13,7 @@ export type TableStrings = {
 type TableFrameProps = {
 	strings?: TableStrings;
 	className?: string;
+	fillHeight?: boolean;
 	children: React.ReactNode;
 	count: number;
 	emptyMessage?: string;
@@ -23,6 +24,7 @@ type TableFrameProps = {
 
 export const TableFrame = ({
 	className,
+	fillHeight = false,
 	children,
 	count,
 	strings,
@@ -56,11 +58,18 @@ export const TableFrame = ({
 	}, [loading]);
 
 	return (
-		<div className={cx("flex min-h-0 min-w-0 flex-col", className)}>
+		<div
+			className={cx(
+				"flex min-h-0 min-w-0 flex-col",
+				fillHeight && "flex-1",
+				className,
+			)}
+		>
 			<div
 				ref={frameRef}
 				className={cx(
 					"table-shell relative flex min-h-0 flex-col",
+					fillHeight && "flex-1",
 					loading &&
 						!count &&
 						"min-h-[calc(var(--table-header-height,0px)+4.5rem)] grow",
@@ -69,6 +78,7 @@ export const TableFrame = ({
 				<div
 					className={cx(
 						"table-scroll min-h-0",
+						fillHeight && "flex-1",
 						bodyScroll && "flex flex-col !overflow-hidden",
 					)}
 				>
