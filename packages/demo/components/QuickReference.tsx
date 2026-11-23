@@ -1,5 +1,5 @@
+import { Code } from "nano-ux";
 import React from "react";
-import { Code } from "../../src/components/Code.tsx";
 
 const examples = [
 	{

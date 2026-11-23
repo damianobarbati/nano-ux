@@ -12,7 +12,7 @@ See live demo [here](https://damianobarbati.github.io/nano-ux/).
 Install:
 
 ```sh
-npm add nano-ux
+npm install nano-ux react react-dom react-hook-form swr
 ```
 
 Configure:
@@ -40,10 +40,13 @@ createRoot(document.getElementById("root")).render(<App/>);
 ## Development
 
 ```sh
-npm i
-npm run stop
-npm run dev
-npm run demo
+fnm install --use
+npm install -g corepack
+corepack enable
+pnpm install
+pnpm run stop
+pnpm run dev
+pnpm run demo
 ```
 
 Storybook at <http://localhost:9000>.  
@@ -52,19 +55,17 @@ Demo at <http://localhost:9001>.
 ## Preview
 
 ```sh
-npm run build
-npm run build:demo
-npm run build:storybook -- --output-dir demo/dist/storybook-static
-npx -y vite preview ./demo --base /nano-ux/ --host 127.0.0.1 --port 9001
+pnpm build
+pnpm preview
 ```
 
-Preview at <http://localhost:9001>.
+Preview at <http://localhost:9001/nano-ux/>.
 
 ## Release
 
 ```sh
-npm run build
-npm publish --dry-run
-npm version patch
-npm publish
+pnpm build
+pnpm release --dry-run
+# Increment the patch version in packages/nano-ux/package.json.
+pnpm release
 ```

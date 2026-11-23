@@ -21,7 +21,7 @@ export default defineConfig(async ({ command, mode }) => {
 	}
 
 	return {
-		publicDir: "../dist",
+		base: "/nano-ux/",
 		plugins,
 		server: { host: true, allowedHosts: true },
 		build: { rolldownOptions: { output: { strictExecutionOrder: true } } },

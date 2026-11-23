@@ -1,7 +1,4 @@
 import cx from "clsx-tw";
-import React from "react";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { IArrowUpRight, IGitHub } from "../src/icons.tsx";
 
 import {
 	Button,
@@ -31,7 +28,11 @@ import {
 	Tooltip,
 	type tableVirtualFeatures,
 	useInViewOnce,
-} from "../src/index.ts";
+} from "nano-ux";
+
+import { IArrowUpRight, IGitHub } from "nano-ux/icons";
+import React from "react";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 import { QuickReference } from "./components/QuickReference.tsx";
 
@@ -52,17 +53,17 @@ import darkLogo from "./logo-dark.svg";
 import lightLogo from "./logo-light.svg";
 
 const ChartBar = React.lazy(async () => {
-	const { ChartBar } = await import("../src/components/ChartBar.tsx");
+	const { ChartBar } = await import("nano-ux/charts/bar");
 	return { default: ChartBar };
 });
 
 const ChartLine = React.lazy(async () => {
-	const { ChartLine } = await import("../src/components/ChartLine.tsx");
+	const { ChartLine } = await import("nano-ux/charts/line");
 	return { default: ChartLine };
 });
 
 const WorldMap = React.lazy(async () => {
-	const { WorldMap } = await import("../src/components/WorldMap.tsx");
+	const { WorldMap } = await import("nano-ux/charts/world-map");
 	return { default: WorldMap };
 });
 

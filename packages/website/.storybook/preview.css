@@ -1,5 +1,5 @@
-@import "../src/style/theme.css";
-@source "../src/stories";
+@import "nano-ux/tailwind.css";
+@source "../../nano-ux/src/stories";
 
 @media (max-width: 1800px) {
   .theme-panels {

@@ -1,0 +1,79 @@
+{
+  "name": "nano-ux",
+  "license": "MIT",
+  "description": "Nano sized UI kit.",
+  "author": "Damiano Barbati <damiano.barbati@gmail.com> (https://github.com/damianobarbati)",
+  "repository": "https://github.com/damianobarbati/nano-ux",
+  "type": "module",
+  "version": "0.0.10",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.js"
+    },
+    "./helpers": {
+      "types": "./dist/helpers.d.ts",
+      "import": "./dist/helpers.js"
+    },
+    "./theme.css": "./dist/theme.css",
+    "./theme": "./dist/components/theme.js",
+    "./tailwind.css": "./dist/style/theme.css",
+    "./charts/bar": {
+      "types": "./dist/components/ChartBar.d.ts",
+      "import": "./dist/components/ChartBar.js"
+    },
+    "./charts/line": {
+      "types": "./dist/components/ChartLine.d.ts",
+      "import": "./dist/components/ChartLine.js"
+    },
+    "./charts/world-map": {
+      "types": "./dist/components/WorldMap.d.ts",
+      "import": "./dist/components/WorldMap.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc && tailwindcss -i src/style/theme.css -o dist/theme.css --minify && cp -R src/style/. dist/style/",
+    "dev": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "prepack": "pnpm run build && cp ../../README.md README.md"
+  },
+  "dependencies": {
+    "@tanstack/react-table": "^9.3.1",
+    "clsx-tw": "^1.0.9",
+    "echarts": "^6.1.0",
+    "prismjs": "^1.30.0",
+    "react-icons": "^5.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "@types/prismjs": "^1.26.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.92.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~7.0.2"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.92.0",
+    "swr": "^2.4.1"
+  },
+  "homepage": "https://damianobarbati.github.io/nano-ux/"
+}

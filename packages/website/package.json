@@ -1,0 +1,23 @@
+{
+  "name": "website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev --quiet --port 9000 --exact-port",
+    "build": "pnpm --filter demo run build && rm -rf dist && cp -R ../demo/dist dist && storybook build --output-dir dist/storybook-static",
+    "preview": "vite preview --base /nano-ux/ --host 127.0.0.1 --port 9001"
+  },
+  "dependencies": {
+    "nano-ux": "workspace:*"
+  },
+  "devDependencies": {
+    "@storybook/react-vite": "^10.6.8",
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-react": "^6.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "storybook": "^10.6.8",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.8"
+  }
+}

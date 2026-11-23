@@ -1,4 +1,4 @@
-@import "../src/style/theme.css";
+@import "nano-ux/tailwind.css";
 @source "./index.tsx";
 
 :root {

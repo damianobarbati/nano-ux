@@ -1,13 +1,14 @@
 import type { Preview } from "@storybook/react-vite";
-import React from "react";
-import { useGlobals } from "storybook/preview-api";
 
 import {
 	applyTheme,
 	isThemeShortcut,
 	saveTheme,
 	type Theme,
-} from "../src/components/theme.ts";
+} from "nano-ux/theme";
+
+import React from "react";
+import { useGlobals } from "storybook/preview-api";
 
 import "./preview.css";
 

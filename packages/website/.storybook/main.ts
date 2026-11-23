@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
 const config: StorybookConfig = {
-	stories: ["../src/stories/*.stories.tsx"],
+	stories: ["../../nano-ux/src/stories/*.stories.tsx"],
 	framework: "@storybook/react-vite",
 	viteFinal: async (config) => {
 		config.optimizeDeps ??= {};

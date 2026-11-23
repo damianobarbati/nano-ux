@@ -61,7 +61,7 @@
     }
   },
   "tailwind": {
-    "stylesheet": "./src/style/theme.css",
+    "stylesheet": "./packages/nano-ux/src/style/theme.css",
     "attributes": [
       "class",
       "className"

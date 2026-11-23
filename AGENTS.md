@@ -5,7 +5,7 @@ At the start of the agent session read the instructions in [CONTRIBUTING.md](./C
 If code was actually changed, then verify the following all the following commands succeed:
 
 ```sh
-npm run lint
+pnpm lint
 ```
 
 Changes to the following files are prohibited unless explicitly consented:
@@ -18,4 +18,4 @@ Changes to the following files are prohibited unless explicitly consented:
 **/ci.yml
 ```
 
-Changes are always allowed when applied by the `npm run lint` command.
+Changes are always allowed when applied by the `pnpm lint` command.
