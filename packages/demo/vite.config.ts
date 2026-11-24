@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, type PluginOption } from "vite";
 
@@ -24,6 +25,16 @@ export default defineConfig(async ({ command, mode }) => {
 		base: "/nano-ux/",
 		plugins,
 		server: { host: true, allowedHosts: true },
-		build: { rolldownOptions: { output: { strictExecutionOrder: true } } },
+		build: {
+			rolldownOptions: {
+				input: {
+					index: fileURLToPath(new URL("./index.html", import.meta.url)),
+					themePreview: fileURLToPath(
+						new URL("./theme-preview.html", import.meta.url),
+					),
+				},
+				output: { strictExecutionOrder: true },
+			},
+		},
 	};
 });

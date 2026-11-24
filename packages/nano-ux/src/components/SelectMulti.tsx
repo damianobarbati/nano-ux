@@ -156,7 +156,7 @@ export const SelectMulti = (props: SelectMultiProps) => {
 				!searchTerm || option.label.toLowerCase().includes(searchTerm),
 		);
 
-	if (expanded) {
+	if (expanded && mode === "many") {
 		filtered.sort(({ option: first }, { option: second }) => {
 			const result =
 				Number(selectedOnOpen.has(second.value)) -

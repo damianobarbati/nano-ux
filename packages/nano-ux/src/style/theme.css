@@ -283,8 +283,6 @@ html:has(dialog[data-nano-dialog][open]) body {
 }
 
 :where(
-  .card,
-  .card-shell,
   .glow,
   .glow-cocoa,
   .glow-mint,
@@ -336,10 +334,6 @@ html:has(dialog[data-nano-dialog][open]) body {
 
 .glow-berry {
   --glow-color: var(--color-berry);
-}
-
-.glow-none {
-  box-shadow: none;
 }
 
 .robinson-map path:hover {

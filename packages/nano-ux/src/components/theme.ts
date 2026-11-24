@@ -1,6 +1,7 @@
 export type Theme = "dark" | "light" | "system";
 
 type ThemeInput = { theme: Theme };
+type GetThemeInput = { defaultTheme?: Theme };
 
 type ThemeShortcutInput = { event: KeyboardEvent };
 
@@ -29,7 +30,9 @@ const migrateTheme = () => {
 	localStorage.removeItem("nano-ui-theme-selected-at");
 };
 
-export const getTheme = (): Theme => {
+export const getTheme = ({
+	defaultTheme = "system",
+}: GetThemeInput = {}): Theme => {
 	try {
 		migrateTheme();
 
@@ -37,7 +40,7 @@ export const getTheme = (): Theme => {
 		const selectedAt = Number(localStorage.getItem(themeSelectedAtStorageKey));
 
 		if (theme !== "light" && theme !== "dark" && theme !== "system")
-			return "system";
+			return defaultTheme;
 
 		if (Number.isFinite(selectedAt) && selectedAt > 0) {
 			const selectedDate = new Date(selectedAt);
@@ -53,7 +56,7 @@ export const getTheme = (): Theme => {
 				if (Date.now() >= expiresAt) {
 					localStorage.removeItem(themeStorageKey);
 					localStorage.removeItem(themeSelectedAtStorageKey);
-					return "system";
+					return defaultTheme;
 				}
 			}
 		}
@@ -61,7 +64,7 @@ export const getTheme = (): Theme => {
 		return theme;
 	} catch {}
 
-	return "system";
+	return defaultTheme;
 };
 
 export const applyTheme = ({ theme }: ThemeInput) => {

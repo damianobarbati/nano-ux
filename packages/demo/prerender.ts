@@ -12,6 +12,8 @@ export const prerenderDemo = (): Plugin => {
 			config = resolved;
 		},
 		async transformIndexHtml(html) {
+			if (!html.includes("<!--app-html-->")) return html;
+
 			const root = config.root;
 			const outDir = await mkdtemp(join(root, ".prerender-"));
 

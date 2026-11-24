@@ -54,37 +54,40 @@
   --theme-ocean: light-dark(#1d4ed8, #60a5fa);
   --theme-violet: light-dark(#5b21b6, #cbb8ff);
   --theme-berry: light-dark(#a21caf, #e879f9);
+
+  --tint-light: in srgb, var(--theme-bg) 92%;
+  --tint-dark: in srgb, var(--theme-bg) 89%;
   --theme-cocoa-tint: light-dark(
-    color-mix(in srgb, var(--theme-cocoa) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-cocoa) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-cocoa)),
+    color-mix(var(--tint-dark), var(--theme-cocoa))
   );
   --theme-mint-tint: light-dark(
-    color-mix(in srgb, var(--theme-mint) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-mint) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-mint)),
+    color-mix(var(--tint-dark), var(--theme-mint))
   );
   --theme-mintlight-tint: light-dark(
-    color-mix(in srgb, var(--theme-mintlight) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-mintlight) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-mintlight)),
+    color-mix(var(--tint-dark), var(--theme-mintlight))
   );
   --theme-lime-tint: light-dark(
-    color-mix(in srgb, var(--theme-lime) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-lime) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-lime)),
+    color-mix(var(--tint-dark), var(--theme-lime))
   );
   --theme-cyan-tint: light-dark(
-    color-mix(in srgb, var(--theme-cyan) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-cyan) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-cyan)),
+    color-mix(var(--tint-dark), var(--theme-cyan))
   );
   --theme-ocean-tint: light-dark(
-    color-mix(in srgb, var(--theme-ocean) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-ocean) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-ocean)),
+    color-mix(var(--tint-dark), var(--theme-ocean))
   );
   --theme-violet-tint: light-dark(
-    color-mix(in srgb, var(--theme-violet) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-violet) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-violet)),
+    color-mix(var(--tint-dark), var(--theme-violet))
   );
   --theme-berry-tint: light-dark(
-    color-mix(in srgb, var(--theme-berry) 8%, var(--theme-bg)),
-    color-mix(in srgb, var(--theme-berry) 11%, var(--theme-bg))
+    color-mix(var(--tint-light), var(--theme-berry)),
+    color-mix(var(--tint-dark), var(--theme-berry))
   );
 }
 

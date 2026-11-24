@@ -1,5 +1,14 @@
 @import "nano-ux/tailwind.css";
 @source "./index.tsx";
+@source "./components";
+
+.reference-kind {
+  @apply text-sm font-medium text-fg-muted;
+}
+
+html:has(#quick-reference:target) {
+  scroll-behavior: auto;
+}
 
 :root {
   --font-family: "Montserrat Variable", system-ui, sans-serif;
@@ -28,12 +37,6 @@ body {
   .prism-code {
     white-space: pre-wrap;
     overflow-wrap: anywhere;
-  }
-}
-
-@media (width < 64rem) {
-  html {
-    scroll-padding-top: 3.5rem;
   }
 }
 

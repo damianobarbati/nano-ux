@@ -64,6 +64,7 @@ export {
 	LuMonitor as IMonitor,
 	LuMoon as IMoon,
 	LuNetwork as INetwork,
+	LuSend as ISend,
 	LuShuffle as IShuffle,
 	LuSplit as ISplit,
 	LuSun as ISun,

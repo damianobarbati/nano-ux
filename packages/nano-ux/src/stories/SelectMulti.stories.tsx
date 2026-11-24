@@ -328,6 +328,36 @@ export const Variants = {
 	render: () => <Examples />,
 };
 
+export const SingleSelectionInteraction = {
+	...Variants,
+	name: "Single selection interaction",
+	tags: ["!dev"],
+	play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+		const canvas = within(canvasElement);
+		const trigger = canvas.getByRole("button", { name: "Single selection" });
+
+		await userEvent.click(trigger);
+
+		const menu = within(
+			canvas.getByRole("dialog", { name: "Single selection" }),
+		);
+
+		await userEvent.click(menu.getByRole("button", { name: "website.test" }));
+		await expect(trigger).toHaveTextContent("website.test");
+		await userEvent.click(trigger);
+
+		await expect(
+			menu.getAllByRole("button").map((row) => row.textContent),
+		).toEqual([
+			"pulsio.io Primary",
+			"example.com",
+			"website.test",
+			"acme.dev",
+			"demo.app",
+		]);
+	},
+};
+
 export const PlacementInteraction = {
 	...Variants,
 	name: "Placement interaction",

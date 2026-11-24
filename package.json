@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.8",
-    "oxlint": "^1.94.0",
+    "oxlint": "^1.95.0",
     "oxlint-better": "^1.0.6"
   }
 }

@@ -29,16 +29,20 @@ export const Examples: StoryObj<typeof meta> = {
 		<main className="mx-auto grid max-w-5xl gap-6 p-6">
 			{examples.map(({ name, hue, flat }) => {
 				const tintClass = hue && `tint-${hue}`;
-				const glowClass = flat ? "glow-none" : hue && `glow-${hue}`;
+				const glowClass = !flat && (hue ? `glow-${hue}` : "glow");
 				const appearance = cx("card-tint", tintClass, glowClass);
-				const modifiers = [tintClass, glowClass].filter(Boolean).join(" and .");
+
+				const modifiers = ["card-tint", tintClass, glowClass]
+					.filter(Boolean)
+					.join(" and .");
+
 				return (
 					<div key={name} className="grid gap-6 sm:grid-cols-3">
 						<article
 							className={cx("card grid content-start gap-2", appearance)}
 						>
 							<h2>{name}</h2>
-							<p>This is .card{modifiers && ` with .${modifiers}`}.</p>
+							<p>This is .card with .{modifiers}.</p>
 						</article>
 						<Mockup className={cx("card-shell", appearance)} variant="terminal">
 							{'$ echo "Server ready"\nServer ready'}

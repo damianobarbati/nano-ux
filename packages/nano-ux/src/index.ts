@@ -128,4 +128,5 @@ export {
 	IClose,
 	IMenu,
 	ISearch,
+	ISend,
 } from "./icons.tsx";

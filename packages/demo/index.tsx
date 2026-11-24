@@ -30,11 +30,14 @@ import {
 	useInViewOnce,
 } from "nano-ux";
 
-import { IArrowUpRight, IGitHub } from "nano-ux/icons";
+import { IGitHub } from "nano-ux/icons";
 import React from "react";
+import { flushSync } from "react-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
-import { QuickReference } from "./components/QuickReference.tsx";
+import { ContactButton } from "./components/ContactButton.tsx";
+import { Reference } from "./components/Reference.tsx";
+import { ReferenceNavigation } from "./components/ReferenceNavigation.tsx";
 
 import {
 	dailySignups,
@@ -67,10 +70,6 @@ const WorldMap = React.lazy(async () => {
 	return { default: WorldMap };
 });
 
-const storybookUrl = import.meta.env.DEV
-	? `//${window.location.hostname}:9000/`
-	: "./storybook-static/index.html";
-
 type BrandProps = {
 	brand: string;
 	onBrandChange: (brand: string) => void;
@@ -81,6 +80,7 @@ const brandValue = (brand: string) =>
 
 export const App = () => {
 	const [brand, setBrand] = React.useState("Default");
+	const [dashboardRequested, setDashboardRequested] = React.useState(false);
 
 	const changeBrand = (name: string) => {
 		document.documentElement.style.setProperty(
@@ -91,12 +91,29 @@ export const App = () => {
 		setBrand(name);
 	};
 
+	const prepareReferenceScroll = (
+		event: React.MouseEvent<HTMLAnchorElement>,
+	) => {
+		if (
+			dashboardRequested ||
+			event.defaultPrevented ||
+			event.altKey ||
+			event.ctrlKey ||
+			event.metaKey ||
+			event.shiftKey ||
+			!window.matchMedia("(min-width: 48rem)").matches
+		)
+			return;
+
+		flushSync(() => setDashboardRequested(true));
+	};
+
 	return (
 		<>
-			<header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border bg-bg sm:gap-6 lg:static lg:h-auto lg:py-4 lg:[reading-flow:flex-visual]">
+			<header className="relative z-30 flex h-14 items-center gap-3 border-b border-border bg-bg pe-14 sm:gap-6 lg:h-auto lg:py-4 lg:[reading-flow:flex-visual]">
 				<Nav
 					label="Page sections"
-					className="text-sm lg:flex-wrap max-lg:[&_a]:px-2 max-lg:[&_a]:py-3"
+					className="text-sm lg:flex-wrap max-lg:[&>a]:px-2 max-lg:[&>a]:py-3"
 				>
 					<a href="#theme">Theme</a>
 					<a href="#typography">Typography</a>
@@ -104,18 +121,7 @@ export const App = () => {
 					<a href="#feedback">Feedback</a>
 					<a href="#colors">Colors</a>
 					<a href="#dashboard">Dashboard</a>
-					<a href="#quick-reference">Quick reference</a>
-					<a href={storybookUrl}>Storybook</a>
-					<a
-						className="inline-flex items-center gap-2 max-lg:mt-auto"
-						href="https://github.com/damianobarbati/nano-ux"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						<IGitHub aria-hidden="true" size="1em" />
-						<span>GitHub</span>
-						<IArrowUpRight aria-hidden="true" size="1em" />
-					</a>
+					<ReferenceNavigation onNavigate={prepareReferenceScroll} />
 				</Nav>
 				<a
 					href="#top"
@@ -130,7 +136,23 @@ export const App = () => {
 						nano-ux
 					</span>
 				</a>
-				<ThemeSelector className="static ms-auto" tooltipPlacement="bottom" />
+				<div className="ms-auto flex shrink-0 items-center gap-3 text-sm sm:gap-5">
+					<ContactButton />
+					<a
+						className="inline-flex items-center gap-2"
+						href="https://github.com/damianobarbati/nano-ux"
+						target="_blank"
+						rel="noopener noreferrer"
+					>
+						<IGitHub aria-hidden="true" size="1em" />
+						<span className="max-sm:sr-only">GitHub</span>
+					</a>
+					<ThemeSelector
+						className="top-1.5 bottom-auto sm:right-8 lg:top-4"
+						defaultTheme="dark"
+						tooltipPlacement="bottom"
+					/>
+				</div>
 			</header>
 			<main id="top">
 				<section
@@ -219,9 +241,20 @@ createRoot(document.getElementById("root")).render(<App />);`}
 				<ProfileForm />
 				<Feedback />
 				<Colors brand={brand} onBrandChange={changeBrand} />
-				<Dashboard />
-				<QuickReference />
+				<Dashboard requested={dashboardRequested} />
+				<Reference />
 			</main>
+			<footer className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border py-6">
+				<div className="flex items-center gap-2 font-semibold">
+					<img className="brand-logo size-8" src={darkLogo} alt="" />
+					<span>nano-ux</span>
+				</div>
+				<p className="m-0 text-sm text-fg-muted">
+					Copyright{" "}
+					<a href="https://linkedin.com/in/damianobarbati">Damiano Barbati</a>
+				</p>
+				<ContactButton className="ms-auto" />
+			</footer>
 		</>
 	);
 };
@@ -918,14 +951,16 @@ const dashboardCardClasses = {
 	outline: "card-outline",
 } as const;
 
-const Dashboard = () => {
+type DashboardProps = { requested: boolean };
+
+const Dashboard = ({ requested }: DashboardProps) => {
 	const { ref, hasEnteredView } = useInViewOnce();
 	return (
 		<FadeIn
 			id="dashboard"
-			className="relative grid min-w-0 scroll-mt-6 gap-y-8 py-12 md:gap-y-12"
+			className="relative grid min-w-0 scroll-mt-6 gap-y-8 py-12 [overflow-anchor:none] md:gap-y-12"
 		>
-			{hasEnteredView ? (
+			{requested || hasEnteredView ? (
 				<DashboardContent />
 			) : (
 				<>

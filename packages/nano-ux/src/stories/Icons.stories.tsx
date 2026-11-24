@@ -65,6 +65,7 @@ const sources = {
 	ISafari: "SiSafari",
 	ISamsung: "SiSamsung",
 	ISearch: "HiOutlineMagnifyingGlass",
+	ISend: "LuSend",
 	IServer: "FiServer",
 	IShieldCheck: "HiOutlineShieldCheck",
 	IShuffle: "LuShuffle",

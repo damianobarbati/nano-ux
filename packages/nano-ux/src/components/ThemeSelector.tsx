@@ -16,6 +16,7 @@ import {
 
 export type ThemeSelectorProps = {
 	className?: string;
+	defaultTheme?: Theme;
 	strings?: Partial<Record<Theme, string>> & {
 		themeLabel?: (name: string) => string;
 	};
@@ -36,17 +37,18 @@ const themeLabels: Record<Theme, string> = {
 
 export const ThemeSelector = ({
 	className,
+	defaultTheme = "system",
 	strings,
 	tooltipPlacement = "top",
 }: ThemeSelectorProps) => {
-	const [theme, setTheme] = React.useState<Theme>("system");
-	const themeRef = React.useRef<Theme>("system");
+	const [theme, setTheme] = React.useState(defaultTheme);
+	const themeRef = React.useRef(defaultTheme);
 	const Icon = themeIcons[theme];
 	const label = strings?.[theme] ?? themeLabels[theme];
 	const themeLabel = strings?.themeLabel?.(label) ?? `Theme: ${label}`;
 
 	React.useEffect(() => {
-		const savedTheme = getTheme();
+		const savedTheme = getTheme({ defaultTheme });
 		const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
 
 		const updateSystemTheme = () => {
@@ -59,7 +61,7 @@ export const ThemeSelector = ({
 
 		systemTheme.addEventListener("change", updateSystemTheme);
 		return () => systemTheme.removeEventListener("change", updateSystemTheme);
-	}, []);
+	}, [defaultTheme]);
 
 	const cycleTheme = ({
 		skipSystem = false,
