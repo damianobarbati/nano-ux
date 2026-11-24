@@ -91,8 +91,9 @@ test("demo build includes readable content before JavaScript runs", async () => 
 
 		assert.deepEqual(classHeadings, [
 			".card, .card-shell, .card-outline, .card-ghost, .card-tint",
-			".tint-cocoa, .tint-mint, .tint-mintlight, .tint-lime, .tint-cyan, .tint-ocean, .tint-violet, .tint-berry",
+			".tint, .tint-cocoa, .tint-mint, .tint-mintlight, .tint-lime, .tint-cyan, .tint-ocean, .tint-violet, .tint-berry",
 			".glow, .glow-cocoa, .glow-mint, .glow-mintlight, .glow-lime, .glow-cyan, .glow-ocean, .glow-violet, .glow-berry",
+			".text-glow, .text-glow-brand, .text-glow-*",
 			".anchor",
 			".typo-lg, .prose, .heading-hero, .text-box-trim, .trim-ex",
 			".light, .dark, .invert",
@@ -104,12 +105,32 @@ test("demo build includes readable content before JavaScript runs", async () => 
 			/<a class="anchor" href="#typography">Typography<\/a>/,
 		);
 
+		assert.match(
+			classCatalog,
+			/<code class="text-glow-\[#0ff\]">\.text-glow-\[#0ff\]<\/code>/,
+		);
+
+		assert.match(
+			classCatalog,
+			/<article id="reference-css-tints"[^>]*>(?:(?!<\/article>).)*?<ul[^>]*><li class="tint [^"]*"><code>\.tint<\/code><\/li>/s,
+		);
+
+		assert.match(
+			classCatalog,
+			/<li class="tint [^"]*\btint-\[#0ff\]"><code>\.tint-\[#0ff\]<\/code><\/li>/,
+		);
+
+		assert.match(
+			classCatalog,
+			/<li class="card card-tint [^"]*\bglow-\[#0ff\]"><code>\.glow-\[#0ff\]<\/code><\/li>/,
+		);
+
 		assert.doesNotMatch(
 			classCatalog,
 			/<code>\.(?:empty-state|badge|button|control)(?:-|<)/,
 		);
 
-		assert.doesNotMatch(classCatalog, /<code>(?!\.)/);
+		assert.doesNotMatch(classCatalog, /<code\b[^>]*>(?!\.)/);
 
 		const reference = html.slice(html.indexOf('<section id="reference"'));
 

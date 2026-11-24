@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "storybook dev --quiet --port 9000 --exact-port",
-    "build": "pnpm --filter demo run build && rm -rf dist && cp -R ../demo/dist dist && storybook build --output-dir dist/storybook-static",
+    "build": "pnpm -F demo run build && rm -rf dist && cp -R ../demo/dist dist && storybook build --output-dir dist/storybook-static",
     "preview": "vite preview --base /nano-ux/ --host 127.0.0.1 --port 9001"
   },
   "dependencies": {

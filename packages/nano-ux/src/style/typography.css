@@ -19,6 +19,7 @@
   --tracking-dashboard: calc(var(--tracking) * 1.5);
   --tracking-body: var(--tracking); /* Default text letter spacing. */
   --tracking-label: var(--tracking); /* Label and small text letter spacing. */
+  --text-glow-color-brand: var(--color-brand, currentColor);
 }
 
 @layer base {
@@ -230,9 +231,31 @@
     }
   }
 }
-@source inline("trim-ex");
+@source inline("trim-ex text-glow text-glow-brand");
 
 @utility trim-ex {
   text-box-trim: trim-both;
   text-box-edge: ex alphabetic;
+}
+
+@utility text-glow {
+  text-shadow:
+    0 0 0.4em color-mix(in srgb, currentColor 42%, transparent),
+    0 0 0.9em color-mix(in srgb, currentColor 24%, transparent);
+}
+
+@utility text-glow-* {
+  text-shadow:
+    0 0 0.4em
+    color-mix(
+      in srgb,
+      --value(--text-glow-color-*, --color-*, [color]) 42%,
+      transparent
+    ),
+    0 0 0.9em
+    color-mix(
+      in srgb,
+      --value(--text-glow-color-*, --color-*, [color]) 24%,
+      transparent
+    );
 }

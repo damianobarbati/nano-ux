@@ -44,9 +44,9 @@ fnm install --use
 npm install -g corepack
 corepack enable
 pnpm install
-pnpm run stop
-pnpm run dev
-pnpm run demo
+pnpm stop
+pnpm dev
+pnpm demo
 ```
 
 Storybook at <http://localhost:9000>.  

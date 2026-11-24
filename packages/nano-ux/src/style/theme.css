@@ -11,6 +11,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
+  .tint,
+  .card-tint {
+    --card-tint-color: initial;
+  }
+
   @media (width < 64rem) {
     html:has([data-nano-nav-open]),
     body:has([data-nano-nav-open]) {
@@ -222,8 +227,8 @@ html:has(dialog[data-nano-dialog][open]) body {
   }
 }
 
+.tint,
 .card-tint {
-  --card-tint-color: initial;
   --card-tint-accent: var(
     --card-tint-color,
     var(--theme-primary, var(--color-brand))
@@ -241,6 +246,7 @@ html:has(dialog[data-nano-dialog][open]) body {
   border-color: var(--card-tint-border, var(--color-border));
 }
 
+.tint > [data-mockup-bar],
 .card-tint > [data-mockup-bar] {
   --card-tint-bar: light-dark(
     color-mix(in srgb, var(--card-tint-accent) 16%, var(--color-surface)),
@@ -282,6 +288,10 @@ html:has(dialog[data-nano-dialog][open]) body {
   --card-tint-color: var(--color-berry);
 }
 
+@utility tint-* {
+  --card-tint-color: --value([color]);
+}
+
 :where(
   .glow,
   .glow-cocoa,
@@ -293,10 +303,11 @@ html:has(dialog[data-nano-dialog][open]) body {
   .glow-violet,
   .glow-berry
 ) {
-  --glow-color: var(
-    --theme-primary,
-    var(--color-brand, light-dark(black, white))
-  );
+  @apply glow-[color:var(--theme-primary,var(--color-brand,light-dark(black,white)))];
+}
+
+@utility glow-* {
+  --glow-color: --value([color]);
   box-shadow:
     inset 0 1px 0 light-dark(white, rgb(255 255 255 / 22%)),
     0 4px 18px light-dark(rgb(0 0 0 / 10%), rgb(255 255 255 / 8%)),

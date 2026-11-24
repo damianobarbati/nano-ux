@@ -42,6 +42,8 @@ const tints = [
 	"tint-berry",
 ];
 
+const tintClasses = ["tint", ...tints];
+
 const glows: { name: string; tint?: string }[] = [
 	{ name: "glow" },
 	...tints.map((tint) => ({ name: tint.replace(/^tint-/, "glow-"), tint })),
@@ -50,8 +52,8 @@ const glows: { name: string; tint?: string }[] = [
 const colorGridClassName =
 	"m-0 mt-3 grid list-none gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4";
 
-const colorSampleClassName =
-	"card card-tint grid min-w-0 place-items-center p-3";
+const colorSampleClassName = "grid min-w-0 place-items-center p-3";
+const tintedCardSampleClassName = cx("card card-tint", colorSampleClassName);
 
 const styles = [
 	{
@@ -105,15 +107,25 @@ const sections = [
 	},
 	{
 		id: "reference-css-tints",
-		names: tints,
+		names: tintClasses,
 		content: (
 			<>
 				<p>
-					Add a tint class to <code>.card-tint</code> to set its color.
+					Use <code>.tint</code> to tint the background and border with the
+					theme accent. If no accent is set, it uses the standard surface and
+					border colors. Add a color class such as <code>.tint-ocean</code> to
+					set the tint. Use a hex color in brackets with nano-ux/tailwind.css.
 				</p>
 				<ul className={colorGridClassName}>
-					{tints.map((name) => (
-						<li key={name} className={cx(colorSampleClassName, name)}>
+					{[...tintClasses, "tint-[#0ff]"].map((name) => (
+						<li
+							key={name}
+							className={cx(
+								"tint rounded-card border",
+								colorSampleClassName,
+								name !== "tint" && name,
+							)}
+						>
 							<code>{`.${name}`}</code>
 						</li>
 					))}
@@ -128,12 +140,46 @@ const sections = [
 			<>
 				<p>
 					Use <code>.glow</code> or <code>.glow-*</code> to add a glow with the
-					theme accent or a theme color.
+					theme accent or a theme color. Use a hex color in brackets with
+					nano-ux/tailwind.css.
 				</p>
 				<ul className={colorGridClassName}>
-					{glows.map(({ name, tint }) => (
-						<li key={name} className={cx(colorSampleClassName, name, tint)}>
+					{[...glows, { name: "glow-[#0ff]" }].map(({ name, tint }) => (
+						<li
+							key={name}
+							className={cx(tintedCardSampleClassName, name, tint)}
+						>
 							<code>{`.${name}`}</code>
+						</li>
+					))}
+				</ul>
+			</>
+		),
+	},
+	{
+		id: "reference-css-text-glows",
+		names: ["text-glow", "text-glow-brand", "text-glow-*"],
+		content: (
+			<>
+				<p>
+					Use <code>.text-glow</code> for a glow in the current text color. Use{" "}
+					<code>.text-glow-brand</code> for the brand color. If the brand color
+					is unset, the glow uses the current text color.
+				</p>
+				<p>
+					nano-ux/theme.css includes both classes. With nano-ux/tailwind.css,
+					use <code>.text-glow-*</code> to generate variants for theme colors or
+					custom colors.
+				</p>
+				<ul className={colorGridClassName}>
+					{[
+						"text-glow",
+						"text-glow-brand",
+						"text-glow-ocean",
+						"text-glow-[#0ff]",
+					].map((name) => (
+						<li key={name} className={tintedCardSampleClassName}>
+							<code className={name}>{`.${name}`}</code>
 						</li>
 					))}
 				</ul>

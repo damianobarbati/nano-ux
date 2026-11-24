@@ -10,14 +10,14 @@
   },
   "packageManager": "pnpm@12.23.0",
   "scripts": {
-    "build": "pnpm --filter nano-ux run build && pnpm --filter website run build",
+    "build": "pnpm -F nano-ux run build && pnpm -F website run build",
     "lint": "oxlint && biome check && pnpm -r run lint",
-    "test": "pnpm --filter nano-ux run build && pnpm --filter demo run test",
-    "release": "pnpm --filter nano-ux publish --no-git-checks",
+    "test": "pnpm -F nano-ux run build && pnpm -F demo run test",
+    "release": "pnpm -F nano-ux publish --no-git-checks",
     "stop": "for port in 9000 9001; do lsof -nP -tiTCP:$port -sTCP:LISTEN | while read -r pid; do kill \"$pid\"; done; done",
-    "dev": "pnpm --filter nano-ux run build && pnpm --filter website run dev",
-    "demo": "pnpm --filter nano-ux run build && pnpm --parallel --filter nano-ux --filter demo run dev",
-    "preview": "pnpm --filter website run preview",
+    "dev": "pnpm -F nano-ux run build && pnpm -F website run dev",
+    "demo": "pnpm -F nano-ux run build && pnpm --parallel --filter nano-ux --filter demo run dev",
+    "preview": "pnpm -F website run preview",
     "bump": "pnpm -r --include-workspace-root version"
   },
   "devDependencies": {
