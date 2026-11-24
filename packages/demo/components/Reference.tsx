@@ -362,9 +362,11 @@ const options = [${colorOptions.map(({ label }) => JSON.stringify(label)).join("
 		kind: "Component",
 		title: "TableVirtual",
 		description:
-			"Scroll through 10,000 sample users with Name and Email columns. The preview loads 50 users at a time. Include every active filter in the key. Loading stops when the API returns fewer than 50 rows.",
+			"The preview shows all 10,000 matching users while loading 50 rows at a time. The example imports countProfiles and listProfiles from your application. Use Repository.count with the same filters as listProfiles. Apply pagination only to listProfiles.",
 		language: "tsx",
-		text: `import { Button, createColumnHelper, TableVirtual, type tableVirtualFeatures, useInfiniteTable } from "nano-ux";
+		text: `import { createColumnHelper, TableVirtual, type tableVirtualFeatures, useInfiniteTable } from "nano-ux";
+import useSWR from "swr";
+import { countProfiles, listProfiles } from "./profiles-api";
 
 type Profile = { name: string; email: string };
 const column = createColumnHelper<typeof tableVirtualFeatures, Profile>();
@@ -373,33 +375,27 @@ const columns = column.columns([
   column.accessor("email", { header: "Email" }),
 ]);
 
-export const ProfileList = ({ search }: { search: string }) => {
-  const { tableKey, tableProps, error, mutate } = useInfiniteTable<Profile>({
-    key: ["/api/profiles", search],
+type ProfileListProps = { search: string; className?: string };
+
+export const ProfileList = ({ search, className = "h-96" }: ProfileListProps) => {
+  const { data: total } = useSWR(["profiles/count", search], () =>
+    countProfiles({ search }),
+  );
+
+  const { tableKey, tableProps } = useInfiniteTable<Profile>({
+    key: ["profiles", search],
     pageSize: 50,
-    fetchPage: async ({ offset, limit }) => {
-      const params = new URLSearchParams({
-        search, page: String(offset / limit + 1), limit: String(limit),
-      });
-      const response = await fetch("/api/profiles?" + params);
-      if (!response.ok) throw new Error("Could not load profiles.");
-      return response.json();
-    },
+    fetchPage: ({ offset, limit }) => listProfiles({ search, offset, limit }),
   });
 
   return (
-    <>
-      <TableVirtual
-        key={tableKey}
-        columns={columns}
-        className="h-96"
-        emptyMessage="No profiles found."
-        {...tableProps}
-      />
-      {error && <p role="alert">{error.message}{" "}
-        <Button type="button" onClick={() => mutate()}>Retry</Button>
-      </p>}
-    </>
+    <TableVirtual
+      key={tableKey}
+      className={className}
+      columns={columns}
+      totalCount={total ?? null}
+      {...tableProps}
+    />
   );
 };`,
 		preview: <ReferenceTablePreview />,

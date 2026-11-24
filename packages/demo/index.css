@@ -23,6 +23,14 @@ body {
   margin-inline: auto;
 }
 
+.site-header {
+  padding-inline-end: clamp(
+    0px,
+    calc(3.25rem + (var(--container-7xl) - 100vw) / 2),
+    3.25rem
+  );
+}
+
 @media (width < 48rem) {
   html {
     overflow-x: clip;

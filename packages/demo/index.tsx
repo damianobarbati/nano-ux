@@ -30,7 +30,7 @@ import {
 	useInViewOnce,
 } from "nano-ux";
 
-import { IGitHub } from "nano-ux/icons";
+import { IGitHub, ILinkedIn } from "nano-ux/icons";
 import React from "react";
 import { flushSync } from "react-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
@@ -110,7 +110,7 @@ export const App = () => {
 
 	return (
 		<>
-			<header className="relative z-30 flex h-14 items-center gap-3 border-b border-border bg-bg pe-14 sm:gap-6 lg:h-auto lg:py-4 lg:[reading-flow:flex-visual]">
+			<header className="site-header relative z-30 flex h-14 items-center gap-3 border-b border-border bg-bg sm:gap-6 lg:h-auto lg:py-4 lg:[reading-flow:flex-visual]">
 				<Nav
 					label="Page sections"
 					className="text-sm lg:flex-wrap max-lg:[&>a]:px-2 max-lg:[&>a]:py-3"
@@ -249,11 +249,27 @@ createRoot(document.getElementById("root")).render(<App />);`}
 					<img className="brand-logo size-8" src={darkLogo} alt="" />
 					<span>nano-ux</span>
 				</div>
-				<p className="m-0 text-sm text-fg-muted">
+				<p className="m-0 text-sm">
 					Copyright{" "}
-					<a href="https://linkedin.com/in/damianobarbati">Damiano Barbati</a>
+					<strong className="font-bold">
+						<a
+							className="no-underline"
+							href="https://damianobarbati.github.io/hq/"
+						>
+							Damiano Barbati
+						</a>
+					</strong>
 				</p>
-				<ContactButton className="ms-auto" />
+				<div className="ms-auto flex items-center gap-4 text-sm">
+					<a
+						className="inline-flex items-center gap-2"
+						href="https://linkedin.com/in/damianobarbati"
+					>
+						<ILinkedIn className="size-5 shrink-0" aria-hidden="true" />
+						<span>LinkedIn</span>
+					</a>
+					<ContactButton />
+				</div>
 			</footer>
 		</>
 	);

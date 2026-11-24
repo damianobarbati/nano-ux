@@ -16,6 +16,7 @@ type TableFrameProps = {
 	fillHeight?: boolean;
 	children: React.ReactNode;
 	count: number;
+	totalCount?: number | null;
 	emptyMessage?: string;
 	loading?: boolean;
 	footer?: React.ReactNode;
@@ -27,6 +28,7 @@ export const TableFrame = ({
 	fillHeight = false,
 	children,
 	count,
+	totalCount,
 	strings,
 	emptyMessage = strings?.empty ?? "No data found.",
 	loading,
@@ -34,6 +36,8 @@ export const TableFrame = ({
 	bodyScroll,
 }: TableFrameProps) => {
 	const frameRef = React.useRef<HTMLDivElement>(null);
+	const resultCount = totalCount === undefined ? count : totalCount;
+	const showResultCount = !loading || totalCount !== undefined || count > 0;
 
 	React.useLayoutEffect(() => {
 		if (!loading) return;
@@ -95,10 +99,10 @@ export const TableFrame = ({
 			</div>
 			<div className="table-footer">
 				{footer ??
-					((!loading || count > 0) && (
+					(showResultCount && resultCount !== null && (
 						<span>
-							{strings?.resultCount?.(count) ??
-								`${count} ${count === 1 ? "result" : "results"}`}
+							{strings?.resultCount?.(resultCount) ??
+								`${resultCount.toLocaleString("en")} ${resultCount === 1 ? "result" : "results"}`}
 						</span>
 					))}
 			</div>

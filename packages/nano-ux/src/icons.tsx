@@ -3,6 +3,7 @@ export { CgSpinner as ISpinner } from "react-icons/cg";
 export {
 	FaEdge as IEdge,
 	FaLaptop as ILaptop,
+	FaLinkedin as ILinkedIn,
 	FaMobileScreenButton as IPhone,
 	FaTabletScreenButton as ITablet,
 	FaWindows as IWindows,

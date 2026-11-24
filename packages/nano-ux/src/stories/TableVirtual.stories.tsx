@@ -20,10 +20,13 @@ const columns = column.columns([
 
 type PageRequest = { offset: number; limit: number; group: string };
 
+const countWebsites = ({ group }: Pick<PageRequest, "group">) =>
+	group === "All" ? 64 : 61;
+
 const loadWebsites = async ({ offset, limit, group }: PageRequest) => {
 	await new Promise<void>((resolve) => window.setTimeout(resolve, 100));
 
-	const count = group === "All" ? 64 : 61;
+	const count = countWebsites({ group });
 	return Array.from(
 		{ length: Math.min(limit, Math.max(0, count - offset)) },
 		(_, index) => ({
@@ -57,6 +60,7 @@ const InfiniteWebsites = () => {
 				key={tableKey}
 				{...tableProps}
 				columns={columns}
+				totalCount={countWebsites({ group })}
 				emptyMessage="No websites found."
 				className="[&_tbody]:max-h-90"
 				getRowId={(row) => row.domain}

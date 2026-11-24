@@ -62,12 +62,12 @@ test("demo build includes readable content before JavaScript runs", async () => 
 
 		assert.match(
 			footer[1],
-			/Copyright(?:<!-- -->)? (?:<!-- -->)?<a href="https:\/\/linkedin\.com\/in\/damianobarbati">Damiano Barbati<\/a>/,
+			/<p\b[^>]*>Copyright(?:<!-- -->)? (?:<!-- -->)?<strong\b[^>]*><a\b[^>]*href="https:\/\/damianobarbati\.github\.io\/hq\/">Damiano Barbati<\/a><\/strong><\/p>/,
 		);
 
 		assert.match(
 			footer[1],
-			/<button\b[^>]*type="button"><svg\b[^>]*aria-hidden="true"[^>]*>.*?<\/svg><span>Contact me<\/span><\/button>/s,
+			/<a\b[^>]*href="https:\/\/linkedin\.com\/in\/damianobarbati"><svg\b[^>]*aria-hidden="true"[^>]*>.*?<\/svg><span>LinkedIn<\/span><\/a><button\b[^>]*type="button"><svg\b[^>]*aria-hidden="true"[^>]*>.*?<\/svg><span>Contact me<\/span><\/button>/s,
 		);
 
 		assert.doesNotMatch(html, /mailto:|damiano\.barbati@gmail\.com/);
@@ -180,6 +180,11 @@ test("demo build includes readable content before JavaScript runs", async () => 
 			"Hook",
 			"Function",
 		]);
+
+		assert.match(
+			reference,
+			/<article id="reference-table-virtual"[^>]*>(?:(?!<\/article>).)*<div class="table-footer"><span>10,000 results<\/span><\/div>/s,
+		);
 
 		for (const [id, snippet] of [
 			["theme", "import { ThemeSelector } from &quot;nano-ux&quot;"],

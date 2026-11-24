@@ -36,6 +36,7 @@ export const ReferenceTablePreview = ({
 			key={tableKey}
 			className={cx("h-96", className)}
 			columns={columns}
+			totalCount={profiles.length}
 			emptyMessage="No profiles found."
 			{...tableProps}
 		/>

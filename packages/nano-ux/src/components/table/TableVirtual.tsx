@@ -28,6 +28,8 @@ export type TableVirtualProps<T extends object> = TableSortingProps & {
 	fillHeight?: boolean;
 	columns: ColumnDef<typeof tableVirtualFeatures, T>[];
 	data: T[];
+	/** Total matching rows across pages. Pass null while the total is unknown. */
+	totalCount?: number | null;
 	getRowId?: (row: T) => string;
 	onEndReached?: () => void;
 	loading?: boolean;
@@ -43,6 +45,7 @@ export const TableVirtual = <T extends object>({
 	fillHeight,
 	columns,
 	data,
+	totalCount,
 	getRowId,
 	onEndReached,
 	loading,
@@ -136,6 +139,7 @@ export const TableVirtual = <T extends object>({
 			className={className}
 			fillHeight={fillHeight}
 			count={rows.length}
+			totalCount={totalCount}
 			strings={strings}
 			emptyMessage={emptyMessage}
 			loading={loading}
