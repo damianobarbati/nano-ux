@@ -1,4 +1,13 @@
 @layer components {
+  .code-frame,
+  .prism-code {
+    @apply bg-layer;
+  }
+
+  :where(.card-tint) :is(.code-frame, .prism-code) {
+    @apply bg-transparent;
+  }
+
   .prism-code > code {
     color: inherit;
     font: inherit;

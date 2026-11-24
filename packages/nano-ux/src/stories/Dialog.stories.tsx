@@ -1,6 +1,10 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
+import { Form } from "../components/Form.tsx";
+import { Input } from "../components/Input.tsx";
 import { Toast } from "../components/Toast.tsx";
 
 export default { title: "Components / Dialog", component: Dialog };
@@ -81,6 +85,28 @@ const LessonDetailsExample = (options: LessonDetailsOptions) => {
 	);
 };
 
+const EditNameExample = () => {
+	const [open, setOpen] = React.useState(false);
+	const form = useForm({ defaultValues: { name: "", reference: "" } });
+	return (
+		<>
+			<Button onClick={() => setOpen(true)}>Edit name</Button>
+			<Dialog open={open} title="Edit name" onClose={() => setOpen(false)}>
+				<Form
+					className="grid gap-3"
+					form={form}
+					onSubmit={() => setOpen(false)}
+				>
+					<input type="hidden" name="id" value="1" />
+					<Input label="Reference" name="reference" disabled />
+					<Input label="Name" name="name" />
+					<Button type="submit">Save</Button>
+				</Form>
+			</Dialog>
+		</>
+	);
+};
+
 export const Variants = {
 	name: "Dialog",
 	args: { fullscreen: true, closeOnBackdrop: false },
@@ -100,4 +126,43 @@ export const Variants = {
 			</section>
 		</div>
 	),
+	play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+		const canvas = within(canvasElement);
+		const opener = canvas.getByRole("button", { name: "Lesson details" });
+
+		await userEvent.click(opener);
+
+		const dialog = await canvas.findByRole("dialog", {
+			name: "Lesson details",
+		});
+
+		const close = within(dialog).getByRole("button", { name: "Chiudi" });
+
+		await waitFor(() => expect(dialog).toHaveFocus());
+
+		await userEvent.click(close);
+		await waitFor(() => expect(opener).toHaveFocus());
+	},
+};
+
+export const WithForm = {
+	render: () => <EditNameExample />,
+	play: async ({ canvasElement }: { canvasElement: HTMLElement }) => {
+		const canvas = within(canvasElement);
+		const opener = canvas.getByRole("button", { name: "Edit name" });
+
+		await userEvent.click(opener);
+
+		const dialog = await canvas.findByRole("dialog", { name: "Edit name" });
+
+		const name = within(dialog).getByRole("textbox", {
+			name: "Name",
+			exact: true,
+		});
+
+		await waitFor(() => expect(name).toHaveFocus());
+
+		await userEvent.keyboard("Alex{Enter}");
+		await waitFor(() => expect(opener).toHaveFocus());
+	},
 };

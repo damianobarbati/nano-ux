@@ -39,6 +39,7 @@
         body,
         header,
         .card,
+        .card-shell,
         .card-outline,
         .card-ghost,
         .control-field,
@@ -101,16 +102,22 @@
   }
 
   .card,
+  .card-shell,
   .card-outline,
   .card-ghost {
     @apply rounded-card border p-6 text-fg;
   }
   .card,
+  .card-shell,
   .card-outline {
     @apply border-border;
   }
-  .card {
+  .card,
+  .card-shell {
     @apply bg-surface dark:shadow-sm;
+  }
+  .card-shell {
+    @apply p-0;
   }
   .card-outline {
     @apply bg-transparent shadow-none;
@@ -213,6 +220,126 @@ html:has(dialog[data-nano-dialog][open]) body {
   .robinson-map path {
     transition: fill 300ms cubic-bezier(0.215, 0.61, 0.355, 1);
   }
+}
+
+.card-tint {
+  --card-tint-color: initial;
+  --card-tint-accent: var(
+    --card-tint-color,
+    var(--theme-primary, var(--color-brand))
+  );
+  --card-tint-border: color-mix(
+    in srgb,
+    var(--card-tint-accent) 30%,
+    var(--color-border)
+  );
+  --card-tint-surface: light-dark(
+    color-mix(in srgb, var(--card-tint-accent) 10%, var(--color-surface)),
+    color-mix(in srgb, var(--card-tint-accent) 8%, var(--color-bg))
+  );
+  background-color: var(--card-tint-surface, var(--color-surface));
+  border-color: var(--card-tint-border, var(--color-border));
+}
+
+.card-tint > [data-mockup-bar] {
+  --card-tint-bar: light-dark(
+    color-mix(in srgb, var(--card-tint-accent) 16%, var(--color-surface)),
+    color-mix(in srgb, var(--card-tint-accent) 14%, var(--color-bg))
+  );
+  background-color: var(--card-tint-bar, transparent);
+  border-color: var(--card-tint-border, var(--color-border));
+}
+
+.tint-cocoa {
+  --card-tint-color: var(--color-cocoa);
+}
+
+.tint-mint {
+  --card-tint-color: var(--color-mint);
+}
+
+.tint-mintlight {
+  --card-tint-color: var(--color-mintlight);
+}
+
+.tint-lime {
+  --card-tint-color: var(--color-lime);
+}
+
+.tint-cyan {
+  --card-tint-color: var(--color-cyan);
+}
+
+.tint-ocean {
+  --card-tint-color: var(--color-ocean);
+}
+
+.tint-violet {
+  --card-tint-color: var(--color-violet);
+}
+
+.tint-berry {
+  --card-tint-color: var(--color-berry);
+}
+
+:where(
+  .card,
+  .card-shell,
+  .glow,
+  .glow-cocoa,
+  .glow-mint,
+  .glow-mintlight,
+  .glow-lime,
+  .glow-cyan,
+  .glow-ocean,
+  .glow-violet,
+  .glow-berry
+) {
+  --glow-color: var(
+    --theme-primary,
+    var(--color-brand, light-dark(black, white))
+  );
+  box-shadow:
+    inset 0 1px 0 light-dark(white, rgb(255 255 255 / 22%)),
+    0 4px 18px light-dark(rgb(0 0 0 / 10%), rgb(255 255 255 / 8%)),
+    0 0 5rem color-mix(in srgb, var(--glow-color) 9%, transparent),
+    var(--glow-shadow, 0 0 transparent);
+}
+
+.glow-cocoa {
+  --glow-color: var(--color-cocoa);
+}
+
+.glow-mint {
+  --glow-color: var(--color-mint);
+}
+
+.glow-mintlight {
+  --glow-color: var(--color-mintlight);
+}
+
+.glow-lime {
+  --glow-color: var(--color-lime);
+}
+
+.glow-cyan {
+  --glow-color: var(--color-cyan);
+}
+
+.glow-ocean {
+  --glow-color: var(--color-ocean);
+}
+
+.glow-violet {
+  --glow-color: var(--color-violet);
+}
+
+.glow-berry {
+  --glow-color: var(--color-berry);
+}
+
+.glow-none {
+  box-shadow: none;
 }
 
 .robinson-map path:hover {

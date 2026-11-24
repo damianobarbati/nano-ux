@@ -47,7 +47,10 @@ export const Mockup = ({
 				className,
 			)}
 		>
-			<div className="flex h-10 items-center gap-4 border-b border-border bg-inherit px-5">
+			<div
+				className="flex h-10 items-center gap-4 border-b border-border bg-inherit px-5"
+				data-mockup-bar=""
+			>
 				<span className="flex shrink-0 gap-2">
 					<span className="size-2.5 rounded-full bg-[#ff5f57]" />
 					<span className="size-2.5 rounded-full bg-[#febc2e]" />

@@ -9,7 +9,7 @@ import { Spinner } from "./Spinner.tsx";
 import { Toast } from "./Toast.tsx";
 
 const codeClassName =
-	"prism-code min-w-0 overflow-x-auto rounded-control bg-layer p-6 font-mono text-sm leading-6 whitespace-pre text-fg";
+	"prism-code min-w-0 overflow-x-auto rounded-control p-6 font-mono text-sm leading-6 whitespace-pre text-fg";
 
 const grammarNames: Record<string, string> = {
 	html: "markup",
@@ -95,7 +95,7 @@ export const Code = ({
 	return (
 		<div
 			className={cx(
-				"relative min-w-0 rounded-control bg-layer pr-14",
+				"code-frame relative min-w-0 rounded-control pr-14",
 				className,
 			)}
 		>

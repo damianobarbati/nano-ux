@@ -49,6 +49,11 @@ export const Variants: StoryObj<typeof meta> = {
 						<h3>Without copy</h3>
 						<Code {...meta.args} copyable={false} />
 					</section>
+					<section className="card card-tint tint-mint grid min-w-0 gap-2">
+						<h3>Mint card</h3>
+						<Code {...meta.args} />
+						<Code {...meta.args} copyable={false} />
+					</section>
 				</section>
 			))}
 		</main>

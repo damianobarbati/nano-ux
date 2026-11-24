@@ -41,12 +41,34 @@ export const Dialog = ({
 	busy = false,
 }: DialogProps) => {
 	const ref = React.useRef<HTMLDialogElement>(null);
+	const titleId = React.useId();
 
 	React.useEffect(() => {
 		const dialog = ref.current;
 		if (!dialog) return;
 
-		if (open && !dialog.open) dialog.showModal();
+		if (open && !dialog.open) {
+			dialog.setAttribute("autofocus", "");
+			dialog.showModal();
+
+			const fields = dialog.querySelectorAll<
+				HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+			>(
+				':is(input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="image"]), textarea, select):not(:disabled, [readonly])',
+			);
+
+			for (const field of fields) {
+				if (!dialog.contains(field.form) || field.closest("dialog") !== dialog)
+					continue;
+
+				field.focus();
+
+				if (dialog.ownerDocument.activeElement === field) return;
+			}
+
+			if (dialog.ownerDocument.activeElement !== dialog)
+				dialog.focus({ preventScroll: true });
+		}
 
 		if (!open && dialog.open) dialog.close();
 	}, [open]);
@@ -66,10 +88,11 @@ export const Dialog = ({
 		<dialog
 			ref={ref}
 			className={cx(
-				"flex-col border-border bg-surface text-fg shadow-xl backdrop:bg-fg/50 open:flex",
+				"flex-col border-border bg-surface text-fg shadow-xl backdrop:bg-fg/50 open:flex focus:outline-none",
 				layoutClassName,
 				className,
 			)}
+			aria-labelledby={titleId}
 			data-nano-dialog=""
 			onClick={(event) => {
 				if (
@@ -100,9 +123,9 @@ export const Dialog = ({
 			}}
 		>
 			<header className="flex shrink-0 items-center justify-between gap-3">
-				<h2>{title}</h2>
+				<h2 id={titleId}>{title}</h2>
 				{!onConfirm && (
-					<Button variant="ghost" disabled={busy} onClick={onClose} autoFocus>
+					<Button variant="ghost" disabled={busy} onClick={onClose}>
 						{closeLabel}
 					</Button>
 				)}
@@ -112,7 +135,7 @@ export const Dialog = ({
 			</div>
 			{onConfirm && (
 				<footer className="mt-6 flex shrink-0 justify-end gap-3">
-					<Button variant="ghost" disabled={busy} onClick={onClose} autoFocus>
+					<Button variant="ghost" disabled={busy} onClick={onClose}>
 						{cancelLabel}
 					</Button>
 					<Button strings={strings} loading={busy} onClick={onConfirm}>

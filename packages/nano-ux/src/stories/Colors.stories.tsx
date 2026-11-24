@@ -77,6 +77,12 @@ const productColors: ProductColor[] = [
 		property: "backgroundColor",
 	},
 	{
+		name: "Mintlight",
+		token: "mintlight",
+		className: "bg-mintlight",
+		property: "backgroundColor",
+	},
+	{
 		name: "Lime",
 		token: "lime",
 		className: "bg-lime",
@@ -114,8 +120,10 @@ const productColorStyles: Record<
 		tintedCard: string;
 		neutralCard: string;
 		accent: string;
+		tintedAccent?: string;
 		tint: string;
 		border: string;
+		contrastLabel?: string;
 	}
 > = {
 	cocoa: {
@@ -132,12 +140,22 @@ const productColorStyles: Record<
 		tint: "bg-mint-tint",
 		border: "border-mint",
 	},
+	mintlight: {
+		tintedCard: "bg-mintlight-tint border-mintlight",
+		neutralCard: "bg-bg border-mintlight",
+		accent: "text-mint dark:text-mintlight",
+		tint: "bg-mintlight-tint",
+		border: "border-mintlight",
+		contrastLabel: "Text on Mintlight tint",
+	},
 	lime: {
 		tintedCard: "bg-lime-tint border-lime",
 		neutralCard: "bg-bg border-lime",
 		accent: "text-lime",
+		tintedAccent: "text-fg dark:text-lime",
 		tint: "bg-lime-tint",
 		border: "border-lime",
+		contrastLabel: "Text on Lime tint",
 	},
 	cyan: {
 		tintedCard: "bg-cyan-tint border-cyan",
@@ -325,27 +343,26 @@ const TokenGrid = ({
 };
 
 const ProductSelectorCard = ({
-	color,
-	treatment,
+	className,
+	accentClass,
 }: {
-	color: ProductColor;
-	treatment: "tinted" | "neutral";
+	className?: string;
+	accentClass: string;
 }) => {
-	const styles = productColorStyles[color.token];
 	return (
 		<article
 			className={cx(
 				"flex min-h-56 flex-col items-start gap-4 rounded-card border border-border p-5",
-				treatment === "tinted" ? styles.tintedCard : styles.neutralCard,
+				className,
 			)}
 		>
-			<ICard aria-hidden="true" className={cx("size-6", styles.accent)} />
+			<ICard aria-hidden="true" className={cx("size-6", accentClass)} />
 			<h4 className="text-lg">Project details</h4>
-			<p className="text-sm text-fg">
+			<p className="text-sm">
 				Verify customer identities with secure document checks.
 			</p>
 			<Button
-				className={cx("border-current bg-transparent", styles.accent)}
+				className={cx("border-current bg-transparent", accentClass)}
 				size="sm"
 				variant="ghost"
 			>
@@ -357,24 +374,33 @@ const ProductSelectorCard = ({
 
 const ProductSelectorExamples = ({ colors }: { colors: ProductColor[] }) => (
 	<div className="mt-6 grid gap-x-6 gap-y-5">
-		{colors.map((color) => (
-			<div
-				className="grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(10rem,0.7fr)_2fr]"
-				key={color.token}
-			>
-				<ProductColorSample color={color} />
-				<div className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
-					<div className="grid gap-x-6 gap-y-2">
-						<span className="text-sm text-fg-muted">Neutral surface</span>
-						<ProductSelectorCard color={color} treatment="neutral" />
-					</div>
-					<div className="grid gap-x-6 gap-y-2">
-						<span className="text-sm text-fg-muted">Tinted hover</span>
-						<ProductSelectorCard color={color} treatment="tinted" />
+		{colors.map((color) => {
+			const styles = productColorStyles[color.token];
+			return (
+				<div
+					className="grid gap-x-6 gap-y-3 lg:grid-cols-[minmax(10rem,0.7fr)_2fr]"
+					key={color.token}
+				>
+					<ProductColorSample color={color} />
+					<div className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+						<div className="grid gap-x-6 gap-y-2">
+							<span className="text-sm text-fg-muted">Neutral surface</span>
+							<ProductSelectorCard
+								className={styles.neutralCard}
+								accentClass={styles.accent}
+							/>
+						</div>
+						<div className="grid gap-x-6 gap-y-2">
+							<span className="text-sm text-fg-muted">Tinted hover</span>
+							<ProductSelectorCard
+								className={styles.tintedCard}
+								accentClass={styles.tintedAccent ?? styles.accent}
+							/>
+						</div>
 					</div>
 				</div>
-			</div>
-		))}
+			);
+		})}
 	</div>
 );
 
@@ -503,15 +529,17 @@ const ThemePanel = ({ mode }: { mode: "light" | "dark" }) => {
 
 			<section className="grid gap-4">
 				<h3>Colors</h3>
-				<TokenGrid colors={productColors} fixedColumns={6} />
-				<div className="grid grid-cols-6 gap-x-6 gap-y-2">
+				<TokenGrid className="lg:grid-cols-6" colors={productColors} />
+				<div className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3 lg:grid-cols-6">
 					{productColors.map((color) => {
 						const styles = productColorStyles[color.token];
 						return (
 							<ContrastPair
 								key={color.token}
-								label={`${color.name} on ${color.name} tint`}
-								foregroundClass={styles.accent}
+								label={
+									styles.contrastLabel ?? `${color.name} on ${color.name} tint`
+								}
+								foregroundClass={styles.tintedAccent ?? styles.accent}
 								backgroundClass={styles.tint}
 								borderClass={styles.border}
 							/>
