@@ -369,10 +369,15 @@ export const SelectMulti = (props: SelectMultiProps) => {
 	};
 
 	const openMenu = () => {
+		const selectedIndex =
+			mode === "one"
+				? selectable.findIndex((option) => selectedValues.has(option.value))
+				: -1;
+
 		setSelectedOnOpen(selectedValues);
 		setOptionCountOnOpen(options.length);
 		setQuery("");
-		setActive(0);
+		setActive(Math.max(0, selectedIndex));
 		setOpen(true);
 	};
 
@@ -602,9 +607,7 @@ export const SelectMulti = (props: SelectMultiProps) => {
 								id={optionId}
 								type="button"
 								disabled={option.disabled}
-								aria-pressed={
-									mode === "many" ? selectedValues.has(option.value) : undefined
-								}
+								aria-pressed={selectedValues.has(option.value)}
 								tabIndex={-1}
 								className={cx(
 									"flex w-full cursor-pointer items-center gap-2 rounded-control px-3 py-2 text-left text-sm text-fg hover:bg-layer disabled:cursor-not-allowed disabled:opacity-50",
@@ -613,14 +616,13 @@ export const SelectMulti = (props: SelectMultiProps) => {
 								onMouseDown={(event) => event.preventDefault()}
 								onClick={() => choose(option)}
 							>
-								{mode === "many" && (
-									<ICheck
-										className={cx(
-											"size-4 shrink-0",
-											!selectedValues.has(option.value) && "invisible",
-										)}
-									/>
-								)}
+								<ICheck
+									className={cx(
+										"size-4 shrink-0",
+										!selectedValues.has(option.value) && "invisible",
+									)}
+									aria-hidden="true"
+								/>
 								{option.content ?? option.label}
 							</button>
 						))}

@@ -342,8 +342,8 @@ export const SingleSelectionInteraction = {
 			canvas.getByRole("dialog", { name: "Single selection" }),
 		);
 
-		await userEvent.click(menu.getByRole("button", { name: "website.test" }));
-		await expect(trigger).toHaveTextContent("website.test");
+		await userEvent.click(menu.getByRole("button", { name: "example.com" }));
+		await expect(trigger).toHaveTextContent("example.com");
 		await userEvent.click(trigger);
 
 		await expect(
@@ -355,6 +355,20 @@ export const SingleSelectionInteraction = {
 			"acme.dev",
 			"demo.app",
 		]);
+
+		const selectedOption = menu.getByRole("button", { name: "example.com" });
+
+		await expect(selectedOption).toHaveAttribute("aria-pressed", "true");
+
+		await userEvent.keyboard("{ArrowDown}");
+
+		await expect(
+			selectedOption.querySelector('svg[aria-hidden="true"]'),
+		).toBeVisible();
+
+		await userEvent.keyboard("{Enter}");
+
+		await expect(trigger).toHaveTextContent("website.test");
 	},
 };
 
