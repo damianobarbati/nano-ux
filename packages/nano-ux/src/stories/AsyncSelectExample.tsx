@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "../components/Button.tsx";
 import type { SelectOptionsFetcher } from "../hooks/useSelectOptions.ts";
 
 function createFetcher(): SelectOptionsFetcher {
@@ -35,13 +34,13 @@ export const AsyncSelectExample = ({
 	return (
 		<div className="grid gap-2">
 			{children(fetcher)}
-			<Button
-				className="justify-self-start"
-				variant="outline"
+			<button
+				className="anchor justify-self-start text-sm"
+				type="button"
 				onClick={() => setFetcher(() => createFetcher())}
 			>
 				Reload options
-			</Button>
+			</button>
 		</div>
 	);
 };

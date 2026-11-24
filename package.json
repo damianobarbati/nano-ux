@@ -1,5 +1,6 @@
 {
   "name": "nano-ux-monorepo",
+  "version": "0.0.12",
   "private": true,
   "type": "module",
   "repository": "https://github.com/damianobarbati/nano-ux",
@@ -16,7 +17,8 @@
     "stop": "for port in 9000 9001; do lsof -nP -tiTCP:$port -sTCP:LISTEN | while read -r pid; do kill \"$pid\"; done; done",
     "dev": "pnpm --filter nano-ux run build && pnpm --filter website run dev",
     "demo": "pnpm --filter nano-ux run build && pnpm --parallel --filter nano-ux --filter demo run dev",
-    "preview": "pnpm --filter website run preview"
+    "preview": "pnpm --filter website run preview",
+    "bump": "pnpm -r --include-workspace-root version"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.8",

@@ -16,6 +16,12 @@ import { ICheck, IChevronDown } from "../icons.tsx";
 import { FieldMessage } from "./FieldMessage.tsx";
 import { Spinner } from "./Spinner.tsx";
 
+import {
+	hideSelectMultiPanel,
+	positionSelectMultiPanel,
+	selectMultiMaxPopoverRows,
+} from "./selectMultiPanel.ts";
+
 export type SelectMultiOption = SelectOption;
 
 type SelectMultiBaseProps = FormFieldProps & {
@@ -27,6 +33,7 @@ type SelectMultiBaseProps = FormFieldProps & {
 		searchPlaceholder?: string;
 		clearAll?: string;
 		selectAll?: string;
+		close?: string;
 	};
 	className?: string;
 
@@ -36,6 +43,8 @@ type SelectMultiBaseProps = FormFieldProps & {
 	searchPlaceholder?: string;
 	emptyLabel?: string;
 	disabled?: boolean;
+	/** Below 768 px, auto uses fullscreen when more than eight options exist at opening. */
+	mobileDisplay?: "auto" | "popover" | "fullscreen";
 };
 
 type SelectManyProps = SelectMultiBaseProps & {
@@ -57,6 +66,8 @@ type OptionsSource =
 export type SelectMultiProps = (SelectManyProps | SelectOneProps) &
 	OptionsSource;
 
+const optionLabels = new Intl.Collator(undefined, { sensitivity: "base" });
+
 export const SelectMulti = (props: SelectMultiProps) => {
 	const {
 		strings,
@@ -67,6 +78,7 @@ export const SelectMulti = (props: SelectMultiProps) => {
 		name,
 		fetcher,
 		mode = "many",
+		mobileDisplay = "auto",
 		placeholder = strings?.placeholder ?? "Select options",
 		searchable = true,
 		searchPlaceholder = strings?.searchPlaceholder ?? "Search options",
@@ -104,14 +116,29 @@ export const SelectMulti = (props: SelectMultiProps) => {
 	}, [field.onBlur, props.onBlur]);
 
 	const [open, setOpen] = React.useState(false);
+	const [optionCountOnOpen, setOptionCountOnOpen] = React.useState(0);
 	const expanded = open && !disabled;
+
+	const fullscreenOnMobile =
+		mobileDisplay === "fullscreen" ||
+		(mobileDisplay === "auto" && optionCountOnOpen > selectMultiMaxPopoverRows);
+
+	const [selectedOnOpen, setSelectedOnOpen] = React.useState(
+		() => new Set<string>(),
+	);
+
 	const [query, setQuery] = React.useState("");
 	const [active, setActive] = React.useState(-1);
 	const root = React.useRef<HTMLDivElement>(null);
 	const trigger = React.useRef<HTMLButtonElement>(null);
+	const panel = React.useRef<HTMLDialogElement>(null);
+	const controls = React.useRef<HTMLDivElement>(null);
+	const rows = React.useRef<HTMLDivElement>(null);
+	const closeButton = React.useRef<HTMLButtonElement>(null);
 	const search = React.useRef<HTMLInputElement>(null);
 	const listbox = React.useRef<HTMLDivElement>(null);
 	const bulkAction = React.useRef<HTMLButtonElement>(null);
+	const movingFocus = React.useRef(false);
 	const id = React.useId();
 
 	let selected: string[] = [];
@@ -128,6 +155,17 @@ export const SelectMulti = (props: SelectMultiProps) => {
 			({ option }) =>
 				!searchTerm || option.label.toLowerCase().includes(searchTerm),
 		);
+
+	if (expanded) {
+		filtered.sort(({ option: first }, { option: second }) => {
+			const result =
+				Number(selectedOnOpen.has(second.value)) -
+					Number(selectedOnOpen.has(first.value)) ||
+				optionLabels.compare(first.label, second.label);
+
+			return result;
+		});
+	}
 
 	const available = filtered.filter(({ option }) => !option.disabled);
 	const selectable = options.filter((option) => !option.disabled);
@@ -146,14 +184,110 @@ export const SelectMulti = (props: SelectMultiProps) => {
 	const activeOption = available[active]?.option;
 	const activeId = available[active]?.optionId;
 
-	React.useEffect(() => {
-		if (open) (search.current ?? listbox.current)?.focus();
-	}, [open, searchable]);
+	React.useLayoutEffect(() => {
+		const menu = panel.current;
+		const anchor = trigger.current;
+		const menuControls = controls.current;
+		const optionList = listbox.current;
+		const optionRows = rows.current;
+
+		if (
+			!expanded ||
+			!menu ||
+			!anchor ||
+			!menuControls ||
+			!optionList ||
+			!optionRows
+		)
+			return;
+
+		const mobile = window.matchMedia("(width < 768px)");
+		const viewport = window.visualViewport;
+		let frame = 0;
+
+		const position = () => {
+			positionSelectMultiPanel({
+				panel: menu,
+				trigger: anchor,
+				controls: menuControls,
+				listbox: optionList,
+				rows: optionRows,
+			});
+		};
+
+		const schedulePosition = () => {
+			window.cancelAnimationFrame(frame);
+			frame = window.requestAnimationFrame(position);
+		};
+
+		const handleScroll = (event: Event) => {
+			if (!(event.target instanceof Node) || !menu.contains(event.target))
+				schedulePosition();
+		};
+
+		const showPanel = () => {
+			const isMobile = mobile.matches;
+			const fullscreen = fullscreenOnMobile && isMobile;
+
+			movingFocus.current = true;
+			hideSelectMultiPanel(menu);
+			menu.toggleAttribute("data-fullscreen", fullscreen);
+			optionList.toggleAttribute("autofocus", isMobile && !fullscreen);
+
+			if (fullscreen) menu.showModal();
+			else menu.showPopover();
+
+			position();
+
+			const initialFocus = fullscreen ? closeButton.current : optionList;
+			const focusTarget = isMobile ? initialFocus : search.current;
+
+			(focusTarget ?? optionList).focus({ preventScroll: true });
+			movingFocus.current = false;
+		};
+
+		showPanel();
+		optionList.scrollTop = 0;
+
+		const observer = new ResizeObserver(schedulePosition);
+
+		observer.observe(anchor);
+		observer.observe(menuControls);
+		observer.observe(optionRows);
+
+		if (fullscreenOnMobile) mobile.addEventListener("change", showPanel);
+		window.addEventListener("resize", schedulePosition);
+		window.addEventListener("scroll", handleScroll, true);
+
+		if (viewport) {
+			viewport.addEventListener("resize", schedulePosition);
+			viewport.addEventListener("scroll", schedulePosition);
+		}
+
+		return () => {
+			observer.disconnect();
+			mobile.removeEventListener("change", showPanel);
+			window.removeEventListener("resize", schedulePosition);
+			window.removeEventListener("scroll", handleScroll, true);
+			window.cancelAnimationFrame(frame);
+
+			if (viewport) {
+				viewport.removeEventListener("resize", schedulePosition);
+				viewport.removeEventListener("scroll", schedulePosition);
+			}
+
+			movingFocus.current = true;
+			hideSelectMultiPanel(menu);
+			movingFocus.current = false;
+		};
+	}, [expanded, fullscreenOnMobile]);
 
 	React.useEffect(() => {
-		if (!open) return;
+		if (!expanded) return;
 
 		const handlePointerDown = (event: PointerEvent) => {
+			if (panel.current && panel.current.open) return;
+
 			if (
 				root.current &&
 				event.target instanceof Node &&
@@ -167,14 +301,22 @@ export const SelectMulti = (props: SelectMultiProps) => {
 
 		document.addEventListener("pointerdown", handlePointerDown);
 		return () => document.removeEventListener("pointerdown", handlePointerDown);
-	}, [open, onBlur]);
+	}, [expanded, onBlur]);
 
 	React.useEffect(() => {
-		if (!activeId || !open) return;
+		if (!activeId || !expanded || !listbox.current) return;
 
 		const option = document.getElementById(activeId);
-		if (option) option.scrollIntoView({ block: "nearest" });
-	}, [activeId, open]);
+		if (!option) return;
+
+		const list = listbox.current;
+		const row = option.getBoundingClientRect();
+		const viewport = list.getBoundingClientRect();
+
+		if (row.top < viewport.top) list.scrollTop += row.top - viewport.top;
+		else if (row.bottom > viewport.bottom)
+			list.scrollTop += row.bottom - viewport.bottom;
+	}, [activeId, expanded]);
 
 	const change = (nextValue: string[]) => {
 		if (props.mode === "one") {
@@ -201,7 +343,13 @@ export const SelectMulti = (props: SelectMultiProps) => {
 
 	const closeMenu = () => {
 		setOpen(false);
-		trigger.current?.focus();
+		movingFocus.current = true;
+
+		if (panel.current) hideSelectMultiPanel(panel.current);
+
+		if (trigger.current) trigger.current.focus({ preventScroll: true });
+
+		movingFocus.current = false;
 	};
 
 	const choose = (option: SelectMultiOption) => {
@@ -221,6 +369,8 @@ export const SelectMulti = (props: SelectMultiProps) => {
 	};
 
 	const openMenu = () => {
+		setSelectedOnOpen(selectedValues);
+		setOptionCountOnOpen(options.length);
 		setQuery("");
 		setActive(0);
 		setOpen(true);
@@ -334,6 +484,9 @@ export const SelectMulti = (props: SelectMultiProps) => {
 			ref={root}
 			onKeyDown={handleKeyDown}
 			onBlur={(event) => {
+				if (movingFocus.current || (panel.current && panel.current.open))
+					return;
+
 				if (!event.currentTarget.contains(event.relatedTarget)) {
 					setOpen(false);
 
@@ -351,6 +504,9 @@ export const SelectMulti = (props: SelectMultiProps) => {
 				id={id}
 				name={name}
 				aria-invalid={Boolean(error)}
+				aria-expanded={expanded}
+				aria-controls={`${id}-options`}
+				aria-haspopup="dialog"
 				disabled={disabled}
 				ref={(element) => {
 					trigger.current = element;
@@ -358,8 +514,11 @@ export const SelectMulti = (props: SelectMultiProps) => {
 					field.ref(element);
 				}}
 				className="control-field flex items-center justify-between gap-3 text-left"
+				onPointerDown={(event) => {
+					if (expanded && event.button === 0) event.preventDefault();
+				}}
 				onClick={() => {
-					if (open) setOpen(false);
+					if (open) closeMenu();
 					else openMenu();
 				}}
 			>
@@ -378,74 +537,96 @@ export const SelectMulti = (props: SelectMultiProps) => {
 				</span>
 				{indicator}
 			</button>
-			<div
-				inert={!expanded}
-				className={cx(
-					"absolute top-full z-20 mt-2 w-full rounded-control border border-border bg-surface p-2 text-fg shadow-lg transition-[opacity,display] transition-discrete duration-150 ease-out motion-reduce:transition-none starting:opacity-0",
-					!expanded && "hidden opacity-0",
-				)}
+			<dialog
+				id={`${id}-options`}
+				className="group fixed inset-auto m-0 max-h-none max-w-none flex-col overflow-auto overscroll-contain rounded-control border border-border bg-surface p-2 text-fg shadow-lg transition-opacity duration-150 ease-out data-fullscreen:rounded-none data-fullscreen:border-0 data-fullscreen:px-4 data-fullscreen:pt-[max(1rem,env(safe-area-inset-top))] data-fullscreen:pb-[max(1rem,env(safe-area-inset-bottom))] motion-reduce:transition-none starting:opacity-0 [&:is(:modal,:popover-open)]:flex"
+				ref={panel}
+				popover="manual"
+				aria-label={label || placeholder}
+				onCancel={(event) => {
+					event.preventDefault();
+					event.stopPropagation();
+					closeMenu();
+				}}
 			>
-				{searchable && (
-					<input
-						ref={search}
-						className="control-field mb-2 block"
-						value={query}
-						onChange={(event) => {
-							setQuery(event.target.value);
-							setActive(0);
-						}}
-						placeholder={searchPlaceholder}
-					/>
-				)}
-				{hasBulkAction && (
+				<div className="shrink-0" ref={controls}>
 					<button
+						className="control-field mb-2 hidden group-data-fullscreen:block"
 						type="button"
-						ref={bulkAction}
-						onFocus={() => setActive(-1)}
-						className="block w-full cursor-pointer rounded-control py-2 pr-3 pl-9 text-left text-sm font-medium text-fg hover:bg-layer focus:bg-layer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
-						onClick={toggleAll}
+						ref={closeButton}
+						onClick={closeMenu}
 					>
-						{allSelected
-							? (strings?.clearAll ?? "Clear all")
-							: (strings?.selectAll ?? "Select all")}
+						{strings?.close ?? "Close"}
 					</button>
-				)}
-				{filtered.length === 0 && (
-					<p className="m-0 px-3 py-3 text-sm text-fg-muted">{emptyLabel}</p>
-				)}
+					{searchable && (
+						<input
+							className="control-field mb-2"
+							ref={search}
+							value={query}
+							onChange={(event) => {
+								setQuery(event.target.value);
+								setActive(0);
+							}}
+							placeholder={searchPlaceholder}
+						/>
+					)}
+					{hasBulkAction && (
+						<button
+							className="block w-full cursor-pointer rounded-control py-2 pr-3 pl-9 text-left text-sm font-medium text-fg hover:bg-layer focus:bg-layer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+							type="button"
+							ref={bulkAction}
+							onFocus={() => {
+								if (!movingFocus.current) setActive(-1);
+							}}
+							onClick={toggleAll}
+						>
+							{allSelected
+								? (strings?.clearAll ?? "Clear all")
+								: (strings?.selectAll ?? "Select all")}
+						</button>
+					)}
+					{filtered.length === 0 && (
+						<p className="m-0 px-3 py-3 text-sm text-fg-muted">{emptyLabel}</p>
+					)}
+				</div>
 				<div
 					id={`${id}-listbox`}
+					className="min-h-0 overflow-y-auto overscroll-contain focus:outline-none"
 					ref={listbox}
 					tabIndex={-1}
-					className="max-h-56 overflow-y-auto focus:outline-none"
 				>
-					{filtered.map(({ option, optionId }) => (
-						<button
-							key={option.value}
-							id={optionId}
-							type="button"
-							disabled={option.disabled}
-							tabIndex={-1}
-							className={cx(
-								"flex w-full cursor-pointer items-center gap-2 rounded-control px-3 py-2 text-left text-sm text-fg hover:bg-layer disabled:cursor-not-allowed disabled:opacity-50",
-								activeOption === option && "bg-layer",
-							)}
-							onMouseDown={(event) => event.preventDefault()}
-							onClick={() => choose(option)}
-						>
-							{mode === "many" && (
-								<ICheck
-									className={cx(
-										"size-4 shrink-0",
-										!selectedValues.has(option.value) && "invisible",
-									)}
-								/>
-							)}
-							{option.content ?? option.label}
-						</button>
-					))}
+					<div className="grid auto-rows-fr" ref={rows}>
+						{filtered.map(({ option, optionId }) => (
+							<button
+								key={option.value}
+								id={optionId}
+								type="button"
+								disabled={option.disabled}
+								aria-pressed={
+									mode === "many" ? selectedValues.has(option.value) : undefined
+								}
+								tabIndex={-1}
+								className={cx(
+									"flex w-full cursor-pointer items-center gap-2 rounded-control px-3 py-2 text-left text-sm text-fg hover:bg-layer disabled:cursor-not-allowed disabled:opacity-50",
+									activeOption === option && "bg-layer",
+								)}
+								onMouseDown={(event) => event.preventDefault()}
+								onClick={() => choose(option)}
+							>
+								{mode === "many" && (
+									<ICheck
+										className={cx(
+											"size-4 shrink-0",
+											!selectedValues.has(option.value) && "invisible",
+										)}
+									/>
+								)}
+								{option.content ?? option.label}
+							</button>
+						))}
+					</div>
 				</div>
-			</div>
+			</dialog>
 			<FieldMessage error={error} helpText={helpText} />
 		</div>
 	);

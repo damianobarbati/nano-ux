@@ -77,6 +77,11 @@
 }
 
 @layer components {
+  .anchor {
+    @apply cursor-pointer border-0 bg-transparent p-0 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current;
+    color: LinkText;
+  }
+
   .nano-tooltip {
     opacity: 0;
     transition:

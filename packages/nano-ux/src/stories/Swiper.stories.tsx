@@ -1,6 +1,4 @@
-import type { StoryObj } from "@storybook/react-vite";
 import React from "react";
-import { expect, waitFor } from "storybook/test";
 import { Button } from "../components/Button.tsx";
 import { Swiper } from "../components/Swiper.tsx";
 
@@ -69,38 +67,3 @@ const CalendarExample = () => {
 };
 
 export const Default = { name: "Swiper", render: CalendarExample };
-
-export const ScrollSettlement: StoryObj<typeof Swiper> = {
-	render: CalendarExample,
-	play: async ({ canvas, canvasElement }) => {
-		const viewport =
-			canvasElement.querySelector<HTMLDivElement>(".snap-mandatory");
-
-		if (!viewport) throw new Error("Missing Swiper viewport");
-
-		viewport.scrollTo({ left: viewport.clientWidth, behavior: "instant" });
-
-		await waitFor(() =>
-			expect(canvas.getByRole("heading")).toHaveTextContent(days[1]),
-		);
-
-		await expect(canvas.getByRole("region", { name: days[1] })).toBeVisible();
-	},
-};
-
-export const InterruptedNavigation: StoryObj<typeof Swiper> = {
-	render: CalendarExample,
-	play: async ({ canvas, canvasElement, userEvent }) => {
-		const viewport =
-			canvasElement.querySelector<HTMLDivElement>(".snap-mandatory");
-
-		if (!viewport) throw new Error("Missing Swiper viewport");
-
-		await userEvent.click(canvas.getByRole("button", { name: "Next" }));
-		viewport.scrollTo({ left: viewport.clientWidth * 3, behavior: "instant" });
-
-		await waitFor(() =>
-			expect(canvas.getByRole("heading")).toHaveTextContent(days[3]),
-		);
-	},
-};

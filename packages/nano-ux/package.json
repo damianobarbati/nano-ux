@@ -1,11 +1,11 @@
 {
   "name": "nano-ux",
+  "version": "0.0.12",
   "license": "MIT",
   "description": "Nano sized UI kit.",
   "author": "Damiano Barbati <damiano.barbati@gmail.com> (https://github.com/damianobarbati)",
   "repository": "https://github.com/damianobarbati/nano-ux",
   "type": "module",
-  "version": "0.0.12",
   "engines": {
     "node": ">=24.0.0"
   },
