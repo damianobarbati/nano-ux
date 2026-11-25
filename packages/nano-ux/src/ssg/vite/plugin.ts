@@ -287,6 +287,10 @@ export const ssg = (overrides: SsgOptions = {}): Plugin[] => {
 	const plugin: Plugin = {
 		name: "ssg",
 		enforce: "post",
+		config(_config, { command }) {
+			if (command === "serve")
+				return { optimizeDeps: { include: ["react-dom/client"] } };
+		},
 		async configResolved(config) {
 			const directory = config.configFile
 				? dirname(config.configFile)

@@ -1,6 +1,6 @@
 {
   "name": "nano-ux-monorepo",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "private": true,
   "type": "module",
   "repository": "https://github.com/damianobarbati/nano-ux",

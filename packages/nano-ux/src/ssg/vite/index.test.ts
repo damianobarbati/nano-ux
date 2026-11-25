@@ -558,12 +558,17 @@ test("uses built-in rendering and supports optional project overrides", async (c
 	const server = await createServer({
 		...config,
 		plugins: [ssg()],
+		optimizeDeps: { include: ["react"] },
 		server: { host: "127.0.0.1", port: 0 },
 	});
 
 	try {
 		await server.listen();
 
+		const includes = server.environments.client.config.optimizeDeps.include;
+
+		assert.ok(includes.includes("react-dom/client"));
+		assert.ok(includes.includes("react"));
 		assert.ok(server.httpServer);
 
 		const { port } = server.httpServer.address() as AddressInfo;
