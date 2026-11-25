@@ -55,6 +55,13 @@ export { Metric, type MetricProps } from "./components/Metric.tsx";
 export { Mockup, type MockupProps } from "./components/Mockup.tsx";
 export { Nav, type NavProps } from "./components/Nav.tsx";
 export { NotFound, type NotFoundProps } from "./components/NotFound.tsx";
+
+export {
+	SectionNav,
+	type SectionNavProps,
+	type SectionNavSection,
+} from "./components/SectionNav.tsx";
+
 export { Select, type SelectProps } from "./components/Select.tsx";
 
 export {

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
@@ -15,6 +17,12 @@
   },
   "files": [
     "src/index.ts",
-    "src/helpers.ts"
+    "src/helpers.ts",
+    "src/ssg/client.tsx",
+    "src/ssg/router/index.ts",
+    "src/ssg/server/render.ts",
+    "src/ssg/vite/index.ts",
+    "src/ssg/vite/config.ts",
+    "src/ssg/vite/virtual.d.ts"
   ]
 }
