@@ -21,7 +21,7 @@
     "bump": "pnpm -r --include-workspace-root version"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.8",
+    "@biomejs/biome": "^2.6.9",
     "oxlint": "^1.95.0",
     "oxlint-better": "^1.0.6"
   }
