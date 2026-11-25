@@ -29,6 +29,10 @@
     scroll-behavior: smooth;
   }
 
+  :root[data-nano-instant-scroll] {
+    scroll-behavior: auto;
+  }
+
   body {
     min-width: 20rem;
     margin: 0;

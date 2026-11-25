@@ -435,6 +435,17 @@ const format = keysToDate<typeof profile>(["birth_date"], "YYYY-MM-DD");
 const payload = format(profile);
 // { birth_date: "1995-04-18" }`,
 	},
+	{
+		id: "reference-init-nav-scroll",
+		kind: "Function",
+		title: "initNavScroll",
+		description:
+			"Call once at browser startup to restore the scroll position without animation on back and forward navigation.",
+		language: "typescript",
+		text: `import { initNavScroll } from "nano-ux/helpers";
+
+initNavScroll();`,
+	},
 ];
 
 type ReferenceLink = { id: string; title: string; kind: string };

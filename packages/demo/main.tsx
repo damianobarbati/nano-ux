@@ -1,4 +1,5 @@
 import "@fontsource-variable/montserrat";
+import { initNavScroll } from "nano-ux/helpers";
 import React from "react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { App } from "./index.tsx";
@@ -11,3 +12,5 @@ if (import.meta.env.DEV) {
 } else {
 	hydrateRoot(root, <App />);
 }
+
+initNavScroll();
