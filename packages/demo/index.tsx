@@ -32,7 +32,7 @@ import {
 
 import { IGitHub, ILinkedIn } from "nano-ux/icons";
 import React from "react";
-import { flushSync } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 import { ContactButton } from "./components/ContactButton.tsx";
@@ -793,18 +793,20 @@ const Feedback = () => {
 			>
 				Do you want to proceed?
 			</Dialog>
-			{notice && (
-				<Toast
-					key={notice.timestamp}
-					duration={5000}
-					tone={notice.option.tone}
-					message={notice.option.message}
-					onClose={(reason) => {
-						if (reason === "dismiss") notice.trigger.focus();
-						setNotice(undefined);
-					}}
-				/>
-			)}
+			{notice &&
+				createPortal(
+					<Toast
+						key={notice.timestamp}
+						duration={5000}
+						tone={notice.option.tone}
+						message={notice.option.message}
+						onClose={(reason) => {
+							if (reason === "dismiss") notice.trigger.focus();
+							setNotice(undefined);
+						}}
+					/>,
+					document.body,
+				)}
 		</FadeIn>
 	);
 };

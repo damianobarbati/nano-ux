@@ -231,7 +231,7 @@
     }
   }
 }
-@source inline("trim-ex text-glow text-glow-brand");
+@source inline("trim-ex text-glow text-glow-{brand,cocoa,mint,mintlight,lime,cyan,ocean,violet,berry}");
 
 @utility trim-ex {
   text-box-trim: trim-both;
@@ -239,9 +239,10 @@
 }
 
 @utility text-glow {
+  --text-glow-primary: var(--theme-primary, var(--color-brand, currentColor));
   text-shadow:
-    0 0 0.4em color-mix(in srgb, currentColor 42%, transparent),
-    0 0 0.9em color-mix(in srgb, currentColor 24%, transparent);
+    0 0 0.4em color-mix(in srgb, var(--text-glow-primary) 42%, transparent),
+    0 0 0.9em color-mix(in srgb, var(--text-glow-primary) 24%, transparent);
 }
 
 @utility text-glow-* {

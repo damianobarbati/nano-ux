@@ -162,14 +162,14 @@ const sections = [
 		content: (
 			<>
 				<p>
-					Use <code>.text-glow</code> for a glow in the current text color. Use{" "}
-					<code>.text-glow-brand</code> for the brand color. If the brand color
-					is unset, the glow uses the current text color.
+					Use <code>.text-glow</code> for the primary color or{" "}
+					<code>.text-glow-brand</code> for the brand color. Both fall back to
+					the text color. Named palette glows use their own colors.
 				</p>
 				<p>
-					nano-ux/theme.css includes both classes. With nano-ux/tailwind.css,
-					use <code>.text-glow-*</code> to generate variants for theme colors or
-					custom colors.
+					nano-ux/theme.css includes the named palette glows. With
+					nano-ux/tailwind.css, use <code>.text-glow-*</code> for additional
+					theme colors or custom colors.
 				</p>
 				<ul className={colorGridClassName}>
 					{[

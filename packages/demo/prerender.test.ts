@@ -5,6 +5,31 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { build } from "vite";
 
+test("packaged theme uses each text glow color", async () => {
+	const themePath = new URL(import.meta.resolve("nano-ux/theme.css"));
+	const css = await readFile(themePath, "utf8");
+
+	assert.match(css, /\.text-glow\s*\{[^}]*var\(--theme-primary,/);
+
+	for (const color of [
+		"cocoa",
+		"mint",
+		"mintlight",
+		"lime",
+		"cyan",
+		"ocean",
+		"violet",
+		"berry",
+	]) {
+		assert.match(
+			css,
+			new RegExp(
+				`\\.text-glow-${color}\\s*\\{[^}]*text-shadow:[^}]*var\\(--color-${color}\\)`,
+			),
+		);
+	}
+});
+
 test("demo build includes readable content before JavaScript runs", async () => {
 	const outDir = await mkdtemp(join(tmpdir(), "nano-ux-demo-"));
 
