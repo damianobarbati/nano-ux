@@ -125,4 +125,4 @@ export default {
 
 To use the shared preset, put `export { default } from 'nano-ux/ssg/config';` in `vite.config.ts`. It sets the Vite root to `src`, writes to `dist`, loads environment files from the workspace root, and serves on port 3000 on all interfaces with all hostnames allowed. It enables React Compiler, Tailwind CSS, Brotli compression, and a bundle report at `.report/bundle.html` in the workspace root.
 
-The preset requires `@vitejs/plugin-react`, `@rolldown/plugin-babel`, `@babel/core`, `babel-plugin-react-compiler`, `@tailwindcss/vite`, `vite-plugin-compression2`, and `rollup-plugin-visualizer`.
+Install Vite in your app to run the dev server and production build. Installing `nano-ux` also installs all plugins used by the shared preset.
