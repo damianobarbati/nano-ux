@@ -3,6 +3,11 @@ const setInstantScroll = (enabled: boolean) => {
 };
 
 export const initNavScroll = () => {
+	if (typeof window === "undefined") return;
+
+	const browser = window as Window & { nanoNavScrollInitialized?: boolean };
+	if (browser.nanoNavScrollInitialized) return;
+
 	const navigation = window.navigation;
 
 	setInstantScroll(
@@ -18,4 +23,6 @@ export const initNavScroll = () => {
 	window.addEventListener("pageshow", (event) => {
 		if (event.persisted) setInstantScroll(true);
 	});
+
+	browser.nanoNavScrollInitialized = true;
 };
