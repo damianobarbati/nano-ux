@@ -201,6 +201,7 @@ test("demo build includes readable content before JavaScript runs", async () => 
 			"reference-table-virtual",
 			"reference-use-in-view-once",
 			"reference-keys-to-date",
+			"reference-init-nav-scroll",
 		]);
 
 		assert.match(
@@ -224,6 +225,7 @@ test("demo build includes readable content before JavaScript runs", async () => 
 			...classHeadings.map(() => "CSS"),
 			...Array(16).fill("Component"),
 			"Hook",
+			"Function",
 			"Function",
 		]);
 
