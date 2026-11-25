@@ -5,7 +5,6 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig, searchForWorkspaceRoot } from "vite";
 import { compression } from "vite-plugin-compression2";
-import { formatHtml } from "./formatHtml.ts";
 import { ssg } from "./plugin.ts";
 
 const workspaceRoot = searchForWorkspaceRoot(process.cwd());
@@ -20,7 +19,6 @@ export default defineConfig({
 		babel({ presets: [reactCompilerPreset()] }),
 		tailwindcss(),
 		ssg(),
-		formatHtml(),
 		compression({ algorithms: ["br"] }),
 		visualizer({
 			filename: resolve(workspaceRoot, ".report/bundle.html"),

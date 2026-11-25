@@ -465,20 +465,21 @@ export const ssg = (overrides: SsgOptions = {}): Plugin[] => {
 					if (!route) return next();
 
 					const template = await readFile(templatePath(indexPath), "utf8");
+
+					const transformed = await server.transformIndexHtml(
+						request.url ?? "/",
+						template,
+					);
+
 					const rendered = await renderPage({ app, route });
 
-					const html = renderDocument({
-						template,
+					const source = renderDocument({
+						template: transformed,
 						route,
 						routes: app.routes,
 						rendered,
 						site,
 					});
-
-					const source = await server.transformIndexHtml(
-						request.url ?? "/",
-						html,
-					);
 
 					response.writeHead(route.status ?? 200, { "Content-Type": htmlType });
 					response.end(request.method === "HEAD" ? undefined : source);

@@ -9,7 +9,6 @@ import { build, createServer, type InlineConfig, preview } from "vite";
 import { discoverRoutes, validateRoutes } from "../routing/routes.ts";
 import { enrichRobots } from "../server/robots.ts";
 import { fotoneFlags } from "../server/runtime.ts";
-import { formatHtml } from "./formatHtml.ts";
 import { ssg } from "./index.ts";
 
 test("maps folders to URL segments and Home to the folder index", () => {
@@ -544,11 +543,14 @@ test("uses built-in rendering and supports optional project overrides", async (c
 
 	await mkdir(join(root, "views"));
 
+	const supportText = "Support Windows machines inside customer networks";
+	const supportMarkup = `<span class="block trim-ex">${supportText}</span>`;
+
 	await writeFile(
 		join(root, "views/About.page.tsx"),
 		`
     import { NavLink } from "virtual:ssg/router";
-    export const Page = () => <><header><NavLink href="/about">About</NavLink><NavLink href="/">Menu</NavLink></header><main>About us</main></>;
+    export const Page = () => <><header><NavLink href="/about">About</NavLink><NavLink href="/">Menu</NavLink></header><main>About us</main><span className="block trim-ex">${supportText}</span></>;
     export const route = { metadata: { title: 'About', llms: { content: true } } };
   `,
 	);
@@ -562,7 +564,7 @@ test("uses built-in rendering and supports optional project overrides", async (c
 
 	const server = await createServer({
 		...config,
-		plugins: [ssg(), formatHtml()],
+		plugins: [ssg()],
 		optimizeDeps: { include: ["react"] },
 		server: { host: "127.0.0.1", port: 0 },
 	});
@@ -580,8 +582,7 @@ test("uses built-in rendering and supports optional project overrides", async (c
 		const origin = `http://127.0.0.1:${port}`;
 		const html = await (await fetch(`${origin}/about`)).text();
 
-		assert.match(html, /<div id="root"\n +>/);
-		assert.match(html, /<main>About us<\/main\s*>/);
+		assert.ok(html.includes(supportMarkup));
 
 		const client = html.match(/src="([^"]+html-proxy[^"]+)"/);
 
@@ -596,9 +597,11 @@ test("uses built-in rendering and supports optional project overrides", async (c
 		await server.close();
 	}
 
-	await build({ ...config, plugins: [ssg(), formatHtml()] });
+	await build({ ...config, plugins: [ssg()] });
 
 	const about = await readFile(join(root, "dist/about.html"), "utf8");
+
+	assert.ok(about.includes(supportMarkup));
 
 	assert.match(
 		about,
