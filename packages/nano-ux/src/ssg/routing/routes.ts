@@ -201,6 +201,84 @@ const entryPath = ({ path, pattern, params, locale, page }: EntryPathInput) => {
 	return result;
 };
 
+type InferredPageRoute = {
+	relativeName: string;
+	fallback: boolean;
+	pattern: string;
+};
+
+const inferPageRoute = (page: string): InferredPageRoute => {
+	const relativeName = page.slice("/views/".length, -".page.tsx".length);
+	const parts = relativeName.split("/");
+	const filename = parts[parts.length - 1];
+	const folders = parts.slice(0, -1);
+
+	if (filename.includes(".")) {
+		const names = filename.split(".");
+
+		const suggestion = [
+			...folders,
+			...names.slice(0, -1).map(kebab),
+			names.at(-1),
+		].join("/");
+
+		throw new Error(
+			`Move ${page} to /views/${suggestion}.page.tsx. Use folders for nested routes.`,
+		);
+	}
+
+	const fallback = !folders.length && filename === "NotFound";
+
+	if (filename !== "Home") folders.push(fallback ? "404" : filename);
+
+	const pattern = `/${folders.map(kebab).join("/")}`;
+	const result = { relativeName, fallback, pattern };
+	return result;
+};
+
+type ApplyRouteMetadataInput = {
+	route: Route;
+	settings: PageRoute;
+	entry: Entry;
+	site?: Site;
+	timestamp: string;
+	defaultContentId?: string;
+};
+
+const applyRouteMetadata = ({
+	route,
+	settings,
+	entry,
+	site,
+	timestamp,
+	defaultContentId,
+}: ApplyRouteMetadataInput) => {
+	const { pathname } = route;
+
+	const pageMetadata =
+		typeof settings.metadata === "function"
+			? settings.metadata(route)
+			: settings.metadata;
+
+	const base = mergeMetadata(site?.metadata ?? {}, pageMetadata ?? {});
+	const input = mergeMetadata(base, entry.metadata ?? {});
+
+	if ((pageMetadata || entry.metadata) && !input.title?.trim()) {
+		throw new Error(`Missing metadata title for ${pathname}.`);
+	}
+
+	route.metadata = resolveMetadata(route, input, timestamp, site);
+
+	if (input.robots?.crawl !== undefined)
+		route.robots = input.robots.crawl ? undefined : "disallow";
+
+	route.assistant = input.llms?.content;
+
+	if (defaultContentId !== undefined && !route.metadata.contentId) {
+		route.metadata.contentId = defaultContentId;
+	}
+};
+
 export const discoverRoutes = ({
 	pages,
 	options,
@@ -210,33 +288,12 @@ export const discoverRoutes = ({
 }: DiscoverRoutesInput): Route[] => {
 	validateLocales(locales);
 
-	const routes = pages.flatMap((page) => {
-		const relativeName = page.slice("/views/".length, -".page.tsx".length);
-		const parts = relativeName.split("/");
-		const filename = parts[parts.length - 1];
-		const folders = parts.slice(0, -1);
+	const routes: Route[] = [];
 
-		if (filename.includes(".")) {
-			const names = filename.split(".");
-
-			const suggestion = [
-				...folders,
-				...names.slice(0, -1).map(kebab),
-				names.at(-1),
-			].join("/");
-
-			throw new Error(
-				`Move ${page} to /views/${suggestion}.page.tsx. Use folders for nested routes.`,
-			);
-		}
-
+	for (const page of pages) {
+		const inferred = inferPageRoute(page);
 		const settings = options[page] ?? {};
-		const fallback = !folders.length && filename === "NotFound";
-
-		if (filename !== "Home") folders.push(fallback ? "404" : filename);
-
-		const inferred = `/${folders.map(kebab).join("/")}`;
-		const pattern = settings.pattern ?? inferred;
+		const pattern = settings.pattern ?? inferred.pattern;
 		const entries = settings.entries ?? [{}];
 
 		const pageLocales =
@@ -249,7 +306,7 @@ export const discoverRoutes = ({
 				throw new Error(`Unknown locale "${locale}" in ${page}.`);
 		}
 
-		const result = entries.flatMap((entry) => {
+		for (const entry of entries) {
 			if (entry.path !== undefined && settings.pattern !== undefined)
 				throw new Error(`Choose a path or pattern in ${page}.`);
 
@@ -265,62 +322,43 @@ export const discoverRoutes = ({
 					`Specify locale for localized path "${entry.path}" in ${page}.`,
 				);
 
-			const result = (languages.length ? languages : [undefined]).map(
-				(locale) => {
-					const params = { ...entry.params };
+			for (const locale of languages.length ? languages : [undefined]) {
+				const params = { ...entry.params };
 
-					if (locale) params.lang = locale;
+				if (locale) params.lang = locale;
 
-					const pathname = entryPath({
-						path: entry.path,
-						pattern,
-						params,
-						locale,
-						page,
-					});
+				const pathname = entryPath({
+					path: entry.path,
+					pattern,
+					params,
+					locale,
+					page,
+				});
 
-					const route: Route = {
-						pathname,
-						params,
-						locale,
-						page,
-						render: settings.render,
-					};
+				const route: Route = {
+					pathname,
+					params,
+					locale,
+					page,
+					render: settings.render,
+				};
 
-					if (fallback) route.status = 404;
+				if (inferred.fallback) route.status = 404;
 
-					const pageMetadata =
-						typeof settings.metadata === "function"
-							? settings.metadata(route)
-							: settings.metadata;
+				applyRouteMetadata({
+					route,
+					settings,
+					entry,
+					site,
+					timestamp,
+					defaultContentId:
+						locale && !settings.entries ? inferred.relativeName : undefined,
+				});
 
-					const base = mergeMetadata(site?.metadata ?? {}, pageMetadata ?? {});
-					const input = mergeMetadata(base, entry.metadata ?? {});
-
-					if ((pageMetadata || entry.metadata) && !input.title?.trim()) {
-						throw new Error(`Missing metadata title for ${pathname}.`);
-					}
-
-					route.metadata = resolveMetadata(route, input, timestamp, site);
-
-					if (input.robots?.crawl !== undefined)
-						route.robots = input.robots.crawl ? undefined : "disallow";
-
-					route.assistant = input.llms?.content;
-
-					if (locale && !settings.entries && !route.metadata?.contentId) {
-						route.metadata = { ...route.metadata, contentId: relativeName };
-					}
-
-					return route;
-				},
-			);
-
-			return result;
-		});
-
-		return result;
-	});
+				routes.push(route);
+			}
+		}
+	}
 
 	return routes;
 };

@@ -237,6 +237,12 @@ importers:
       '@babel/core':
         specifier: ^8.1.3
         version: 8.1.3
+      '@biomejs/js-api':
+        specifier: 6.1.0
+        version: 6.1.0(@biomejs/wasm-nodejs@2.6.9)
+      '@biomejs/wasm-nodejs':
+        specifier: 2.6.9
+        version: 2.6.9
       '@rolldown/plugin-babel':
         specifier: ^0.3.1
         version: 0.3.1(@babel/core@8.1.3)(@babel/runtime@7.29.15)(rolldown@1.2.19)(vite@8.3.8(@types/node@26.6.7)(esbuild@0.28.2)(jiti@2.7.0))
@@ -540,6 +546,23 @@ packages:
     engines: {node: '>=14.21.3'}
     cpu: [x64]
     os: [win32]
+
+  '@biomejs/js-api@6.1.0':
+    resolution: {integrity: sha512-u5njUR64aeH5y3/fXYe11S6jBjfxoiEelp5jM5FlxMorIEEKyW9KiX3iIo1Tg3GUV9tV1mc+oP6IMUYVuv0FZg==}
+    peerDependencies:
+      '@biomejs/wasm-bundler': ^2.6.0
+      '@biomejs/wasm-nodejs': ^2.6.0
+      '@biomejs/wasm-web': ^2.6.0
+    peerDependenciesMeta:
+      '@biomejs/wasm-bundler':
+        optional: true
+      '@biomejs/wasm-nodejs':
+        optional: true
+      '@biomejs/wasm-web':
+        optional: true
+
+  '@biomejs/wasm-nodejs@2.6.9':
+    resolution: {integrity: sha512-UaBvp0FX5OEN09C4gX6cN3BIcdZVeZmBw8VUmUDfZLTnHCITuF6CIiKVd5Tjn9otS3TrUJHolK9lcDlPF5VWpQ==}
 
   '@emnapi/core@1.11.0':
     resolution: {integrity: sha512-l9Oo58x0HOP5znGzVhYW9U3e5wVuA4LAZU2AGezTmkhO1CgQRFDhDg4nneHsu/t3WniXg9QrG2nIXL/ZS8ln8Q==}
@@ -2738,6 +2761,12 @@ snapshots:
 
   '@biomejs/cli-win32-x64@2.6.9':
     optional: true
+
+  '@biomejs/js-api@6.1.0(@biomejs/wasm-nodejs@2.6.9)':
+    optionalDependencies:
+      '@biomejs/wasm-nodejs': 2.6.9
+
+  '@biomejs/wasm-nodejs@2.6.9': {}
 
   '@emnapi/core@1.11.0':
     dependencies:

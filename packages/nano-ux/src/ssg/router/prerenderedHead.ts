@@ -1,27 +1,7 @@
 export const clearPrerenderedHead = () => {
-	let insideRouteHead = false;
+	const nodes = document.head.querySelectorAll(
+		':scope > [data-ssg-head]:is(title, meta, link[rel="canonical"], link[rel="alternate"][hreflang], script[type="application/ld+json"])',
+	);
 
-	for (const node of Array.from(document.head.childNodes)) {
-		if (
-			node.nodeType === Node.COMMENT_NODE &&
-			node.textContent === "ssg-head-start"
-		)
-			insideRouteHead = true;
-
-		if (
-			node.nodeType === Node.COMMENT_NODE &&
-			node.textContent === "ssg-head-end"
-		)
-			break;
-
-		if (
-			insideRouteHead &&
-			node instanceof Element &&
-			node.matches(
-				'title, meta, link[rel="canonical"], link[rel="alternate"][hreflang], script[type="application/ld+json"]',
-			)
-		) {
-			node.remove();
-		}
-	}
+	for (const node of nodes) node.remove();
 };

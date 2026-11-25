@@ -125,4 +125,6 @@ export default {
 
 To use the shared preset, put `export { default } from 'nano-ux/ssg/config';` in `vite.config.ts`. It sets the Vite root to `src`, writes to `dist`, loads environment files from the workspace root, and serves on port 3000 on all interfaces with all hostnames allowed. It enables React Compiler, Tailwind CSS, Brotli compression, and a bundle report at `.report/bundle.html` in the workspace root.
 
+The preset uses Biome to format complete HTML pages in memory with two spaces. The development server loads Biome on the first HTML request and reuses it for later requests. Production builds format the generated pages before Brotli compression. It uses strict HTML whitespace handling. Biome can still collapse repeated spaces in dynamic text, which can cause a React hydration mismatch.
+
 Install Vite in your app to run the dev server and production build. Installing `nano-ux` also installs all plugins used by the shared preset.

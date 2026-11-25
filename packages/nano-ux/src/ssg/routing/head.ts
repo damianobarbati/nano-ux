@@ -1,4 +1,5 @@
 import { Fragment, createElement as h, type ReactNode } from "react";
+import { isIndexable } from "./metadata.ts";
 import type { Route } from "./routes.ts";
 
 type PageMetaProps = {
@@ -12,8 +13,7 @@ export const PageMeta = ({ route, alternates }: PageMetaProps) => {
 	const tags: ReactNode[] = [];
 	const directives: string[] = [];
 
-	if (route.status || route.render === "shell" || metadata.indexable === false)
-		directives.push("noindex");
+	if (!isIndexable(route)) directives.push("noindex");
 
 	if (metadata.follow === false) directives.push("nofollow");
 

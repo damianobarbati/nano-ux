@@ -184,7 +184,7 @@ const robotsFile = async ({
 	return result;
 };
 
-const htmlRequest = ({
+const htmlRequestPath = ({
 	request,
 	pathname,
 }: {
@@ -193,7 +193,7 @@ const htmlRequest = ({
 }) => {
 	const accept = request.headers.accept;
 
-	const result =
+	const acceptsHtml =
 		(request.method === "GET" || request.method === "HEAD") &&
 		(!accept || accept.includes("text/html") || accept.includes("*/*")) &&
 		!pathname.startsWith("/@") &&
@@ -202,6 +202,11 @@ const htmlRequest = ({
 			pathname === "/index.html" ||
 			pathname.endsWith("/404.html"));
 
+	if (!acceptsHtml) return;
+
+	if (pathname === "/index.html") return "/";
+
+	const result = pathname.replace(/\/+$/, "") || "/";
 	return result;
 };
 
@@ -452,10 +457,8 @@ export const ssg = (overrides: SsgOptions = {}): Plugin[] => {
 						return;
 					}
 
-					if (!htmlRequest({ request, pathname: path })) return next();
-
-					const pathname =
-						path === "/index.html" ? "/" : path.replace(/\/+$/, "") || "/";
+					const pathname = htmlRequestPath({ request, pathname: path });
+					if (!pathname) return next();
 
 					const app = await loadEntry({ server, entry, runtime, excerpts });
 					const route = findRoute({ pathname, routes: app.routes, locales });
@@ -509,10 +512,10 @@ export const ssg = (overrides: SsgOptions = {}): Plugin[] => {
 			server.middlewares.use(async (request, response, next) => {
 				const url = new URL(request.url ?? "/", "http://localhost");
 				const path = withinBase({ pathname: url.pathname, base });
-				if (!path || !htmlRequest({ request, pathname: path })) return next();
+				if (!path) return next();
 
-				const pathname =
-					path === "/index.html" ? "/" : path.replace(/\/+$/, "") || "/";
+				const pathname = htmlRequestPath({ request, pathname: path });
+				if (!pathname) return next();
 
 				const route = findRoute({ pathname, routes: manifest.routes, locales });
 				if (!route) return next();

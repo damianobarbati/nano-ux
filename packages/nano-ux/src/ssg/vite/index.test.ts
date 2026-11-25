@@ -9,6 +9,7 @@ import { build, createServer, type InlineConfig, preview } from "vite";
 import { discoverRoutes, validateRoutes } from "../routing/routes.ts";
 import { enrichRobots } from "../server/robots.ts";
 import { fotoneFlags } from "../server/runtime.ts";
+import { formatHtml } from "./formatHtml.ts";
 import { ssg } from "./index.ts";
 
 test("maps folders to URL segments and Home to the folder index", () => {
@@ -297,7 +298,9 @@ test("generates route output and serves matching dev and preview responses", asy
 		],
 	};
 
-	const jsonLdScript = /<script type="application\/ld\+json">([^<]*)<\/script>/;
+	const jsonLdScript =
+		/<script data-ssg-head type="application\/ld\+json">([^<]*)<\/script>/;
+
 	let devRobots: string;
 
 	const server = await createServer({
@@ -347,7 +350,7 @@ test("generates route output and serves matching dev and preview responses", asy
 
 		assert.match(
 			page,
-			/<head>[\s\S]*<title>incontri<\/title>[\s\S]*og:title[\s\S]*<\/head>/,
+			/<head>[\s\S]*<title data-ssg-head>incontri<\/title>[\s\S]*og:title[\s\S]*<\/head>/,
 		);
 
 		assert.match(page.split("</head>")[0], jsonLdScript);
@@ -372,12 +375,12 @@ test("generates route output and serves matching dev and preview responses", asy
 
 		assert.match(
 			await (await fetch(`${origin}/legal/terms`)).text(),
-			/<title>Legal terms<\/title>/,
+			/<title data-ssg-head>Legal terms<\/title>/,
 		);
 
 		assert.match(
 			await (await fetch(`${origin}/en`)).text(),
-			/<title>Home<\/title>/,
+			/<title data-ssg-head>Home<\/title>/,
 		);
 
 		const clientRoutes = `${origin}/@id/__x00__virtual:ssg/routes`;
@@ -430,6 +433,8 @@ test("generates route output and serves matching dev and preview responses", asy
 		"utf8",
 	);
 
+	assert.doesNotMatch(italian, /<!--ssg-head-(?:start|end)-->/);
+
 	const script = jsonLdScript.exec(italian.split("</head>")[0]);
 
 	assert.ok(script);
@@ -462,7 +467,7 @@ test("generates route output and serves matching dev and preview responses", asy
 
 	assert.match(
 		await readFile(join(root, "dist/legal/terms.html"), "utf8"),
-		/<title>Updated terms<\/title>/,
+		/<title data-ssg-head>Updated terms<\/title>/,
 	);
 
 	assert.match(
@@ -557,7 +562,7 @@ test("uses built-in rendering and supports optional project overrides", async (c
 
 	const server = await createServer({
 		...config,
-		plugins: [ssg()],
+		plugins: [ssg(), formatHtml()],
 		optimizeDeps: { include: ["react"] },
 		server: { host: "127.0.0.1", port: 0 },
 	});
@@ -575,7 +580,8 @@ test("uses built-in rendering and supports optional project overrides", async (c
 		const origin = `http://127.0.0.1:${port}`;
 		const html = await (await fetch(`${origin}/about`)).text();
 
-		assert.match(html, /<main>About us<\/main>/);
+		assert.match(html, /<div id="root"\n +>/);
+		assert.match(html, /<main>About us<\/main\s*>/);
 
 		const client = html.match(/src="([^"]+html-proxy[^"]+)"/);
 
@@ -590,13 +596,13 @@ test("uses built-in rendering and supports optional project overrides", async (c
 		await server.close();
 	}
 
-	await build({ ...config, plugins: [ssg()] });
+	await build({ ...config, plugins: [ssg(), formatHtml()] });
 
 	const about = await readFile(join(root, "dist/about.html"), "utf8");
 
 	assert.match(
 		about,
-		/<a [^>]*aria-current="page"[^>]*>About<\/a><a href="\/">Menu<\/a>/,
+		/<a[^>]*aria-current="page"[^>]*>About<\/a\s*><a\s+href="\/"\s*>Menu<\/a\s*>/,
 	);
 
 	const index = JSON.parse(

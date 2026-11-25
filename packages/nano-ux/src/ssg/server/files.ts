@@ -33,6 +33,22 @@ const xml = (value: string) => {
 	return result;
 };
 
+const markPrerenderedHead = (html: string) => {
+	const result = html.replace(
+		/<!--[\s\S]*?-->|<(script|style|title|textarea|noscript)(?=[\s>])(?:[^>"']|"[^"]*"|'[^']*')*>[\s\S]*?<\/\1\s*>|<[a-z][\w:-]*(?:[^>"']|"[^"]*"|'[^']*')*>/gi,
+		(tag) => {
+			const marked = tag.replace(
+				/^<(title|meta|link|script)(?=[\s/>])/i,
+				"<$1 data-ssg-head",
+			);
+
+			return marked;
+		},
+	);
+
+	return result;
+};
+
 export const renderDocument = ({
 	template,
 	route,
@@ -90,14 +106,14 @@ export const renderDocument = ({
 		}),
 	);
 
+	const routeHead = markPrerenderedHead(
+		tags + (rendered.head ?? "") + (rendered.pageHead ?? ""),
+	);
+
 	const result = html.replace(
 		/<!--route-metadata-->|<!--route-ssg-->/g,
 		(marker) => {
-			const content =
-				marker === head
-					? `<!--ssg-head-start-->${tags}${rendered.head ?? ""}${rendered.pageHead ?? ""}<!--ssg-head-end-->`
-					: (rendered.body ?? "");
-
+			const content = marker === head ? routeHead : (rendered.body ?? "");
 			return content;
 		},
 	);

@@ -16,7 +16,7 @@
     "release": "pnpm -F nano-ux publish --no-git-checks",
     "stop": "for port in 9000 9001; do lsof -nP -tiTCP:$port -sTCP:LISTEN | while read -r pid; do kill \"$pid\"; done; done",
     "dev": "pnpm -F nano-ux run build && pnpm -F website run dev",
-    "demo": "pnpm -F nano-ux run build && pnpm --parallel --filter nano-ux --filter demo run dev",
+    "demo": "pnpm -F nano-ux run build && pnpm --parallel -F nano-ux -F demo run dev",
     "preview": "pnpm -F website run preview",
     "bump": "pnpm -r --include-workspace-root version"
   },
