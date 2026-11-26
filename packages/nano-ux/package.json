@@ -51,7 +51,7 @@
     "dev:tsc": "tsc --watch",
     "build": "rm -rf dist && tsc && tailwindcss -i src/style/theme.css -o dist/theme.css --minify && cp -R src/style/. dist/style/",
     "prepack": "pnpm run build && cp ../../README.md README.md",
-    "dev:preview": "miral preview"
+    "dev:preview": "miral dev"
   },
   "dependencies": {
     "@tanstack/react-table": "^9.3.1",
@@ -68,7 +68,8 @@
     "@types/prismjs": "^1.26.6",
     "@types/react": "^19.3.3",
     "@types/react-dom": "^19.3.0",
-    "miral": "0.0.5",
+    "miral": "0.0.6",
+    "preact": "^11.2.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.92.0",

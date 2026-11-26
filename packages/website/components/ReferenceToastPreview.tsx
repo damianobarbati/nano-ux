@@ -7,6 +7,7 @@ export const ReferenceToastPreview = ({
 	className,
 }: ReferenceToastPreviewProps) => {
 	const [trigger, setTrigger] = React.useState<HTMLButtonElement>();
+
 	return (
 		<div className={className}>
 			<Button

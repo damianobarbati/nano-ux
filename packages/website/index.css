@@ -57,10 +57,6 @@ body {
 }
 
 @media (scripting: none) {
-  .prism-code > span:has(+ noscript) {
-    display: none;
-  }
-
   #root section.opacity-0 {
     opacity: 1;
     translate: none;

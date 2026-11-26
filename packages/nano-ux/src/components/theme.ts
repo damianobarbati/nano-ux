@@ -69,7 +69,6 @@ export const getTheme = ({
 
 export const applyTheme = ({ theme }: ThemeInput) => {
 	const root = document.documentElement;
-
 	root.classList.toggle("light", theme === "light");
 	root.classList.toggle("dark", theme === "dark");
 

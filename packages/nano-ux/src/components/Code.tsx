@@ -6,7 +6,6 @@ import React from "react";
 import { createPortal } from "react-dom";
 import * as z from "zod/mini";
 import { ICopy } from "../icons.tsx";
-import { Spinner } from "./Spinner.tsx";
 import { Toast } from "./Toast.tsx";
 
 const codeClassName =
@@ -42,7 +41,7 @@ export const Code = ({
 	copyable = true,
 	strings,
 }: CodeProps) => {
-	const [prism, setPrism] = React.useState<typeof PrismInstance | null>();
+	const [prism, setPrism] = React.useState<typeof PrismInstance | null>(null);
 
 	React.useEffect(() => {
 		let mounted = true;
@@ -73,16 +72,7 @@ export const Code = ({
 
 	let code;
 
-	if (prism === undefined) {
-		code = (
-			<>
-				<Spinner centered label={strings?.loading} />
-				<noscript>
-					<code>{text}</code>
-				</noscript>
-			</>
-		);
-	} else if (prism && grammar && typeof grammar === "object") {
+	if (prism && grammar && typeof grammar === "object") {
 		code = (
 			<code
 				dangerouslySetInnerHTML={{

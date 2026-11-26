@@ -12,6 +12,7 @@ export const ReferenceLazyPreview = ({
 	children,
 }: ReferenceLazyPreviewProps) => {
 	const { ref, hasEnteredView } = useInViewOnce();
+
 	return (
 		<div className={cx("relative min-w-0", className)} ref={ref}>
 			{hasEnteredView && (

@@ -65,7 +65,7 @@ export const useInfiniteTable = <T extends object>({
 		await setSize(pages.length + 1);
 	};
 
-	return {
+	const result = {
 		tableKey,
 		tableProps: {
 			data,
@@ -76,4 +76,6 @@ export const useInfiniteTable = <T extends object>({
 		error,
 		mutate,
 	};
+
+	return result;
 };

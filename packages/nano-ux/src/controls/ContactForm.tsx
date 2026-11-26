@@ -15,12 +15,15 @@ export type ContactValues = {
 const getContactDefaults = () => {
 	const search = typeof window === "undefined" ? "" : window.location.search;
 	const query = new URLSearchParams(search);
-	return {
+
+	const result = {
 		email: query.get("email") ?? "",
 		subject: query.get("subject") ?? "",
 		content: query.get("content") ?? "",
 		website: "",
 	};
+
+	return result;
 };
 
 const defaultStrings = {

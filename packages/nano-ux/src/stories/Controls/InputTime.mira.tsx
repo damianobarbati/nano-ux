@@ -38,6 +38,7 @@ export const defaults = { label: "InputTime", type: "date" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<InputTime name="example" {...props} />

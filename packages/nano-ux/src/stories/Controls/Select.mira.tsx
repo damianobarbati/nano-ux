@@ -39,6 +39,7 @@ export const defaults = { label: "Select" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<Select name="example" children={<option>Example</option>} {...props} />

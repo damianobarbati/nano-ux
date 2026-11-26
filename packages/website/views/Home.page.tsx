@@ -116,16 +116,11 @@ export const Page = () => {
 						data-theme-background
 						className="mt-6 flex flex-wrap justify-center gap-3"
 					>
-						<Button as="a" href="#theme">
-							Customize the theme
+						<Button as="a" href="./documentation#setup">
+							Get started
 						</Button>
-						<Button
-							as="a"
-							href="#typography"
-							variant="outline"
-							color="secondary"
-						>
-							Explore
+						<Button as="a" href="#theme" variant="outline" color="secondary">
+							Try the theme
 						</Button>
 					</div>
 				</div>
@@ -281,6 +276,7 @@ const Theme = ({ brand, onBrandChange }: BrandProps) => {
 		.map(([property, value]) => `  ${property}: ${value};`);
 
 	const css = [":root {", ...declarations, "}"].join("\n");
+
 	return (
 		<FadeIn aria-labelledby="theme" className="py-12">
 			<h2 id="theme" className="typo-lg scroll-mt-6">
@@ -723,7 +719,8 @@ const brandColors = [
 
 const brandOptions = brandColors.map((name) => {
 	const backgroundColor = brandValue(name) || "var(--color-fg)";
-	return {
+
+	const result = {
 		label: name,
 		value: name,
 		content: (
@@ -739,6 +736,8 @@ const brandOptions = brandColors.map((name) => {
 			</>
 		),
 	};
+
+	return result;
 });
 
 const Colors = ({ brand, onBrandChange }: BrandProps) => {
@@ -755,6 +754,7 @@ const Colors = ({ brand, onBrandChange }: BrandProps) => {
 			<div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-4 xl:grid-cols-8">
 				{brandColors.map((name) => {
 					const swatchColor = brandValue(name) || "var(--color-fg)";
+
 					return (
 						<Button
 							key={name}
@@ -797,11 +797,13 @@ const useProfileSearch = () => {
 		const term = query.trim().toLowerCase();
 		if (!term) return profiles;
 
-		return profiles.filter((row) =>
+		const result = profiles.filter((row) =>
 			[row.name, row.email, ...row.interests].some((value) =>
 				value.toLowerCase().includes(term),
 			),
 		);
+
+		return result;
 	}, [query]);
 
 	return { search, query, filteredProfiles };
@@ -815,6 +817,7 @@ const ProfileTable = ({
 	filteredProfiles,
 }: ProfileTableProps) => {
 	const inputId = React.useId();
+
 	return (
 		<>
 			<h3>TableVirtual</h3>
@@ -870,6 +873,7 @@ const dashboardCardClasses = {
 
 const Dashboard = () => {
 	const { ref, hasEnteredView } = useInViewOnce();
+
 	return (
 		<FadeIn
 			id="dashboard"

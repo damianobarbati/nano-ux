@@ -4,6 +4,7 @@ import { Slider, SliderPropsSchema } from "../../controls/Slider.tsx";
 
 export const Preview = () => {
 	const form = useForm({ defaultValues: { volume: 50, disabledVolume: 25 } });
+
 	return (
 		<FormProvider {...form}>
 			<div className="w-64 space-y-4">
@@ -24,6 +25,7 @@ export const defaults = { label: "Slider" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<Slider name="example" {...props} />

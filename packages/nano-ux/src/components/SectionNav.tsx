@@ -103,6 +103,7 @@ export const SectionNav = ({
 		activeHref && activeHref.startsWith("#") ? "location" : "page";
 
 	const handleMenuClick = () => setMenuOpen(!menuOpen);
+
 	return (
 		<nav
 			className={cx(

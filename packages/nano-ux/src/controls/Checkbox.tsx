@@ -44,6 +44,7 @@ export const Checkbox = ({
 	});
 
 	const registration = field.registration;
+
 	return (
 		<label
 			className={cx(

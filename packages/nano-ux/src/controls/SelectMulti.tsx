@@ -259,7 +259,6 @@ export const SelectMulti = (props: SelectMultiProps) => {
 		optionList.scrollTop = 0;
 
 		const observer = new ResizeObserver(schedulePosition);
-
 		observer.observe(anchor);
 		observer.observe(menuControls);
 		observer.observe(optionRows);

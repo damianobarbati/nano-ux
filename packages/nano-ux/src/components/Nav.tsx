@@ -63,6 +63,7 @@ export const Nav = ({
 	}, [open]);
 
 	const Icon = open ? IClose : IMenu;
+
 	return (
 		<>
 			<button

@@ -28,6 +28,7 @@ export const defaults = { label: "Toggle" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<Toggle name="example" {...props} />

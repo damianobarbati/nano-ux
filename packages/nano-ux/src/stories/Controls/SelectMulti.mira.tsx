@@ -340,6 +340,7 @@ export const defaults = { label: "SelectMulti" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<SelectMulti name="example" options={fiveOptions} {...props} />

@@ -41,6 +41,7 @@ export const defaults = { label: "Input" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<Input name="example" {...props} />

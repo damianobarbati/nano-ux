@@ -46,6 +46,7 @@ export const TableStoryLayout = ({
 	renderTable,
 }: TableStoryLayoutProps) => {
 	const empty = { data: [], emptyMessage: "No websites found." };
+
 	return (
 		<div className="grid w-[min(64rem,calc(100vw-2rem))] gap-8 [&_section]:min-w-0 [&_table]:table-fixed [&_table:not(.flex)]:min-w-[440px]">
 			<section>

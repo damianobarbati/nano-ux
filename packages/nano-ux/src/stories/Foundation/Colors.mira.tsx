@@ -360,6 +360,7 @@ const ProductSelectorExamples = ({ colors }: { colors: ProductColor[] }) => (
 	<div className="mt-6 grid gap-x-6 gap-y-5">
 		{colors.map((color) => {
 			const styles = productColorStyles[color.token];
+
 			return (
 				<div
 					className="grid gap-x-6 gap-y-3 @4xl:grid-cols-[minmax(10rem,0.7fr)_2fr]"
@@ -504,6 +505,7 @@ const ThemePanel = ({ mode }: { mode: "light" | "dark" }) => {
 				<div className={swatchGrid}>
 					{productColors.map((color) => {
 						const styles = productColorStyles[color.token];
+
 						return (
 							<ContrastPair
 								key={color.token}

@@ -60,7 +60,7 @@ export function useSelectOptions(
 		return () => controller.abort();
 	}, [fetcher]);
 
-	return {
+	const result2 = {
 		options: result?.options,
 		loading: !!fetcher && (result?.fetcher !== fetcher || !!result.loading),
 		error:
@@ -68,4 +68,6 @@ export function useSelectOptions(
 				? loadError
 				: undefined,
 	};
+
+	return result2;
 }

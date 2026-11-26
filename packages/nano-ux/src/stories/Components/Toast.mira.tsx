@@ -5,6 +5,7 @@ import { Toast, ToastPropsSchema } from "../../components/Toast.tsx";
 
 const Example = () => {
 	const [trigger, setTrigger] = React.useState<HTMLButtonElement>();
+
 	return (
 		<>
 			<Button onClick={(event) => setTrigger(event.currentTarget)}>

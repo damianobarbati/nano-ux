@@ -45,6 +45,7 @@ export const Textarea = ({
 	});
 
 	const registration = field.registration;
+
 	return (
 		<Field
 			className={className}

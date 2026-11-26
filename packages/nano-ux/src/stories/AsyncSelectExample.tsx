@@ -18,10 +18,12 @@ function createFetcher(): SelectOptionsFetcher {
 			);
 		});
 
-		return ["example.com", "website.test", "acme.dev"].map((value) => ({
+		const result = ["example.com", "website.test", "acme.dev"].map((value) => ({
 			value,
 			label: value,
 		}));
+
+		return result;
 	};
 }
 
@@ -31,6 +33,7 @@ export const AsyncSelectExample = ({
 	children: (fetcher: SelectOptionsFetcher) => React.ReactNode;
 }) => {
 	const [fetcher, setFetcher] = React.useState(createFetcher);
+
 	return (
 		<div className="grid gap-2">
 			{children(fetcher)}

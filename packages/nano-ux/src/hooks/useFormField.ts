@@ -55,7 +55,8 @@ export const useFormField = <T extends FieldElement>({
 			: undefined);
 
 	const inputId = id || generatedId;
-	return {
+
+	const result = {
 		id: inputId,
 		error: message,
 		registration: {
@@ -77,4 +78,6 @@ export const useFormField = <T extends FieldElement>({
 			},
 		},
 	};
+
+	return result;
 };

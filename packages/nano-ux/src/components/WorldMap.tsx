@@ -98,6 +98,7 @@ export const WorldMap = ({
 			>
 				{geometry?.map(([code, name, path]) => {
 					const intensity = values.get(code);
+
 					return (
 						<path
 							key={name}

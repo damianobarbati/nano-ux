@@ -8,6 +8,7 @@ import {
 
 export const Preview = () => {
 	const form = useForm({ defaultValues: { search: "" } });
+
 	return (
 		<FormProvider {...form}>
 			<form role="search" onSubmit={(event) => event.preventDefault()}>
@@ -28,6 +29,7 @@ export const defaults = { label: "InputSearch" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<InputSearch name="example" {...props} />

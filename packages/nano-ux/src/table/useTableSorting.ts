@@ -36,10 +36,13 @@ export const useTableSorting = <Row>(
 		if (onSort || !active) return rows;
 
 		const factor = active.direction === "asc" ? 1 : -1;
-		return [...rows].sort(
+
+		const result = [...rows].sort(
 			(a, b) =>
 				factor * compare(getValue(a, active.id), getValue(b, active.id)),
 		);
+
+		return result;
 	}, [active, getValue, onSort, rows]);
 
 	const selectColumn = (id: string) => {
@@ -52,5 +55,6 @@ export const useTableSorting = <Row>(
 		else setLocalSort(next);
 	};
 
-	return { rows: sortedRows, sort: active, onSort: selectColumn };
+	const result = { rows: sortedRows, sort: active, onSort: selectColumn };
+	return result;
 };

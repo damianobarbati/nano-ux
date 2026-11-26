@@ -49,12 +49,14 @@ function createProfiles(): Profile[] {
 		"Taylor Chen",
 	];
 
-	return Array.from({ length: 10_000 }, (_, index) => ({
+	const result = Array.from({ length: 10_000 }, (_, index) => ({
 		id: String(index + 1),
 		name: names[index % names.length],
 		email: `member${index + 1}@example.com`,
 		interests: [interestOptions[index % interestOptions.length].value],
 	}));
+
+	return result;
 }
 
 export const dailySignups = [

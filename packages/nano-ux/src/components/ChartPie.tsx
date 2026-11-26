@@ -71,7 +71,7 @@ export const ChartPie = ({
 			};
 		}
 
-		return {
+		const result = {
 			legend,
 			tooltip: {
 				trigger: "item",
@@ -95,6 +95,8 @@ export const ChartPie = ({
 				},
 			],
 		};
+
+		return result;
 	}, [data, showLegend, valueFormatter]);
 
 	if (loading || data.length === 0) {

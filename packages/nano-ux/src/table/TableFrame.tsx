@@ -56,7 +56,6 @@ export const TableFrame = ({
 		updateHeaderHeight();
 
 		const observer = new ResizeObserver(updateHeaderHeight);
-
 		observer.observe(header);
 		return () => observer.disconnect();
 	}, [loading]);

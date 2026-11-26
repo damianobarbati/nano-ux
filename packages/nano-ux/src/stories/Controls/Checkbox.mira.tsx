@@ -30,6 +30,7 @@ export const defaults = { label: "Checkbox" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<Checkbox name="example" {...props} />

@@ -88,6 +88,7 @@ export const Spinner = ({
 		: spinnerVariants.arc;
 
 	const icon = <Renderer size={size} className="block size-full" />;
+
 	return (
 		<span
 			ref={anchorRef}

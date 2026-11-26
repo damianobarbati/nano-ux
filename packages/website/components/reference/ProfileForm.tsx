@@ -8,6 +8,7 @@ type ProfileFormProps = { className?: string };
 export const ProfileForm = ({ className }: ProfileFormProps) => {
 	const form = useForm({ defaultValues: { name: "" } });
 	const [savedName, setSavedName] = React.useState("");
+
 	return (
 		<Form
 			className={cx("grid gap-3", className)}

@@ -10,6 +10,7 @@ import { Input } from "../../controls/Input.tsx";
 const ConfirmationExample = () => {
 	const [open, setOpen] = React.useState(false);
 	const [message, setMessage] = React.useState("");
+
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>Delete item</Button>
@@ -63,6 +64,7 @@ type LessonDetailsOptions = Pick<
 
 const LessonDetailsExample = (options: LessonDetailsOptions) => {
 	const [open, setOpen] = React.useState(false);
+
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>Lesson details</Button>
@@ -86,6 +88,7 @@ const LessonDetailsExample = (options: LessonDetailsOptions) => {
 const EditNameExample = () => {
 	const [open, setOpen] = React.useState(false);
 	const form = useForm({ defaultValues: { name: "", reference: "" } });
+
 	return (
 		<>
 			<Button onClick={() => setOpen(true)}>Edit name</Button>

@@ -28,12 +28,15 @@ const loadWebsites = async ({ offset, limit, group }: PageRequest) => {
 	await new Promise<void>((resolve) => window.setTimeout(resolve, 100));
 
 	const count = countWebsites({ group });
-	return Array.from(
+
+	const result = Array.from(
 		{ length: Math.min(limit, Math.max(0, count - offset)) },
 		(_, index) => ({
 			domain: `${group.toLowerCase()}-${offset + index + 1}.example.com`,
 		}),
 	);
+
+	return result;
 };
 
 const InfiniteWebsites = () => {

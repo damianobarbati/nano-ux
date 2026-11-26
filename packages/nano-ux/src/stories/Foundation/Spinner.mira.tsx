@@ -46,6 +46,7 @@ const ScrollCard = ({
 	const [count, setCount] = React.useState(0);
 	const title = internal ? "Card scroll" : "Page scroll";
 	const height = internal ? "h-[min(85dvh,900px)] overflow-auto" : "h-[1000px]";
+
 	return (
 		<section aria-label={title} className={cx("card grid min-w-0 p-0", height)}>
 			{loading && (
@@ -79,6 +80,7 @@ const ScrollCard = ({
 const ScrollablePanel = () => {
 	const [loading, setLoading] = React.useState(false);
 	const [overlay, setOverlay] = React.useState(true);
+
 	return (
 		<div className="grid gap-4">
 			<div className="flex items-center gap-4">

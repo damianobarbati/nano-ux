@@ -164,7 +164,6 @@ export const Swiper = ({
 		measure();
 
 		const observer = new ResizeObserver(measure);
-
 		observer.observe(slide);
 		return () => observer.disconnect();
 	}, []);

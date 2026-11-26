@@ -229,6 +229,7 @@ export const schema = z.pick(FormPropsSchema, {
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<Form form={form} onSubmit={() => {}} {...props}>
 			<Input name="example" label="Name" />

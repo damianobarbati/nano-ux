@@ -34,10 +34,12 @@ const formatValue = ({
 	}
 
 	if (formatAs === "percent") {
-		return (value / 100).toLocaleString(undefined, {
+		const result = (value / 100).toLocaleString(undefined, {
 			style: "percent",
 			maximumFractionDigits: Math.abs(value) > 1 ? 0 : 2,
 		});
+
+		return result;
 	}
 
 	const notation = value >= 10000 ? "compact" : "standard";
@@ -49,13 +51,15 @@ const formatValue = ({
 		});
 	}
 
-	return value.toLocaleString(undefined, {
+	const result = value.toLocaleString(undefined, {
 		style: "currency",
 		currency: formatAs,
 		currencyDisplay: "narrowSymbol",
 		maximumFractionDigits: value < 1 ? 2 : 0,
 		notation,
 	});
+
+	return result;
 };
 
 export const KPI = ({

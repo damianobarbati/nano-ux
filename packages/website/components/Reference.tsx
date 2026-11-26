@@ -470,6 +470,36 @@ const referenceSections = [
 	})),
 }));
 
+const viteSetups = [
+	{
+		id: "vite-react",
+		title: "React",
+		install: `npm install -D nano-ux
+npm install -D vite @vitejs/plugin-react typescript @types/react @types/react-dom`,
+		plugin: "react",
+		preset: "@vitejs/plugin-react",
+		compilerOptions: { jsx: "react-jsx" },
+	},
+	{
+		id: "vite-preact",
+		title: "Preact",
+		install: `npm install -D nano-ux preact
+npm install -D vite @preact/preset-vite typescript`,
+		plugin: "preact",
+		preset: "@preact/preset-vite",
+		compilerOptions: {
+			jsx: "react-jsx",
+			jsxImportSource: "preact",
+			skipLibCheck: true,
+			paths: {
+				react: ["./node_modules/preact/compat"],
+				"react-dom": ["./node_modules/preact/compat"],
+				"react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+			},
+		},
+	},
+];
+
 const sections = [
 	{
 		id: "setup",
@@ -481,6 +511,14 @@ const sections = [
 		],
 	},
 	...referenceSections,
+	{
+		id: "vite",
+		title: "Use Vite",
+		items: viteSetups.map(({ id, title }) => ({
+			label: title,
+			href: `#${id}`,
+		})),
+	},
 	{
 		id: "ssg",
 		title: 'Use "nano-ssg"',
@@ -664,6 +702,65 @@ export const Reference = ({ className }: ReferenceProps) => {
 							)}
 						</section>
 					))}
+					<section
+						id="vite"
+						className="mt-12 grid gap-4"
+						aria-labelledby="vite-heading"
+					>
+						<h2 id="vite-heading">Use Vite</h2>
+						<div className="grid items-start gap-6 md:grid-cols-2">
+							{viteSetups.map(
+								({ id, title, install, plugin, preset, compilerOptions }) => (
+									<div
+										key={id}
+										id={id}
+										className="grid min-w-0 scroll-mt-6 gap-3"
+									>
+										<h3>{title}</h3>
+										{[
+											{
+												label: "npm install",
+												language: "shell",
+												text: install,
+											},
+											{
+												label: "vite.config.ts",
+												language: "typescript",
+												text: `import ${plugin} from "${preset}";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [${plugin}()],
+});`,
+											},
+											{
+												label: "tsconfig.json",
+												language: "json",
+												text: JSON.stringify(
+													{
+														compilerOptions: {
+															module: "ESNext",
+															moduleResolution: "Bundler",
+															...compilerOptions,
+														},
+													},
+													null,
+													2,
+												),
+											},
+										].map(({ label, language, text }) => (
+											<figure key={label} className="min-w-0">
+												<figcaption className="mb-1 font-mono text-xs text-fg-muted">
+													{label}
+												</figcaption>
+												<Code language={language} text={text} />
+											</figure>
+										))}
+									</div>
+								),
+							)}
+						</div>
+					</section>
 					<section
 						id="ssg"
 						className="mt-12 grid gap-4"

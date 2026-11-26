@@ -101,6 +101,7 @@ export const Preview = () => (
 				<tbody>
 					{inventory.map((name) => {
 						const Icon = icons[name];
+
 						return (
 							<tr className="border-t border-border" key={name}>
 								<td className="p-2">

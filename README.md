@@ -55,7 +55,7 @@ Demo at <http://localhost:9001>.
 
 ```sh
 pnpm build
-pnpm preview
+pnpm -F website preview
 ```
 
 Preview at <http://localhost:9001/nano-ux/>.

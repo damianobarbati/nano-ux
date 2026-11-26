@@ -28,6 +28,7 @@ export const defaults = { label: "Textarea" };
 
 export const Playground = (props: z.infer<typeof schema>) => {
 	const form = useForm();
+
 	return (
 		<FormProvider {...form}>
 			<Textarea name="example" {...props} />

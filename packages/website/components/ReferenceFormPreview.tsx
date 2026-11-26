@@ -27,6 +27,7 @@ export const ReferenceFormPreview = ({
 	const [fetcher, setFetcher] = React.useState(() => loadColors);
 	const [savedColors, setSavedColors] = React.useState<ColorFormValues>();
 	const reloadOptions = () => setFetcher(() => () => loadColors());
+
 	return (
 		<Form
 			className={cx("grid justify-items-start gap-3", className)}

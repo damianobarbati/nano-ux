@@ -44,6 +44,7 @@ export const Toggle = ({
 	});
 
 	const registration = field.registration;
+
 	return (
 		<label
 			className={cx(
