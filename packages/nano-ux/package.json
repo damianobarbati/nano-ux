@@ -1,6 +1,6 @@
 {
   "name": "nano-ux",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "license": "MIT",
   "description": "Nano sized UI kit.",
   "author": "Damiano Barbati <damiano.barbati@gmail.com> (https://github.com/damianobarbati)",
@@ -68,11 +68,11 @@
     "@types/prismjs": "^1.26.6",
     "@types/react": "^19.3.2",
     "@types/react-dom": "^19.3.0",
+    "miral": "link:../../../miral",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.92.0",
     "typescript": "~7.0.2",
-    "miral": "link:../../../miral",
     "vite": "^8.3.8"
   },
   "peerDependencies": {
