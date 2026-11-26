@@ -12,7 +12,7 @@ See live demo [here](https://damianobarbati.github.io/nano-ux/).
 Install:
 
 ```sh
-npm install nano-ux react react-dom react-hook-form swr
+npm install nano-ux
 ```
 
 Configure:
@@ -46,10 +46,9 @@ corepack enable
 pnpm install
 pnpm stop
 pnpm dev
-pnpm demo
 ```
 
-Storybook at <http://localhost:9000>.  
+UI playground at <http://localhost:9000>.  
 Demo at <http://localhost:9001>.
 
 ## Preview

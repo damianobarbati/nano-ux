@@ -2,16 +2,24 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 import { IClose, IMenu } from "../icons.tsx";
 
-export type NavProps = {
-	strings?: { open?: string; close?: string };
-	className?: string;
-	label: string;
-	children: React.ReactNode;
-	openLabel?: string;
-	closeLabel?: string;
-};
+export const NavPropsSchema = z.object({
+	strings: z.optional(
+		z.object({
+			open: z.optional(z.string()),
+			close: z.optional(z.string()),
+		}),
+	),
+	className: z.optional(z.string()),
+	label: z.string(),
+	children: z.custom<React.ReactNode>(),
+	openLabel: z.optional(z.string()),
+	closeLabel: z.optional(z.string()),
+});
+
+export type NavProps = z.infer<typeof NavPropsSchema>;
 
 export const Nav = ({
 	strings,

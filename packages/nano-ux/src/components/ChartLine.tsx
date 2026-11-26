@@ -3,6 +3,7 @@
 import cx from "clsx-tw";
 import type { EChartsCoreOption, LineSeriesOption } from "echarts";
 import React from "react";
+import * as z from "zod/mini";
 import { Chart, type ChartSeries, chartGrid } from "./Chart.tsx";
 import { ChartPlaceholder, type ChartStrings } from "./ChartPlaceholder.tsx";
 import { chartSeriesColor, getThemeColor } from "./themeColor.ts";
@@ -16,16 +17,20 @@ export type ChartLineSeries = ChartSeries & {
 	lineType?: "solid" | "dashed" | "dotted";
 };
 
-export type ChartLineProps = {
-	strings?: ChartStrings & { timestamp?: (timestamp: string) => string };
-	className?: string;
-	loading?: boolean;
-	label?: string;
-	data: ChartLineData[];
-	series: ChartLineSeries[];
-	interval: "hour" | "day" | "week" | "month";
-	valueFormatter: (value: number) => string;
-};
+export const ChartLinePropsSchema = z.object({
+	strings: z.optional(
+		z.custom<ChartStrings & { timestamp?: (timestamp: string) => string }>(),
+	),
+	className: z.optional(z.string()),
+	loading: z.optional(z.boolean()),
+	label: z.optional(z.string()),
+	data: z.custom<ChartLineData[]>(),
+	series: z.custom<ChartLineSeries[]>(),
+	interval: z.enum(["hour", "day", "week", "month"]),
+	valueFormatter: z.custom<(value: number) => string>(),
+});
+
+export type ChartLineProps = z.infer<typeof ChartLinePropsSchema>;
 
 export const ChartLine = ({
 	strings,

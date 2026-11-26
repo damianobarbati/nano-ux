@@ -1,7 +1,7 @@
 node_modules/
 dist/
 .idea/
-storybook-static/
 *.tgz
 /packages/nano-ux/README.md
 .DS_Store
+/.report/

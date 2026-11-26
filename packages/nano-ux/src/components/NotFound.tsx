@@ -1,15 +1,23 @@
 "use client";
 
 import cx from "clsx-tw";
+import * as z from "zod/mini";
 import { Button } from "./Button.tsx";
 
-export type NotFoundProps = {
-	strings?: { title?: string; action?: string };
-	className?: string;
-	title?: string;
-	href?: string;
-	actionLabel?: string;
-};
+export const NotFoundPropsSchema = z.object({
+	strings: z.optional(
+		z.object({
+			title: z.optional(z.string()),
+			action: z.optional(z.string()),
+		}),
+	),
+	className: z.optional(z.string()),
+	title: z.optional(z.string()),
+	href: z.optional(z.string()),
+	actionLabel: z.optional(z.string()),
+});
+
+export type NotFoundProps = z.infer<typeof NotFoundPropsSchema>;
 
 export const NotFound = ({
 	strings,

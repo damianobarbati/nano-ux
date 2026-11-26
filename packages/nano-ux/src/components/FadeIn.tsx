@@ -2,8 +2,14 @@
 
 import cx from "clsx-tw";
 import * as React from "react";
+import * as z from "zod/mini";
 
-export type FadeInProps = React.ComponentPropsWithoutRef<"section">;
+export const FadeInPropsSchema = z.object({
+	className: z.optional(z.string()),
+});
+
+export type FadeInProps = z.infer<typeof FadeInPropsSchema> &
+	React.ComponentPropsWithoutRef<"section">;
 
 export const FadeIn = ({
 	children,

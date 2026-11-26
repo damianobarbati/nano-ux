@@ -2,13 +2,16 @@
 
 import cx from "clsx-tw";
 import * as React from "react";
+import * as z from "zod/mini";
 
-export type TooltipProps = {
-	children: React.ReactElement;
-	className?: string;
-	content: React.ReactNode;
-	placement?: "top" | "bottom";
-};
+export const TooltipPropsSchema = z.object({
+	children: z.custom<React.ReactElement>(),
+	className: z.optional(z.string()),
+	content: z.custom<React.ReactNode>(),
+	placement: z.optional(z.enum(["top", "bottom"])),
+});
+
+export type TooltipProps = z.infer<typeof TooltipPropsSchema>;
 
 export const Tooltip = ({
 	children,

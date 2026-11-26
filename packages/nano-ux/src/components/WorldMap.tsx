@@ -1,20 +1,27 @@
 "use client";
 
 import React from "react";
+import * as z from "zod/mini";
 
 type MapGeometry = typeof import("../assets/worldmap.json");
 export type WorldMapData = { country: string; intensity: number };
 
-export type WorldMapProps = {
-	label: string;
-	data: readonly WorldMapData[];
-	strings?: {
-		noData?: string;
-		loadError?: string;
-		countryName?: (code: string, name: string) => string;
-	};
-	color?: string;
-};
+export const WorldMapPropsSchema = z.object({
+	label: z.string(),
+	data: z.custom<readonly WorldMapData[]>(),
+	strings: z.optional(
+		z.object({
+			noData: z.optional(z.string()),
+			loadError: z.optional(z.string()),
+			countryName: z.optional(
+				z.custom<(code: string, name: string) => string>(),
+			),
+		}),
+	),
+	color: z.optional(z.string()),
+});
+
+export type WorldMapProps = z.infer<typeof WorldMapPropsSchema>;
 
 // Simplified Natural Earth 1:50m country boundaries in projected SVG coordinates.
 export const WorldMap = ({

@@ -2,15 +2,23 @@
 
 import React from "react";
 import { type RegisterOptions, useFormContext } from "react-hook-form";
+import * as z from "zod/mini";
 
-export type FormFieldProps = {
-	name: string;
-	strings?: { invalidValue?: string };
-	label?: string;
-	helpText?: string;
-	error?: string;
-	rules?: RegisterOptions;
-};
+export const FormFieldPropsSchema = z.object({
+	name: z.string(),
+	strings: z.optional(z.object({ invalidValue: z.optional(z.string()) })),
+	label: z.optional(z.string()),
+	helpText: z.optional(z.string()),
+	error: z.optional(z.string()),
+	rules: z.optional(z.custom<RegisterOptions>()),
+});
+
+export type FormFieldProps = z.infer<typeof FormFieldPropsSchema>;
+
+export const controlPropsSchema = z.extend(FormFieldPropsSchema, {
+	className: z.optional(z.string()),
+	disabled: z.optional(z.boolean()),
+});
 
 type FieldElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 

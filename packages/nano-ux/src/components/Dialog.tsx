@@ -2,28 +2,33 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 import { Button } from "./Button.tsx";
 
-export type DialogProps = {
-	strings?: {
-		confirm?: string;
-		close?: string;
-		cancel?: string;
-		loading?: string;
-	};
-	className?: string;
-	open: boolean;
-	title: string;
-	children: React.ReactNode;
-	confirmLabel?: string;
-	fullscreen?: boolean;
-	closeOnBackdrop?: boolean;
-	closeLabel?: string;
-	cancelLabel?: string;
-	onConfirm?: () => void;
-	onClose: () => void;
-	busy?: boolean;
-};
+export const DialogPropsSchema = z.object({
+	strings: z.optional(
+		z.object({
+			confirm: z.optional(z.string()),
+			close: z.optional(z.string()),
+			cancel: z.optional(z.string()),
+			loading: z.optional(z.string()),
+		}),
+	),
+	className: z.optional(z.string()),
+	open: z.boolean(),
+	title: z.string(),
+	children: z.custom<React.ReactNode>(),
+	confirmLabel: z.optional(z.string()),
+	fullscreen: z.optional(z.boolean()),
+	closeOnBackdrop: z.optional(z.boolean()),
+	closeLabel: z.optional(z.string()),
+	cancelLabel: z.optional(z.string()),
+	onConfirm: z.optional(z.custom<() => void>()),
+	onClose: z.custom<() => void>(),
+	busy: z.optional(z.boolean()),
+});
+
+export type DialogProps = z.infer<typeof DialogPropsSchema>;
 
 export const Dialog = ({
 	strings,

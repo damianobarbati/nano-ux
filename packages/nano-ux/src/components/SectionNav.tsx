@@ -2,6 +2,7 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 import { IChevronDown } from "../icons.tsx";
 
 import { Accordion } from "./Accordion.tsx";
@@ -14,12 +15,14 @@ export type SectionNavSection = {
 	defaultExpanded?: boolean;
 };
 
-export type SectionNavProps = {
-	className?: string;
-	label?: string;
-	sections: SectionNavSection[];
-	currentHref?: string;
-};
+export const SectionNavPropsSchema = z.object({
+	className: z.optional(z.string()),
+	label: z.optional(z.string()),
+	sections: z.custom<SectionNavSection[]>(),
+	currentHref: z.optional(z.string()),
+});
+
+export type SectionNavProps = z.infer<typeof SectionNavPropsSchema>;
 
 export const SectionNav = ({
 	className,
@@ -30,8 +33,74 @@ export const SectionNav = ({
 	const [menuOpen, setMenuOpen] = React.useState(false);
 	const menuId = React.useId();
 
+	const [sectionHref, setSectionHref] = React.useState<string>();
+
+	React.useEffect(() => {
+		const targets: {
+			href: string;
+			element: HTMLElement;
+			scrollMargin: number;
+		}[] = [];
+
+		for (const { items } of sections) {
+			for (const { href } of items) {
+				if (!href.startsWith("#")) continue;
+
+				const element = document.getElementById(href.slice(1));
+
+				if (element) {
+					const scrollMargin =
+						Number.parseFloat(getComputedStyle(element).scrollMarginTop) || 0;
+
+					targets.push({ href, element, scrollMargin });
+				}
+			}
+		}
+
+		if (!targets.length) {
+			setSectionHref(undefined);
+			return;
+		}
+
+		const updateSection = () => {
+			const atBottom =
+				window.scrollY > 0 &&
+				window.scrollY + window.innerHeight >=
+					document.documentElement.scrollHeight - 1;
+
+			let closestTop = -Infinity;
+			let activeHref = targets[0].href;
+
+			for (const { href, element, scrollMargin } of targets) {
+				const top = element.getBoundingClientRect().top;
+				const threshold = atBottom ? window.innerHeight : scrollMargin + 1;
+
+				if (top <= threshold && top > closestTop) {
+					closestTop = top;
+					activeHref = href;
+				}
+			}
+
+			setSectionHref(activeHref);
+		};
+
+		updateSection();
+		window.addEventListener("scroll", updateSection, { passive: true });
+		window.addEventListener("resize", updateSection);
+
+		return () => {
+			window.removeEventListener("scroll", updateSection);
+			window.removeEventListener("resize", updateSection);
+		};
+	}, [sections]);
+
+	const activeHref =
+		currentHref && !currentHref.startsWith("#")
+			? currentHref
+			: (sectionHref ?? currentHref);
+
 	const current =
-		currentHref && currentHref.startsWith("#") ? "location" : "page";
+		activeHref && activeHref.startsWith("#") ? "location" : "page";
 
 	const handleMenuClick = () => setMenuOpen(!menuOpen);
 	return (
@@ -68,7 +137,7 @@ export const SectionNav = ({
 										<a
 											className="block rounded-control px-3 py-2 wrap-anywhere hover:bg-layer hover:text-[color:var(--color-brand,var(--color-fg))] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus aria-[current]:bg-layer aria-[current]:font-semibold aria-[current]:text-[color:var(--color-brand,var(--color-fg))]"
 											href={href}
-											aria-current={href === currentHref ? current : undefined}
+											aria-current={href === activeHref ? current : undefined}
 										>
 											{label}
 										</a>

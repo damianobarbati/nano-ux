@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/svg+xml" href="/logo-dark.svg">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./index.css">
+    <!--route-metadata-->
+  </head>
+  <body>
+    <div id="root"><!--route-ssg--></div>
+    <script type="module">
+      import "virtual:ssg/client";
+      import { initNavScroll } from "nano-ux/helpers";
+
+      initNavScroll();
+    </script>
+  </body>
+</html>

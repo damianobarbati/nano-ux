@@ -4,7 +4,7 @@ import React from "react";
 import { unstable_serialize } from "swr";
 import type { SWRInfiniteResponse } from "swr/infinite";
 import useSWRInfinite from "swr/infinite";
-import type { TableVirtualProps } from "../components/table/TableVirtual.tsx";
+import type { TableVirtualProps } from "../table/TableVirtual.tsx";
 
 type PageRequest = { offset: number; limit: number };
 

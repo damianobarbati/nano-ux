@@ -1,12 +1,19 @@
 import cx from "clsx-tw";
 import type React from "react";
+import * as z from "zod/mini";
 
-export type MockupProps = React.HTMLAttributes<HTMLDivElement> &
-	(
-		| { variant?: "browser"; address?: string; appearance?: never }
-		| { variant: "smartphone"; address?: never; appearance?: never }
-		| { variant: "terminal"; address?: never; appearance?: "light" | "dark" }
-	);
+export const MockupPropsSchema = z.object({
+	className: z.optional(z.string()),
+	variant: z.optional(z.enum(["browser", "smartphone", "terminal"])),
+});
+
+export type MockupProps = z.infer<typeof MockupPropsSchema> &
+	(React.HTMLAttributes<HTMLDivElement> &
+		(
+			| { variant?: "browser"; address?: string; appearance?: never }
+			| { variant: "smartphone"; address?: never; appearance?: never }
+			| { variant: "terminal"; address?: never; appearance?: "light" | "dark" }
+		));
 
 export const Mockup = ({
 	variant = "browser",

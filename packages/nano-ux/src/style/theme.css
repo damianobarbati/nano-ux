@@ -7,6 +7,9 @@
 @import "./form.css";
 @import "./code.css";
 @source "../components";
+@source "../controls";
+@source "../table";
+@source "../stories";
 
 @custom-variant dark (&:where(.dark, .dark *));
 

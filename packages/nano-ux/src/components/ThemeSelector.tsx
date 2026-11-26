@@ -2,6 +2,7 @@
 
 import cx from "clsx-tw";
 import * as React from "react";
+import * as z from "zod/mini";
 import { IMonitor, IMoon, ISun } from "../icons.tsx";
 import { Tooltip } from "./Tooltip.tsx";
 
@@ -14,14 +15,21 @@ import {
 	type Theme,
 } from "./theme.ts";
 
-export type ThemeSelectorProps = {
-	className?: string;
-	defaultTheme?: Theme;
-	strings?: Partial<Record<Theme, string>> & {
-		themeLabel?: (name: string) => string;
-	};
-	tooltipPlacement?: "top" | "bottom";
-};
+export const ThemeSelectorPropsSchema = z.object({
+	className: z.optional(z.string()),
+	defaultTheme: z.optional(z.enum(["system", "light", "dark"])),
+	strings: z.optional(
+		z.custom<
+			Partial<Record<Theme, string>> & {
+				themeLabel?: (name: string) => string;
+			}
+		>(),
+	),
+	toggleOnDoubleClick: z.optional(z.boolean()),
+	tooltipPlacement: z.optional(z.enum(["top", "bottom"])),
+});
+
+export type ThemeSelectorProps = z.infer<typeof ThemeSelectorPropsSchema>;
 
 const themeIcons: Record<Theme, typeof IMonitor> = {
 	system: IMonitor,
@@ -35,10 +43,33 @@ const themeLabels: Record<Theme, string> = {
 	dark: "Dark",
 };
 
+const hitsText = (target: Element, event: MouseEvent) => {
+	const range = document.createRange();
+
+	for (const node of target.childNodes) {
+		if (!(node instanceof Text)) continue;
+
+		range.selectNodeContents(node);
+
+		for (const rect of range.getClientRects()) {
+			if (
+				event.clientX >= rect.left &&
+				event.clientX < rect.right &&
+				event.clientY >= rect.top &&
+				event.clientY < rect.bottom
+			)
+				return true;
+		}
+	}
+
+	return false;
+};
+
 export const ThemeSelector = ({
 	className,
 	defaultTheme = "system",
 	strings,
+	toggleOnDoubleClick = true,
 	tooltipPlacement = "top",
 }: ThemeSelectorProps) => {
 	const [theme, setTheme] = React.useState(defaultTheme);
@@ -93,22 +124,29 @@ export const ThemeSelector = ({
 	};
 
 	React.useEffect(() => {
-		const isThemeBackground = (target: EventTarget | null) =>
-			target === document.body ||
-			(target instanceof HTMLElement &&
-				target.hasAttribute("data-theme-background"));
+		if (!toggleOnDoubleClick) return;
+
+		const isThemeGesture = (event: MouseEvent) => {
+			const target = event.target;
+
+			const matches =
+				event.button === 0 &&
+				!event.defaultPrevented &&
+				target instanceof Element &&
+				!target.closest(
+					"a, button, input, select, textarea, label, summary, [contenteditable], [role='button'], [role='link']",
+				) &&
+				!hitsText(target, event);
+
+			return matches;
+		};
 
 		const preventWordSelection = (event: MouseEvent) => {
-			if (
-				event.button === 0 &&
-				event.detail === 2 &&
-				isThemeBackground(event.target)
-			)
-				event.preventDefault();
+			if (event.detail === 2 && isThemeGesture(event)) event.preventDefault();
 		};
 
 		const handleDoubleClick = (event: MouseEvent) => {
-			if (isThemeBackground(event.target)) cycleTheme({ skipSystem: true });
+			if (isThemeGesture(event)) cycleTheme({ skipSystem: true });
 		};
 
 		document.body.addEventListener("mousedown", preventWordSelection);
@@ -118,7 +156,7 @@ export const ThemeSelector = ({
 			document.body.removeEventListener("mousedown", preventWordSelection);
 			document.body.removeEventListener("dblclick", handleDoubleClick);
 		};
-	}, []);
+	}, [toggleOnDoubleClick]);
 
 	React.useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {

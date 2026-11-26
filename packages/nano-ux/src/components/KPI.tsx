@@ -1,15 +1,20 @@
 import cx from "clsx-tw";
+import * as z from "zod/mini";
 
-export type KPIProps = {
-	className?: string;
-	label: string;
-	value: number | string;
-	formatAs?: "number" | "percent" | "duration" | Uppercase<string>;
-	format?: (value: number) => string;
-	detail?: string;
-	delta?: number | null;
-	variant?: "solid" | "outline" | "ghost";
-};
+export const KPIPropsSchema = z.object({
+	className: z.optional(z.string()),
+	label: z.string(),
+	value: z.union([z.number(), z.string()]),
+	formatAs: z.optional(
+		z.custom<"number" | "percent" | "duration" | Uppercase<string>>(),
+	),
+	format: z.optional(z.custom<(value: number) => string>()),
+	detail: z.optional(z.string()),
+	delta: z.optional(z.nullable(z.number())),
+	variant: z.optional(z.enum(["solid", "outline", "ghost"])),
+});
+
+export type KPIProps = z.infer<typeof KPIPropsSchema>;
 
 const formatValue = ({
 	value,

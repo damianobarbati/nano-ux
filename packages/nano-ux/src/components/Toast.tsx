@@ -2,6 +2,7 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 import { IClose } from "../icons.tsx";
 import { Button } from "./Button.tsx";
 
@@ -12,14 +13,20 @@ const tones = {
 	error: "bg-danger-surface text-danger",
 };
 
-export type ToastProps = {
-	className?: string;
-	strings?: { dismiss?: string };
-	message?: string;
-	tone?: keyof typeof tones;
-	duration?: number;
-	onClose?: (reason: "dismiss" | "timeout") => void;
-};
+export const ToastPropsSchema = z.object({
+	className: z.optional(z.string()),
+	strings: z.optional(
+		z.object({
+			dismiss: z.optional(z.string()),
+		}),
+	),
+	message: z.optional(z.string()),
+	tone: z.optional(z.enum(["info", "success", "warning", "error"])),
+	duration: z.optional(z.number()),
+	onClose: z.optional(z.custom<(reason: "dismiss" | "timeout") => void>()),
+});
+
+export type ToastProps = z.infer<typeof ToastPropsSchema>;
 
 export const Toast = (props: ToastProps) =>
 	props.message ? <ToastNotice key={props.message} {...props} /> : null;

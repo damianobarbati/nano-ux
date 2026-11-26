@@ -4,6 +4,7 @@ import cx from "clsx-tw";
 import type PrismInstance from "prismjs";
 import React from "react";
 import { createPortal } from "react-dom";
+import * as z from "zod/mini";
 import { ICopy } from "../icons.tsx";
 import { Spinner } from "./Spinner.tsx";
 import { Toast } from "./Toast.tsx";
@@ -16,19 +17,23 @@ const grammarNames: Record<string, string> = {
 	shell: "bash",
 };
 
-export type CodeProps = {
-	text: string;
-	language: string;
-	className?: string;
-	strings?: {
-		loading?: string;
-		copy?: string;
-		copied?: string;
-		copyFailed?: string;
-		dismiss?: string;
-	};
-	copyable?: boolean;
-};
+export const CodePropsSchema = z.object({
+	text: z.string(),
+	language: z.string(),
+	className: z.optional(z.string()),
+	strings: z.optional(
+		z.object({
+			loading: z.optional(z.string()),
+			copy: z.optional(z.string()),
+			copied: z.optional(z.string()),
+			copyFailed: z.optional(z.string()),
+			dismiss: z.optional(z.string()),
+		}),
+	),
+	copyable: z.optional(z.boolean()),
+});
+
+export type CodeProps = z.infer<typeof CodePropsSchema>;
 
 export const Code = ({
 	className,

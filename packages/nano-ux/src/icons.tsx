@@ -60,6 +60,7 @@ export {
 	LuDatabase as IDatabase,
 	LuFileCode2 as ICodeFile,
 	LuGamepad2 as IGamepad,
+	LuGripVertical as IGrip,
 	LuIdCard as IIdCard,
 	LuKeyRound as IKey,
 	LuMonitor as IMonitor,

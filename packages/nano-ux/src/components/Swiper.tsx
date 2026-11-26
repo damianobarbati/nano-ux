@@ -2,15 +2,20 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 
-export type SwiperProps = {
-	className?: string;
-	children: React.ReactNode;
-	index?: number;
-	onChangeIndex?: (next: number, previous: number) => void;
-	autoHeight?: boolean;
-	swipeMany?: boolean;
-};
+export const SwiperPropsSchema = z.object({
+	className: z.optional(z.string()),
+	children: z.custom<React.ReactNode>(),
+	index: z.optional(z.number()),
+	onChangeIndex: z.optional(
+		z.custom<(next: number, previous: number) => void>(),
+	),
+	autoHeight: z.optional(z.boolean()),
+	swipeMany: z.optional(z.boolean()),
+});
+
+export type SwiperProps = z.infer<typeof SwiperPropsSchema>;
 
 type ScrollToSlideOptions = {
 	element: HTMLDivElement;

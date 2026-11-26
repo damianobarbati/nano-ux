@@ -2,6 +2,7 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 
 import { mountCenteredSpinner } from "./mountCenteredSpinner.ts";
 
@@ -37,15 +38,21 @@ export const SpinnerProvider = ({
 	);
 };
 
-export type SpinnerProps = {
-	strings?: { loading?: string };
-	className?: string;
-	centered?: boolean;
-	overlay?: boolean;
-	size?: SpinnerRendererProps["size"];
-	variant?: string;
-	label?: string;
-};
+export const SpinnerPropsSchema = z.object({
+	strings: z.optional(
+		z.object({
+			loading: z.optional(z.string()),
+		}),
+	),
+	className: z.optional(z.string()),
+	centered: z.optional(z.boolean()),
+	overlay: z.optional(z.boolean()),
+	size: z.optional(z.enum(["sm", "md", "lg", "xl"])),
+	variant: z.optional(z.string()),
+	label: z.optional(z.string()),
+});
+
+export type SpinnerProps = z.infer<typeof SpinnerPropsSchema>;
 
 const sizes = { sm: "size-4", md: "size-6", lg: "size-10", xl: "size-16" };
 

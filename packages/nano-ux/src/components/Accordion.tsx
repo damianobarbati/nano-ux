@@ -2,20 +2,23 @@
 
 import cx from "clsx-tw";
 import React from "react";
+import * as z from "zod/mini";
 import { IChevronDown } from "../icons.tsx";
 
-export type AccordionProps = {
-	title: string;
-	summary?: string;
-	action?: string;
-	children: React.ReactNode;
-	expanded?: boolean;
-	defaultExpanded?: boolean;
-	onExpandedChange?: (expanded: boolean) => void;
-	disabled?: boolean;
-	className?: string;
-	ref?: React.Ref<HTMLButtonElement>;
-};
+export const AccordionPropsSchema = z.object({
+	title: z.string(),
+	summary: z.optional(z.string()),
+	action: z.optional(z.string()),
+	children: z.custom<React.ReactNode>(),
+	expanded: z.optional(z.boolean()),
+	defaultExpanded: z.optional(z.boolean()),
+	onExpandedChange: z.optional(z.custom<(expanded: boolean) => void>()),
+	disabled: z.optional(z.boolean()),
+	className: z.optional(z.string()),
+	ref: z.optional(z.custom<React.Ref<HTMLButtonElement>>()),
+});
+
+export type AccordionProps = z.infer<typeof AccordionPropsSchema>;
 
 export const Accordion = ({
 	title,

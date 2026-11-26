@@ -11,18 +11,18 @@
   "packageManager": "pnpm@12.23.0",
   "scripts": {
     "build": "pnpm -F nano-ux run build && pnpm -F website run build",
-    "lint": "oxlint && biome check && pnpm -r run lint",
-    "test": "pnpm -F nano-ux run build && pnpm -F demo run test",
+    "lint": "oxlint --fix && biome check --write --unsafe && tsc --noEmit",
+    "test": "pnpm -F nano-ux run build && pnpm -F website run test",
     "release": "pnpm -F nano-ux publish --no-git-checks",
     "stop": "for port in 9000 9001; do lsof -nP -tiTCP:$port -sTCP:LISTEN | while read -r pid; do kill \"$pid\"; done; done",
-    "dev": "pnpm -F nano-ux run build && pnpm -F website run dev",
-    "demo": "pnpm -F nano-ux run build && pnpm --parallel -F nano-ux -F demo run dev",
-    "preview": "pnpm -F website run preview",
+    "predev": "pnpm stop",
+    "dev": "pnpm -r --parallel dev",
     "bump": "pnpm -r --include-workspace-root version"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.9",
     "oxlint": "^1.95.0",
-    "oxlint-better": "^1.0.6"
+    "oxlint-better": "^1.0.6",
+    "typescript": "~7.0.2"
   }
 }

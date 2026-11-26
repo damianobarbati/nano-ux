@@ -2,14 +2,17 @@
 
 import cx from "clsx-tw";
 import * as React from "react";
+import * as z from "zod/mini";
 
-export type MetricProps = {
-	className?: string;
-	decimals?: number;
-	label: string;
-	suffix?: string;
-	value: number;
-};
+export const MetricPropsSchema = z.object({
+	className: z.optional(z.string()),
+	decimals: z.optional(z.number()),
+	label: z.string(),
+	suffix: z.optional(z.string()),
+	value: z.number(),
+});
+
+export type MetricProps = z.infer<typeof MetricPropsSchema>;
 
 export const Metric = ({
 	className,

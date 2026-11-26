@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import * as z from "zod/mini";
 import { Chart, type ChartSeries, chartGrid } from "./Chart.tsx";
 import { ChartPlaceholder, type ChartStrings } from "./ChartPlaceholder.tsx";
 import { chartSeriesColor, getThemeColor } from "./themeColor.ts";
@@ -12,16 +13,18 @@ export type ChartBarData = {
 
 export type ChartBarSeries = ChartSeries;
 
-export type ChartBarProps = {
-	strings?: ChartStrings;
-	className?: string;
-	loading?: boolean;
-	data: ChartBarData[];
-	label: string;
-	series: ChartBarSeries[];
-	stacked?: boolean;
-	valueFormatter: (value: number) => string;
-};
+export const ChartBarPropsSchema = z.object({
+	strings: z.optional(z.custom<ChartStrings>()),
+	className: z.optional(z.string()),
+	loading: z.optional(z.boolean()),
+	data: z.custom<ChartBarData[]>(),
+	label: z.string(),
+	series: z.custom<ChartBarSeries[]>(),
+	stacked: z.optional(z.boolean()),
+	valueFormatter: z.custom<(value: number) => string>(),
+});
+
+export type ChartBarProps = z.infer<typeof ChartBarPropsSchema>;
 
 export const ChartBar = ({
 	strings,

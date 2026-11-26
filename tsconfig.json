@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "typeRoots": ["./packages/nano-ux/node_modules/@types", "./packages/nano-ux/node_modules"],
+    "types": ["node", "vite/client"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "declaration": true,
+    "rewriteRelativeImportExtensions": true,
+    "skipLibCheck": true,
+    "noEmitOnError": true,
+    "rootDir": "packages/nano-ux/src",
+    "outDir": "packages/nano-ux/dist"
+  },
+  "files": [
+    "packages/nano-ux/src/index.ts",
+    "packages/nano-ux/src/helpers.ts"
+  ]
+}

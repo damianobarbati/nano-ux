@@ -3,6 +3,7 @@
 import cx from "clsx-tw";
 import React from "react";
 import type { IconType } from "react-icons";
+import * as z from "zod/mini";
 import { Spinner } from "./Spinner.tsx";
 
 export { cx };
@@ -11,35 +12,44 @@ type ButtonIcon =
 	| IconType
 	| { icon: IconType; visible: boolean; hideAfterMs?: number };
 
-type ButtonBaseProps = {
-	leftIcon?: ButtonIcon;
-	rightIcon?: ButtonIcon;
-	children?: React.ReactNode;
-	className?: string;
-	size?: "sm" | "md" | "lg";
-	mobileSize?: "sm" | "md" | "lg";
-	pulse?: boolean;
-	variant?: "solid" | "outline" | "ghost";
-	color?:
-		| "primary"
-		| "secondary"
-		| "success"
-		| "warning"
-		| "danger"
-		| "cocoa"
-		| "mint"
-		| "cyan"
-		| "ocean"
-		| "violet"
-		| "berry";
-};
+const buttonBasePropsSchema = z.object({
+	mobileSize: z.optional(z.enum(["sm", "md", "lg"])),
+	size: z.optional(z.enum(["sm", "md", "lg"])),
+	color: z.optional(
+		z.enum([
+			"primary",
+			"secondary",
+			"success",
+			"warning",
+			"danger",
+			"cocoa",
+			"mint",
+			"cyan",
+			"ocean",
+			"violet",
+			"berry",
+		]),
+	),
+	variant: z.optional(z.enum(["solid", "outline", "ghost"])),
+	pulse: z.optional(z.boolean()),
+	className: z.optional(z.string()),
+	children: z.optional(z.custom<React.ReactNode>()),
+	leftIcon: z.optional(z.custom<ButtonIcon>()),
+	rightIcon: z.optional(z.custom<ButtonIcon>()),
+});
 
-type ActionButtonProps = ButtonBaseProps &
+export const ButtonPropsSchema = z.extend(buttonBasePropsSchema, {
+	disabled: z.optional(z.boolean()),
+	loading: z.optional(z.boolean()),
+	loadingPosition: z.optional(z.enum(["left", "right"])),
+	strings: z.optional(z.object({ loading: z.optional(z.string()) })),
+});
+
+type ButtonBaseProps = z.infer<typeof buttonBasePropsSchema>;
+
+type ActionButtonProps = z.infer<typeof ButtonPropsSchema> &
 	Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps> & {
 		as?: "button";
-		loading?: boolean;
-		loadingPosition?: "left" | "right";
-		strings?: { loading?: string };
 	};
 
 type NavigationButtonProps = ButtonBaseProps &

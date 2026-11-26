@@ -2,6 +2,7 @@
 
 import cx from "clsx-tw";
 import * as React from "react";
+import * as z from "zod/mini";
 import { Chart } from "./Chart.tsx";
 import { ChartPlaceholder, type ChartStrings } from "./ChartPlaceholder.tsx";
 import { getThemeColor } from "./themeColor.ts";
@@ -11,15 +12,17 @@ export type ChartPieData = {
 	value: number;
 };
 
-export type ChartPieProps = {
-	className?: string;
-	data: ChartPieData[];
-	label: string;
-	loading?: boolean;
-	showLegend?: boolean;
-	strings?: ChartStrings;
-	valueFormatter: (value: number) => string;
-};
+export const ChartPiePropsSchema = z.object({
+	className: z.optional(z.string()),
+	data: z.custom<ChartPieData[]>(),
+	label: z.string(),
+	loading: z.optional(z.boolean()),
+	showLegend: z.optional(z.boolean()),
+	strings: z.optional(z.custom<ChartStrings>()),
+	valueFormatter: z.custom<(value: number) => string>(),
+});
+
+export type ChartPieProps = z.infer<typeof ChartPiePropsSchema>;
 
 export const ChartPie = ({
 	className,
