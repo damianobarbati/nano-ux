@@ -22,7 +22,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.6.9",
     "oxlint": "^1.95.0",
-    "oxlint-better": "^1.0.6",
+    "oxlint-better": "^1.0.8",
     "typescript": "~7.0.2"
   }
 }

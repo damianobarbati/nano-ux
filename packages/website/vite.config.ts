@@ -1,4 +1,4 @@
-import preset from "nano-ssg/config";
+import preset from "nano-ssg/preact";
 import { mergeConfig } from "vite";
 
 export default mergeConfig(preset, {
