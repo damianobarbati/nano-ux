@@ -112,7 +112,7 @@ export const ChartPie = ({
 
 	if (showLegend) {
 		return (
-			<div className={cx(className ?? "h-56", "[container-type:size]")}>
+			<div className={cx("[container-type:size] h-56", className)}>
 				<Chart
 					className="mx-auto h-full w-full max-w-[145cqh]"
 					label={label}

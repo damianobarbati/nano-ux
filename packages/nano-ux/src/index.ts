@@ -194,6 +194,7 @@ export {
 export { useAnchorScroll } from "./hooks/useAnchorScroll.ts";
 
 export {
+	type TablePageRequest,
 	type UseInfiniteTableOptions,
 	type UseInfiniteTableResult,
 	useInfiniteTable,

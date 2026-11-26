@@ -1,6 +1,5 @@
 "use client";
 
-import cx from "clsx-tw";
 import { BarChart, LineChart, PieChart } from "echarts/charts";
 
 import {
@@ -108,7 +107,7 @@ const ChartRenderer = ({ className, label, onSelect, option }: ChartProps) => {
 
 	return (
 		<div
-			className={cx(className ?? "h-56")}
+			className={className}
 			ref={container}
 			role={label ? "img" : undefined}
 			aria-label={label}

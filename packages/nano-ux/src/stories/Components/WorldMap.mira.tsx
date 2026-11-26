@@ -6,7 +6,6 @@ import {
 } from "../../components/WorldMap.tsx";
 
 const exampleProps = {
-	label: "Traffico per paese",
 	data: [
 		{ country: "IT", intensity: 80 },
 		{ country: "DE", intensity: 45 },
@@ -20,12 +19,12 @@ export const Preview = () => (
 	</div>
 );
 
-export const schema = z.pick(WorldMapPropsSchema, { label: true, color: true });
-export const defaults = { label: "Traffic by country" };
+export const schema = WorldMapPropsSchema;
+export const defaults = exampleProps;
 
 export const Playground = (props: z.infer<typeof schema>) => (
 	<div className="aspect-[5/3] w-96">
-		<WorldMapComponent data={exampleProps.data} {...props} />
+		<WorldMapComponent {...props} />
 	</div>
 );
 

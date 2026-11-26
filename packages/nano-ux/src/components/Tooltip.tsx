@@ -5,7 +5,10 @@ import * as React from "react";
 import * as z from "zod/mini";
 
 export const TooltipPropsSchema = z.object({
-	children: z.custom<React.ReactElement>(),
+	children:
+		z.custom<
+			React.ReactElement<Pick<React.AriaAttributes, "aria-describedby">>
+		>(),
 	className: z.optional(z.string()),
 	content: z.custom<React.ReactNode>(),
 	placement: z.optional(z.enum(["top", "bottom"])),
@@ -19,6 +22,16 @@ export const Tooltip = ({
 	content,
 	placement = "top",
 }: TooltipProps) => {
+	const tooltipId = React.useId();
+
+	const describedBy = [children.props["aria-describedby"], tooltipId]
+		.filter(Boolean)
+		.join(" ");
+
+	const trigger = React.cloneElement(children, {
+		"aria-describedby": describedBy,
+	});
+
 	const bubble = React.useRef<HTMLSpanElement>(null);
 	const closeTimer = React.useRef<number | undefined>(undefined);
 	const hovered = React.useRef(false);
@@ -114,8 +127,10 @@ export const Tooltip = ({
 				if (!bubble.current?.contains(event.target as Node)) setOpen(false);
 			}}
 		>
-			{children}
+			{trigger}
 			<span
+				id={tooltipId}
+				role="tooltip"
 				ref={bubble}
 				popover="manual"
 				className="nano-tooltip fixed inset-auto m-0 w-max overflow-auto border-0 bg-transparent p-0 py-2"

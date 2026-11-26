@@ -3,7 +3,11 @@ import React from "react";
 import { SWRConfig } from "swr";
 import * as z from "zod/mini";
 import { Button } from "../../components/Button.tsx";
-import { useInfiniteTable } from "../../hooks/useInfiniteTable.ts";
+
+import {
+	type TablePageRequest,
+	useInfiniteTable,
+} from "../../hooks/useInfiniteTable.ts";
 
 import {
 	TableVirtual,
@@ -19,12 +23,12 @@ const columns = column.columns([
 	column.accessor("domain", { header: "Website" }),
 ]);
 
-type PageRequest = { offset: number; limit: number; group: string };
+type PageRequest = TablePageRequest & { group: string };
 
 const countWebsites = ({ group }: Pick<PageRequest, "group">) =>
 	group === "All" ? 64 : 61;
 
-const loadWebsites = async ({ offset, limit, group }: PageRequest) => {
+const loadWebsites = async ({ offset, limit, sort, group }: PageRequest) => {
 	await new Promise<void>((resolve) => window.setTimeout(resolve, 100));
 
 	const count = countWebsites({ group });
@@ -32,7 +36,7 @@ const loadWebsites = async ({ offset, limit, group }: PageRequest) => {
 	const result = Array.from(
 		{ length: Math.min(limit, Math.max(0, count - offset)) },
 		(_, index) => ({
-			domain: `${group.toLowerCase()}-${offset + index + 1}.example.com`,
+			domain: `${group.toLowerCase()}-${sort[0]?.[1] === "desc" ? count - offset - index : offset + index + 1}.example.com`,
 		}),
 	);
 

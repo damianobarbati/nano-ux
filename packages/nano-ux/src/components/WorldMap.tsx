@@ -7,29 +7,13 @@ type MapGeometry = typeof import("../assets/worldmap.json");
 export type WorldMapData = { country: string; intensity: number };
 
 export const WorldMapPropsSchema = z.object({
-	label: z.string(),
 	data: z.custom<readonly WorldMapData[]>(),
-	strings: z.optional(
-		z.object({
-			noData: z.optional(z.string()),
-			loadError: z.optional(z.string()),
-			countryName: z.optional(
-				z.custom<(code: string, name: string) => string>(),
-			),
-		}),
-	),
-	color: z.optional(z.string()),
 });
 
 export type WorldMapProps = z.infer<typeof WorldMapPropsSchema>;
 
 // Simplified Natural Earth 1:50m country boundaries in projected SVG coordinates.
-export const WorldMap = ({
-	strings,
-	label,
-	data,
-	color = "var(--theme-fg)",
-}: WorldMapProps) => {
+export const WorldMap = ({ data }: WorldMapProps) => {
 	const [geometry, setGeometry] = React.useState<MapGeometry>();
 	const [loadFailed, setLoadFailed] = React.useState(false);
 	const [active, setActive] = React.useState<SVGPathElement | null>(null);
@@ -81,12 +65,13 @@ export const WorldMap = ({
 			y >= bounds.height / 2 ? `${bounds.height - y + 12}px` : "auto";
 	};
 
-	if (loadFailed)
-		return <p>{strings?.loadError ?? `Could not load ${label}.`}</p>;
+	if (loadFailed) return <p>Could not load world map.</p>;
 
 	return (
 		<div style={{ position: "relative", width: "100%", height: "100%" }}>
 			<svg
+				role="img"
+				aria-label="World map"
 				viewBox="-361 -237 802 405"
 				preserveAspectRatio="none"
 				style={{ display: "block" }}
@@ -104,10 +89,10 @@ export const WorldMap = ({
 							key={name}
 							d={path}
 							data-code={code}
-							data-name={strings?.countryName?.(code, name) ?? name}
+							data-name={name}
 							stroke="var(--theme-surface)"
 							strokeWidth={0.55}
-							fill={`color-mix(in srgb, ${color} ${Math.max(0, Math.min(100, intensity ?? 0))}%, var(--theme-border))`}
+							fill={`color-mix(in srgb, var(--theme-fg) ${Math.max(0, Math.min(100, intensity ?? 0))}%, var(--theme-border))`}
 						/>
 					);
 				})}
@@ -115,9 +100,7 @@ export const WorldMap = ({
 			<div ref={tooltip} hidden={!active} className="robinson-tooltip">
 				<strong>{active?.dataset.name}</strong>
 				<br />
-				{value == null
-					? (strings?.noData ?? "No data")
-					: `${Math.max(0, Math.min(100, value))}%`}
+				{value == null ? "No data" : `${Math.max(0, Math.min(100, value))}%`}
 			</div>
 		</div>
 	);

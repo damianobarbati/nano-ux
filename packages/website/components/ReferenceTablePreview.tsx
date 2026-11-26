@@ -8,7 +8,7 @@ import {
 } from "nano-ux";
 
 import React from "react";
-import { type Profile, profiles } from "../data.ts";
+import { listProfiles, type Profile, profiles } from "../data.ts";
 
 type ReferenceTablePreviewProps = { className?: string };
 
@@ -25,8 +25,8 @@ export const ReferenceTablePreview = ({
 	const { tableKey, tableProps } = useInfiniteTable<Profile>({
 		key: "reference/profiles",
 		pageSize: 50,
-		fetchPage: async ({ offset, limit }) => {
-			const page = profiles.slice(offset, offset + limit);
+		fetchPage: async (request) => {
+			const page = listProfiles({ rows: profiles, ...request });
 			return page;
 		},
 	});

@@ -26,6 +26,7 @@ import {
 	Toggle,
 	Tooltip,
 	type tableVirtualFeatures,
+	useInfiniteTable,
 	useInViewOnce,
 } from "nano-ux";
 
@@ -39,6 +40,7 @@ import {
 	dailySignups,
 	emptyProfile,
 	interestOptions,
+	listProfiles,
 	type Profile,
 	profileSeries,
 	profiles,
@@ -813,6 +815,15 @@ const ProfileTable = ({
 }: ProfileTableProps) => {
 	const inputId = React.useId();
 
+	const { tableKey, tableProps } = useInfiniteTable<Profile>({
+		key: ["home/profiles", query],
+		pageSize: 50,
+		fetchPage: async (request) => {
+			const page = listProfiles({ rows: filteredProfiles, ...request });
+			return page;
+		},
+	});
+
 	return (
 		<>
 			<h3>TableVirtual</h3>
@@ -825,10 +836,10 @@ const ProfileTable = ({
 				/>
 			</FormProvider>
 			<TableVirtual
-				key={query}
+				key={tableKey}
 				className="mbs-4 h-96"
 				columns={columns}
-				data={filteredProfiles}
+				{...tableProps}
 				getRowId={(row) => row.id}
 				emptyMessage="No profiles found."
 				footer={
@@ -998,11 +1009,7 @@ const DashboardContent = () => {
 								</div>
 							}
 						>
-							<WorldMap
-								label="Signup activity relative to the leading country"
-								data={signupActivityByCountry}
-								color="var(--color-brand, var(--theme-fg))"
-							/>
+							<WorldMap data={signupActivityByCountry} />
 						</React.Suspense>
 					</div>
 				</section>

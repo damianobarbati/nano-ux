@@ -12,16 +12,13 @@ import React from "react";
 import * as z from "zod/mini";
 import { TableFrame, type TableStrings } from "./TableFrame.tsx";
 import { TableHeaderCell } from "./TableHeaderCell.tsx";
-import { type TableSortingProps, useTableSorting } from "./useTableSorting.ts";
+import { nextTableSort, type TableSortingProps } from "./useTableSorting.ts";
 
 export const tableVirtualFeatures = tableFeatures({ columnSizingFeature });
 
 const rowHeight = 40;
 
 const overscan = 8;
-
-const getSortValue = (row: { getValue: (id: string) => unknown }, id: string) =>
-	row.getValue(id);
 
 export const TableVirtualPropsSchema = z.object({
 	className: z.optional(z.string()),
@@ -33,7 +30,7 @@ export const TableVirtualPropsSchema = z.object({
 export type TableVirtualProps<T extends object> = z.infer<
 	typeof TableVirtualPropsSchema
 > &
-	(TableSortingProps & {
+	(Omit<TableSortingProps, "defaultSort"> & {
 		columns: ColumnDef<typeof tableVirtualFeatures, T>[];
 		data: T[];
 		/** Total matching rows across pages. Pass null while the total is unknown. */
@@ -59,7 +56,6 @@ export const TableVirtual = <T extends object>({
 	emptyMessage,
 	onRowClick,
 	sort,
-	defaultSort,
 	onSort,
 	sortableColumns,
 	noEllipsisColumns = [],
@@ -77,13 +73,13 @@ export const TableVirtual = <T extends object>({
 		getRowId,
 	});
 
-	const sorting = useTableSorting(
-		table.getRowModel().rows,
-		{ sort, defaultSort, onSort },
-		getSortValue,
-	);
+	const rows = table.getRowModel().rows;
 
-	const rows = sorting.rows;
+	const handleSort = (id: string) => {
+		const next = nextTableSort(id, sort);
+
+		onSort?.(id, next);
+	};
 
 	const startIndex = Math.max(
 		0,
@@ -100,6 +96,13 @@ export const TableVirtual = <T extends object>({
 
 	const visibleRows = rows.slice(startIndex, endIndex);
 	const requestedLengthRef = React.useRef<number | null>(null);
+
+	React.useLayoutEffect(() => {
+		requestedLengthRef.current = null;
+
+		if (bodyRef.current) bodyRef.current.scrollTop = 0;
+		setScrollTop(0);
+	}, [sort?.id, sort?.direction]);
 
 	React.useEffect(() => {
 		const element = bodyRef.current;
@@ -120,17 +123,18 @@ export const TableVirtual = <T extends object>({
 			return;
 		}
 
-		if (!rows.length || loading) return;
+		const body = bodyRef.current;
+		if (!rows.length || loading || !body || !body.clientHeight) return;
 
-		if (
-			endIndex >= rows.length - 5 &&
-			requestedLengthRef.current !== rows.length
-		) {
+		const remaining = body.scrollHeight - body.clientHeight - body.scrollTop;
+		const threshold = body.scrollTop > 0 ? 5 * rowHeight : 0;
+
+		if (remaining <= threshold && requestedLengthRef.current !== rows.length) {
 			requestedLengthRef.current = rows.length;
 
 			onEndReached();
 		}
-	}, [endIndex, rows.length, onEndReached, loading]);
+	}, [scrollTop, viewportHeight, rows.length, onEndReached, loading]);
 
 	const rowStyle = {
 		minWidth: table.getTotalSize(),
@@ -142,7 +146,7 @@ export const TableVirtual = <T extends object>({
 
 	return (
 		<TableFrame
-			className={className}
+			className={cx("max-h-dvh", className)}
 			fillHeight={fillHeight}
 			count={rows.length}
 			totalCount={totalCount}
@@ -171,8 +175,8 @@ export const TableVirtual = <T extends object>({
 									columnId={header.column.id}
 									className="overflow-hidden text-ellipsis"
 									style={{ gridColumn: `span ${header.colSpan}` }}
-									sort={sorting.sort}
-									onSort={sorting.onSort}
+									sort={sort}
+									onSort={onSort && handleSort}
 									sortableColumns={header.isPlaceholder ? [] : sortableColumns}
 								>
 									{!header.isPlaceholder && (

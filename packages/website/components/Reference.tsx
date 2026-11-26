@@ -382,9 +382,11 @@ export const LoadingProfiles = () => (
 		title: "Table",
 		description: (
 			<>
-				Use Table for rows already loaded in memory. Set sortableColumns to
-				enable sorting. Use <a href="#reference-table-virtual">TableVirtual</a>{" "}
-				for infinite loading.
+				Use Table for rows already loaded in memory. Use sortableColumns to
+				choose which headers can sort. TypeScript checks columns, data, and
+				getRowKey through TableProps. The component accepts these props
+				directly. Use <a href="#reference-table-virtual">TableVirtual</a> for
+				infinite loading.
 			</>
 		),
 		language: "tsx",
@@ -396,7 +398,7 @@ export const LoadingProfiles = () => (
 		kind: "Component",
 		title: "TableVirtual",
 		description:
-			"The preview shows all 10,000 matching users while loading 50 rows at a time. The example imports countProfiles and listProfiles from your application. Use Repository.count with the same filters as listProfiles. Apply pagination only to listProfiles.",
+			"The preview loads 50 of 10,000 matching users per page. By default the table fits within the viewport height. It loads enough rows to allow scrolling, then requests more near the bottom. The example imports countProfiles and listProfiles from your application. Use Repository.count with the same filters as listProfiles. Pass sort to Repository.getem with limit and offset. A sortable header requests the first page in the new order.",
 		language: "tsx",
 		text: `import { createColumnHelper, TableVirtual, type tableVirtualFeatures, useInfiniteTable } from "nano-ux";
 import useSWR from "swr";
@@ -419,7 +421,7 @@ export const ProfileList = ({ search, className = "h-96" }: ProfileListProps) =>
   const { tableKey, tableProps } = useInfiniteTable<Profile>({
     key: ["profiles", search],
     pageSize: 50,
-    fetchPage: ({ offset, limit }) => listProfiles({ search, offset, limit }),
+    fetchPage: ({ offset, limit, sort }) => listProfiles({ search, offset, limit, sort }),
   });
 
   return (

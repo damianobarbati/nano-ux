@@ -6,17 +6,27 @@ import type { SWRInfiniteResponse } from "swr/infinite";
 import useSWRInfinite from "swr/infinite";
 import type { TableVirtualProps } from "../table/TableVirtual.tsx";
 
-type PageRequest = { offset: number; limit: number };
+import type { TableSort } from "../table/useTableSorting.ts";
+
+export type TablePageRequest = {
+	offset: number;
+	limit: number;
+	sort: [string, "asc" | "desc"][];
+};
 
 export type UseInfiniteTableOptions<T extends object> = {
 	key: string | ReadonlyArray<unknown>;
 	pageSize: number;
-	fetchPage: (request: PageRequest) => Promise<T[]>;
+	defaultSort?: TableSort;
+	fetchPage: (request: TablePageRequest) => Promise<T[]>;
 };
 
 export type UseInfiniteTableResult<T extends object> = {
 	tableKey: string;
-	tableProps: Pick<TableVirtualProps<T>, "data" | "loading" | "onEndReached">;
+	tableProps: Pick<
+		TableVirtualProps<T>,
+		"data" | "loading" | "onEndReached" | "sort" | "onSort"
+	>;
 	hasMore: boolean;
 	error: Error | undefined;
 	mutate: SWRInfiniteResponse<T[]>["mutate"];
@@ -25,10 +35,17 @@ export type UseInfiniteTableResult<T extends object> = {
 export const useInfiniteTable = <T extends object>({
 	key,
 	pageSize,
+	defaultSort,
 	fetchPage,
 }: UseInfiniteTableOptions<T>): UseInfiniteTableResult<T> => {
 	if (!Number.isSafeInteger(pageSize) || pageSize < 1)
 		throw new RangeError("pageSize must be a positive integer");
+
+	const [sort, setSort] = React.useState(defaultSort);
+
+	const sorters: TablePageRequest["sort"] = sort
+		? [[sort.id, sort.direction]]
+		: [];
 
 	const tableKey = unstable_serialize([
 		"nano-ux/useInfiniteTable",
@@ -38,7 +55,7 @@ export const useInfiniteTable = <T extends object>({
 
 	const getKey = (index: number, previous: T[] | null) => {
 		if (previous && previous.length < pageSize) return null;
-		return [tableKey, index * pageSize] as const;
+		return [tableKey, index * pageSize, sorters] as const;
 	};
 
 	const {
@@ -49,13 +66,22 @@ export const useInfiniteTable = <T extends object>({
 		setSize,
 	} = useSWRInfinite<T[], Error, typeof getKey>(
 		getKey,
-		([, offset]) => fetchPage({ offset, limit: pageSize }),
+		([, offset, sort]) => fetchPage({ offset, limit: pageSize, sort }),
 		{
 			revalidateFirstPage: false,
 			shouldRetryOnError: false,
 			keepPreviousData: false,
 		},
 	);
+
+	const previousSort = React.useRef(sort);
+
+	React.useEffect(() => {
+		if (previousSort.current === sort) return;
+		previousSort.current = sort;
+
+		if (pages) void mutate();
+	}, [sort, pages, mutate]);
 
 	const data = React.useMemo(() => pages?.flat() ?? [], [pages]);
 	const hasMore = pages?.at(-1)?.length === pageSize;
@@ -68,6 +94,8 @@ export const useInfiniteTable = <T extends object>({
 	const result = {
 		tableKey,
 		tableProps: {
+			sort,
+			onSort: (_id: string, next?: TableSort) => setSort(next),
 			data,
 			loading: isValidating,
 			onEndReached: hasMore && !error ? onEndReached : undefined,

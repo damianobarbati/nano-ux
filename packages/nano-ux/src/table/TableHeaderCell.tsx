@@ -29,12 +29,14 @@ export const TableHeaderCell = ({
 	const SortIcon = direction === "ascending" ? TbArrowUp : TbArrowDown;
 	let content;
 
-	if (!sortableColumns || sortableColumns.includes(columnId)) {
+	const handleClick = () => onSort?.(columnId);
+
+	if (onSort && (!sortableColumns || sortableColumns.includes(columnId))) {
 		content = (
 			<button
 				type="button"
 				className="inline-flex w-full cursor-pointer items-center gap-2 text-left focus-visible:outline-2 focus-visible:outline-focus"
-				onClick={() => onSort?.(columnId)}
+				onClick={handleClick}
 			>
 				{children}
 				{sorted && <SortIcon className="size-4 shrink-0" />}
@@ -45,7 +47,11 @@ export const TableHeaderCell = ({
 	}
 
 	return (
-		<th className={cx("table-header-cell", className)} style={style}>
+		<th
+			aria-sort={sorted ? direction : undefined}
+			className={cx("table-header-cell", className)}
+			style={style}
+		>
 			{content}
 		</th>
 	);

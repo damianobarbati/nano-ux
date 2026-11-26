@@ -1,12 +1,21 @@
 import React from "react";
 
-type TableSort = { id: string; direction: "asc" | "desc" };
+export type TableSort = { id: string; direction: "asc" | "desc" };
 
 export type TableSortingProps = {
 	sort?: TableSort;
 	defaultSort?: TableSort;
 	onSort?: (id: string, nextSort?: TableSort) => void;
 	sortableColumns?: string[];
+};
+
+export const nextTableSort = (id: string, active?: TableSort) => {
+	let next: TableSort | undefined;
+
+	if (active?.id !== id) next = { id, direction: "asc" };
+	else if (active.direction === "asc") next = { id, direction: "desc" };
+
+	return next;
 };
 
 const collator = new Intl.Collator(undefined, { numeric: true });
@@ -46,10 +55,7 @@ export const useTableSorting = <Row>(
 	}, [active, getValue, onSort, rows]);
 
 	const selectColumn = (id: string) => {
-		let next: TableSort | undefined;
-
-		if (active?.id !== id) next = { id, direction: "asc" };
-		else if (active.direction === "asc") next = { id, direction: "desc" };
+		const next = nextTableSort(id, active);
 
 		if (onSort) onSort(id, next);
 		else setLocalSort(next);

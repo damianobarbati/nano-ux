@@ -1,3 +1,5 @@
+import type { TablePageRequest } from "nano-ux";
+
 export type Profile = {
 	id: string;
 	name: string;
@@ -97,3 +99,28 @@ export const signupActivityByCountry = [
 ];
 
 export const profiles = createProfiles();
+
+export const listProfiles = ({
+	rows,
+	sort,
+	offset,
+	limit,
+}: TablePageRequest & { rows: Profile[] }) => {
+	const [sorter] = sort;
+	let ordered = rows;
+
+	if (sorter) {
+		const [column, direction] = sorter;
+
+		if (column === "name" || column === "email" || column === "interests") {
+			const factor = direction === "asc" ? 1 : -1;
+
+			ordered = rows.toSorted(
+				(a, b) => factor * String(a[column]).localeCompare(String(b[column])),
+			);
+		}
+	}
+
+	const page = ordered.slice(offset, offset + limit);
+	return page;
+};

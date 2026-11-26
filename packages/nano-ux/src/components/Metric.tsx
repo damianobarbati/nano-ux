@@ -4,8 +4,12 @@ import cx from "clsx-tw";
 import * as React from "react";
 import * as z from "zod/mini";
 
+import { formatValue, type ValueFormat } from "./formatValue.ts";
+
 export const MetricPropsSchema = z.object({
 	className: z.optional(z.string()),
+	format: z.optional(z.custom<(value: number) => string>()),
+	formatAs: z.optional(z.custom<ValueFormat>()),
 	decimals: z.optional(z.number()),
 	label: z.string(),
 	suffix: z.optional(z.string()),
@@ -17,6 +21,8 @@ export type MetricProps = z.infer<typeof MetricPropsSchema>;
 export const Metric = ({
 	className,
 	decimals = 0,
+	format,
+	formatAs,
 	label,
 	suffix = "",
 	value,
@@ -68,10 +74,13 @@ export const Metric = ({
 		};
 	}, [value]);
 
-	const displayValue = currentValue.toLocaleString("en-US", {
-		maximumFractionDigits: decimals,
-		minimumFractionDigits: decimals,
-	});
+	const displayValue =
+		format || formatAs
+			? formatValue({ value: currentValue, formatAs, format })
+			: currentValue.toLocaleString("en-US", {
+					maximumFractionDigits: decimals,
+					minimumFractionDigits: decimals,
+				});
 
 	return (
 		<div
