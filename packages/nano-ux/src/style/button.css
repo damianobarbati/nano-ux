@@ -1,3 +1,9 @@
+@utility button-tone-* {
+  --button-tone: --value(--color-*);
+  --button-surface: --value(--color-* -tint);
+  --button-edge: var(--button-tone);
+}
+
 @property --button-pulse-resolved-color {
   syntax: "<color>";
   inherits: false;
@@ -157,34 +163,22 @@
     --button-edge: var(--color-danger);
   }
   .button-cocoa {
-    --button-tone: var(--color-cocoa);
-    --button-surface: var(--color-cocoa-tint);
-    --button-edge: var(--color-cocoa);
+    @apply button-tone-cocoa;
   }
   .button-mint {
-    --button-tone: var(--color-mint);
-    --button-surface: var(--color-mint-tint);
-    --button-edge: var(--color-mint);
+    @apply button-tone-mint;
   }
   .button-cyan {
-    --button-tone: var(--color-cyan);
-    --button-surface: var(--color-cyan-tint);
-    --button-edge: var(--color-cyan);
+    @apply button-tone-cyan;
   }
   .button-ocean {
-    --button-tone: var(--color-ocean);
-    --button-surface: var(--color-ocean-tint);
-    --button-edge: var(--color-ocean);
+    @apply button-tone-ocean;
   }
   .button-violet {
-    --button-tone: var(--color-violet);
-    --button-surface: var(--color-violet-tint);
-    --button-edge: var(--color-violet);
+    @apply button-tone-violet;
   }
   .button-berry {
-    --button-tone: var(--color-berry);
-    --button-surface: var(--color-berry-tint);
-    --button-edge: var(--color-berry);
+    @apply button-tone-berry;
   }
   .button-solid {
     /* Classify the fill as dark, intermediate, or light using its relative luminance. */

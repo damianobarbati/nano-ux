@@ -11,6 +11,7 @@
 
 :root {
   --font-family: "Montserrat Variable", system-ui, sans-serif;
+  @apply max-lg:overflow-x-clip max-lg:overscroll-x-none;
 }
 
 body {
@@ -24,5 +25,35 @@ body {
 @media (prefers-color-scheme: light) {
   :root:not(.dark) .brand-logo {
     content: url("/logo-light.svg");
+  }
+}
+
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .home-theme {
+    translate: none;
+    opacity: 1;
+  }
+}
+
+.theme-drawer[data-docked] {
+  @apply fixed left-full top-1/2 -translate-y-1/2 z-30 w-[min(32rem,75vw)];
+  transition: transform 220ms ease-out;
+}
+
+.theme-drawer[data-docked][data-open] {
+  transform: translateX(-100%);
+}
+
+.theme-drawer[data-docked] > .card {
+  @apply max-h-[90dvh] overflow-y-auto rounded-r-none bg-surface shadow-lg;
+}
+
+.theme-drawer-tab:not([hidden]) {
+  @apply absolute right-full top-1/2 inline-flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-l-control border border-r-0 border-border bg-surface text-sm text-fg shadow-sm;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-drawer[data-docked] {
+    transition: none;
   }
 }

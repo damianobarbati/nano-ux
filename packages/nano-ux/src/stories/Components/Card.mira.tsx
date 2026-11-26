@@ -4,16 +4,14 @@ import { Code } from "../../components/Code.tsx";
 
 import { Mockup } from "../../components/Mockup.tsx";
 
-const examples = [
+import { productColors } from "../../productColors.ts";
+
+const examples: { name: string; hue?: string; flat?: boolean }[] = [
 	{ name: "Theme primary" },
-	{ name: "Cocoa", hue: "cocoa" },
-	{ name: "Mint", hue: "mint" },
-	{ name: "Mintlight", hue: "mintlight" },
-	{ name: "Lime", hue: "lime" },
-	{ name: "Cyan", hue: "cyan" },
-	{ name: "Ocean", hue: "ocean" },
-	{ name: "Violet", hue: "violet" },
-	{ name: "Berry", hue: "berry" },
+	...productColors.map((hue) => ({
+		name: hue[0].toUpperCase() + hue.slice(1),
+		hue,
+	})),
 	{ name: "Without glow", flat: true },
 ];
 

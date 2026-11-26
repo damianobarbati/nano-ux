@@ -215,6 +215,8 @@ export {
 	ISend,
 } from "./icons.tsx";
 
+export { productColors } from "./productColors.ts";
+
 export {
 	Table,
 	type TableColumn,

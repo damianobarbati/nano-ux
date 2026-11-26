@@ -1,5 +1,6 @@
 import { usePathname } from "virtual:ssg/router";
 import { Nav, ThemeSelector } from "nano-ux";
+import { initNavScroll } from "nano-ux/helpers";
 import { IGitHub, ILinkedIn } from "nano-ux/icons";
 import React from "react";
 import { ContactButton } from "./components/ContactButton.tsx";
@@ -10,6 +11,9 @@ type LayoutProps = { className?: string; children: React.ReactNode };
 
 export const Layout = ({ className, children }: LayoutProps) => {
 	const pathname = usePathname();
+
+	React.useEffect(initNavScroll, []);
+
 	if (pathname.replace(/\/+$/, "") === "/theme-preview") return children;
 
 	return (

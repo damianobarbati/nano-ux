@@ -1,4 +1,5 @@
 import cx from "clsx-tw";
+import { productColors } from "nano-ux";
 import React from "react";
 
 type CssClassCatalogProps = { className?: string };
@@ -31,16 +32,7 @@ const cards = [
 	},
 ];
 
-const tints = [
-	"tint-cocoa",
-	"tint-mint",
-	"tint-mintlight",
-	"tint-lime",
-	"tint-cyan",
-	"tint-ocean",
-	"tint-violet",
-	"tint-berry",
-];
+const tints = productColors.map((name) => `tint-${name}`);
 
 const tintClasses = ["tint", ...tints];
 

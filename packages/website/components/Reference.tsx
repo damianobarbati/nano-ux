@@ -295,7 +295,7 @@ export const LoadingProfiles = () => (
 		kind: "Component",
 		title: "Button",
 		description:
-			"Choose solid, outline, or ghost with variant. Set loading during an async action to show a spinner and prevent repeat clicks.",
+			"Choose solid, outline, or ghost with variant. Pass a product color such as seafoam or ocean in the color prop. Set loading during an async action to show a spinner and prevent repeat clicks.",
 		language: "tsx",
 		text: saveButtonSource,
 		preview: <SaveButton />,
@@ -822,6 +822,17 @@ export default defineConfig({
 							<Code
 								language="typescript"
 								text={'export { default } from "nano-ssg/config";'}
+							/>
+							<p>
+								The default <code>nano-ssg</code> HTML template starts the
+								client. If you provide your own <code>index.html</code>, include
+								this script so the page becomes interactive.
+							</p>
+							<Code
+								language="html"
+								text={
+									'<script type="module">import "virtual:ssg/client";</script>'
+								}
 							/>
 						</div>
 						<div id="ssg-page" className="grid min-w-0 scroll-mt-6 gap-2">

@@ -2,27 +2,19 @@ import React from "react";
 import type { IconType } from "react-icons";
 import * as z from "zod/mini";
 import type { ButtonProps } from "../../components/Button.tsx";
-import { Button, ButtonPropsSchema, cx } from "../../components/Button.tsx";
+
+import {
+	Button,
+	ButtonPropsSchema,
+	buttonColors,
+	cx,
+} from "../../components/Button.tsx";
 
 import { ICheck, IClose } from "../../icons.tsx";
 
 type ButtonColor = NonNullable<ButtonProps["color"]>;
 
 type ButtonVariant = NonNullable<ButtonProps["variant"]>;
-
-const colors: ButtonColor[] = [
-	"primary",
-	"secondary",
-	"success",
-	"warning",
-	"danger",
-	"cocoa",
-	"mint",
-	"cyan",
-	"ocean",
-	"violet",
-	"berry",
-];
 
 const variants: ButtonVariant[] = ["solid", "outline"];
 
@@ -70,7 +62,7 @@ export const Preview = () => (
 				key={theme}
 			>
 				<h2>{theme === "light" ? "Light theme" : "Dark theme"}</h2>
-				{colors.map((color) => (
+				{buttonColors.map((color) => (
 					<section className="grid gap-3" key={color}>
 						<h3>{color}</h3>
 						{variants.map((variant) => (

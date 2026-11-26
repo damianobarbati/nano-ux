@@ -4,6 +4,7 @@ import cx from "clsx-tw";
 import React from "react";
 import type { IconType } from "react-icons";
 import * as z from "zod/mini";
+import { productColors } from "../productColors.ts";
 import { Spinner } from "./Spinner.tsx";
 
 export { cx };
@@ -12,24 +13,19 @@ type ButtonIcon =
 	| IconType
 	| { icon: IconType; visible: boolean; hideAfterMs?: number };
 
+export const buttonColors = [
+	"primary",
+	"secondary",
+	"success",
+	"warning",
+	"danger",
+	...productColors,
+] as const;
+
 const buttonBasePropsSchema = z.object({
 	mobileSize: z.optional(z.enum(["sm", "md", "lg"])),
 	size: z.optional(z.enum(["sm", "md", "lg"])),
-	color: z.optional(
-		z.enum([
-			"primary",
-			"secondary",
-			"success",
-			"warning",
-			"danger",
-			"cocoa",
-			"mint",
-			"cyan",
-			"ocean",
-			"violet",
-			"berry",
-		]),
-	),
+	color: z.optional(z.enum(buttonColors)),
 	variant: z.optional(z.enum(["solid", "outline", "ghost"])),
 	pulse: z.optional(z.boolean()),
 	className: z.optional(z.string()),
@@ -64,20 +60,6 @@ type NavigationButtonProps = ButtonBaseProps &
 
 export type ButtonProps = ActionButtonProps | NavigationButtonProps;
 
-const colorClasses = {
-	primary: "button-primary",
-	secondary: "button-secondary",
-	success: "button-success",
-	warning: "button-warning",
-	danger: "button-danger",
-	cocoa: "button-cocoa",
-	mint: "button-mint",
-	cyan: "button-cyan",
-	ocean: "button-ocean",
-	violet: "button-violet",
-	berry: "button-berry",
-};
-
 const variantClasses = {
 	solid: "button-solid",
 	outline: "button-outline",
@@ -103,16 +85,23 @@ const getButtonClassName = ({
 	mobileSize,
 	color = "primary",
 	pulse,
-}: ButtonBaseProps) =>
-	cx(
+}: ButtonBaseProps) => {
+	const colorClass = productColors.some((name) => name === color)
+		? `button-tone-${color}`
+		: `button-${color}`;
+
+	const result = cx(
 		"button rounded-control",
-		colorClasses[color],
+		colorClass,
 		variantClasses[variant],
 		sizeClasses[mobileSize ?? size],
 		mobileSize && desktopSizeClasses[size],
 		pulse && "button-pulse",
 		className,
 	);
+
+	return result;
+};
 
 type IconSlotProps = {
 	loadingLabel?: string;

@@ -47,13 +47,17 @@
     #451a19
   ); /* Danger alert and status surfaces. */
   --theme-cocoa: light-dark(#6b4423, #f2b877);
-  --theme-mint: light-dark(#116b4c, #38efb0);
-  --theme-mintlight: #8bf3c5;
   --theme-lime: light-dark(#4d7c0f, #c4f26a);
+  --theme-mint: light-dark(#116b4c, #38efb0);
+  --theme-seafoam: light-dark(#185747, #8bf3c5);
+  --theme-glacier: light-dark(#006b64, #55fff1);
   --theme-cyan: light-dark(#0e7490, #22d3ee);
   --theme-ocean: light-dark(#1d4ed8, #60a5fa);
+  --theme-klein: light-dark(#321ec7, #807cff);
   --theme-violet: light-dark(#5b21b6, #cbb8ff);
   --theme-berry: light-dark(#a21caf, #e879f9);
+  --theme-pitaya: light-dark(#af006a, #ff4fcb);
+  --theme-morello: light-dark(#98234e, #ff8daf);
 
   --tint-light: in srgb, var(--theme-bg) 92%;
   --tint-dark: in srgb, var(--theme-bg) 89%;
@@ -61,17 +65,21 @@
     color-mix(var(--tint-light), var(--theme-cocoa)),
     color-mix(var(--tint-dark), var(--theme-cocoa))
   );
+  --theme-lime-tint: light-dark(
+    color-mix(var(--tint-light), var(--theme-lime)),
+    color-mix(var(--tint-dark), var(--theme-lime))
+  );
   --theme-mint-tint: light-dark(
     color-mix(var(--tint-light), var(--theme-mint)),
     color-mix(var(--tint-dark), var(--theme-mint))
   );
-  --theme-mintlight-tint: light-dark(
-    color-mix(var(--tint-light), var(--theme-mintlight)),
-    color-mix(var(--tint-dark), var(--theme-mintlight))
+  --theme-seafoam-tint: light-dark(
+    color-mix(var(--tint-light), var(--theme-seafoam)),
+    color-mix(var(--tint-dark), var(--theme-seafoam))
   );
-  --theme-lime-tint: light-dark(
-    color-mix(var(--tint-light), var(--theme-lime)),
-    color-mix(var(--tint-dark), var(--theme-lime))
+  --theme-glacier-tint: light-dark(
+    color-mix(var(--tint-light), var(--theme-glacier)),
+    color-mix(var(--tint-dark), var(--theme-glacier))
   );
   --theme-cyan-tint: light-dark(
     color-mix(var(--tint-light), var(--theme-cyan)),
@@ -81,6 +89,10 @@
     color-mix(var(--tint-light), var(--theme-ocean)),
     color-mix(var(--tint-dark), var(--theme-ocean))
   );
+  --theme-klein-tint: light-dark(
+    color-mix(var(--tint-light), var(--theme-klein)),
+    color-mix(var(--tint-dark), var(--theme-klein))
+  );
   --theme-violet-tint: light-dark(
     color-mix(var(--tint-light), var(--theme-violet)),
     color-mix(var(--tint-dark), var(--theme-violet))
@@ -88,6 +100,14 @@
   --theme-berry-tint: light-dark(
     color-mix(var(--tint-light), var(--theme-berry)),
     color-mix(var(--tint-dark), var(--theme-berry))
+  );
+  --theme-pitaya-tint: light-dark(
+    color-mix(var(--tint-light), var(--theme-pitaya)),
+    color-mix(var(--tint-dark), var(--theme-pitaya))
+  );
+  --theme-morello-tint: light-dark(
+    color-mix(var(--tint-light), var(--theme-morello)),
+    color-mix(var(--tint-dark), var(--theme-morello))
   );
 }
 
@@ -113,21 +133,29 @@
   --color-border: var(--theme-border); /* Default borders and dividers. */
   --color-focus: var(--theme-focus); /* Keyboard focus indicators. */
   --color-cocoa: var(--theme-cocoa);
-  --color-mint: var(--theme-mint);
-  --color-mintlight: var(--theme-mintlight);
   --color-lime: var(--theme-lime);
+  --color-mint: var(--theme-mint);
+  --color-seafoam: var(--theme-seafoam);
+  --color-glacier: var(--theme-glacier);
   --color-cyan: var(--theme-cyan);
   --color-ocean: var(--theme-ocean);
+  --color-klein: var(--theme-klein);
   --color-violet: var(--theme-violet);
   --color-berry: var(--theme-berry);
+  --color-pitaya: var(--theme-pitaya);
+  --color-morello: var(--theme-morello);
   --color-cocoa-tint: var(--theme-cocoa-tint);
-  --color-mint-tint: var(--theme-mint-tint);
-  --color-mintlight-tint: var(--theme-mintlight-tint);
   --color-lime-tint: var(--theme-lime-tint);
+  --color-mint-tint: var(--theme-mint-tint);
+  --color-seafoam-tint: var(--theme-seafoam-tint);
+  --color-glacier-tint: var(--theme-glacier-tint);
   --color-cyan-tint: var(--theme-cyan-tint);
   --color-ocean-tint: var(--theme-ocean-tint);
+  --color-klein-tint: var(--theme-klein-tint);
   --color-violet-tint: var(--theme-violet-tint);
   --color-berry-tint: var(--theme-berry-tint);
+  --color-pitaya-tint: var(--theme-pitaya-tint);
+  --color-morello-tint: var(--theme-morello-tint);
   --color-danger: var(--theme-danger); /* Danger actions and status text. */
   --color-danger-surface: var(
     --theme-danger-surface

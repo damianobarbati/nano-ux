@@ -1,8 +1,7 @@
 import React from "react";
-
 import { Button, cx } from "../../components/Button.tsx";
-
 import { ICard } from "../../icons.tsx";
+import { productColors } from "../../productColors.ts";
 
 type Swatch = {
 	name: string;
@@ -65,128 +64,36 @@ const foundationColors: Swatch[] = [
 	},
 ];
 
-const productColors: ProductColor[] = [
-	{
-		name: "Cocoa",
-		token: "cocoa",
-		className: "bg-cocoa",
+const productSwatches = productColors.map((token): ProductColor => {
+	const color: ProductColor = {
+		name: token[0].toUpperCase() + token.slice(1),
+		token,
+		className: `bg-${token}`,
 		property: "backgroundColor",
-	},
-	{
-		name: "Mint",
-		token: "mint",
-		className: "bg-mint",
-		property: "backgroundColor",
-	},
-	{
-		name: "Mintlight",
-		token: "mintlight",
-		className: "bg-mintlight",
-		property: "backgroundColor",
-	},
-	{
-		name: "Lime",
-		token: "lime",
-		className: "bg-lime",
-		property: "backgroundColor",
-	},
-	{
-		name: "Cyan",
-		token: "cyan",
-		className: "bg-cyan",
-		property: "backgroundColor",
-	},
-	{
-		name: "Ocean",
-		token: "ocean",
-		className: "bg-ocean",
-		property: "backgroundColor",
-	},
-	{
-		name: "Violet",
-		token: "violet",
-		className: "bg-violet",
-		property: "backgroundColor",
-	},
-	{
-		name: "Berry",
-		token: "berry",
-		className: "bg-berry",
-		property: "backgroundColor",
-	},
-];
+	};
 
-const productColorStyles: Record<
-	string,
-	{
-		tintedCard: string;
-		neutralCard: string;
-		accent: string;
-		tintedAccent?: string;
-		tint: string;
-		border: string;
-		contrastLabel?: string;
-	}
-> = {
-	cocoa: {
-		tintedCard: "bg-cocoa-tint border-cocoa",
-		neutralCard: "bg-bg border-cocoa",
-		accent: "text-cocoa",
-		tint: "bg-cocoa-tint",
-		border: "border-cocoa",
-	},
-	mint: {
-		tintedCard: "bg-mint-tint border-mint",
-		neutralCard: "bg-bg border-mint",
-		accent: "text-mint",
-		tint: "bg-mint-tint",
-		border: "border-mint",
-	},
-	mintlight: {
-		tintedCard: "bg-mintlight-tint border-mintlight",
-		neutralCard: "bg-bg border-mintlight",
-		accent: "text-[color:light-dark(var(--color-mint),var(--color-mintlight))]",
-		tint: "bg-mintlight-tint",
-		border: "border-mintlight",
-		contrastLabel: "Text on Mintlight tint",
-	},
-	lime: {
-		tintedCard: "bg-lime-tint border-lime",
-		neutralCard: "bg-bg border-lime",
-		accent: "text-lime",
-		tintedAccent: "text-[color:light-dark(var(--color-fg),var(--color-lime))]",
-		tint: "bg-lime-tint",
-		border: "border-lime",
-		contrastLabel: "Text on Lime tint",
-	},
-	cyan: {
-		tintedCard: "bg-cyan-tint border-cyan",
-		neutralCard: "bg-bg border-cyan",
-		accent: "text-cyan",
-		tint: "bg-cyan-tint",
-		border: "border-cyan",
-	},
-	violet: {
-		tintedCard: "bg-violet-tint border-violet",
-		neutralCard: "bg-bg border-violet",
-		accent: "text-violet",
-		tint: "bg-violet-tint",
-		border: "border-violet",
-	},
-	berry: {
-		tintedCard: "bg-berry-tint border-berry",
-		neutralCard: "bg-bg border-berry",
-		accent: "text-berry",
-		tint: "bg-berry-tint",
-		border: "border-berry",
-	},
-	ocean: {
-		tintedCard: "bg-ocean-tint border-ocean",
-		neutralCard: "bg-bg border-ocean",
-		accent: "text-ocean",
-		tint: "bg-ocean-tint",
-		border: "border-ocean",
-	},
+	return color;
+});
+
+const getProductColorStyles = ({ token }: ProductColor) => {
+	const accent = `text-${token}`;
+	const border = `border-${token}`;
+	const tint = `bg-${token}-tint`;
+
+	const styles = {
+		accent,
+		border,
+		tint,
+		tintedCard: cx(tint, border),
+		neutralCard: cx("bg-bg", border),
+		tintedAccent:
+			token === "lime"
+				? "text-[color:light-dark(var(--color-fg),var(--color-lime))]"
+				: accent,
+		contrastLabel: token === "lime" ? "Text on Lime tint" : undefined,
+	};
+
+	return styles;
 };
 
 const semanticColors: Swatch[] = [
@@ -359,7 +266,7 @@ const ProductSelectorCard = ({
 const ProductSelectorExamples = ({ colors }: { colors: ProductColor[] }) => (
 	<div className="mt-6 grid gap-x-6 gap-y-5">
 		{colors.map((color) => {
-			const styles = productColorStyles[color.token];
+			const styles = getProductColorStyles(color);
 
 			return (
 				<div
@@ -501,10 +408,10 @@ const ThemePanel = ({ mode }: { mode: "light" | "dark" }) => {
 
 			<section className="grid gap-4">
 				<h3>Colors</h3>
-				<TokenGrid colors={productColors} />
+				<TokenGrid colors={productSwatches} />
 				<div className={swatchGrid}>
-					{productColors.map((color) => {
-						const styles = productColorStyles[color.token];
+					{productSwatches.map((color) => {
+						const styles = getProductColorStyles(color);
 
 						return (
 							<ContrastPair
@@ -519,7 +426,7 @@ const ThemePanel = ({ mode }: { mode: "light" | "dark" }) => {
 						);
 					})}
 				</div>
-				<ProductSelectorExamples colors={productColors} />
+				<ProductSelectorExamples colors={productSwatches} />
 			</section>
 		</section>
 	);

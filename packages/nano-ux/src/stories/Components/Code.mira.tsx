@@ -38,7 +38,7 @@ export const Preview = () => (
 					<h3>Without copy</h3>
 					<Code {...defaults} copyable={false} />
 				</section>
-				<section className="card card-tint tint-mint grid min-w-0 gap-2">
+				<section className="card card-tint grid min-w-0 gap-2 tint-mint">
 					<h3>Mint card</h3>
 					<Code {...defaults} />
 					<Code {...defaults} copyable={false} />

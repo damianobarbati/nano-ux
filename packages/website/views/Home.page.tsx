@@ -16,6 +16,7 @@ import {
 	KPI,
 	type KPIProps,
 	Mockup,
+	productColors,
 	SelectMulti,
 	Slider,
 	Spinner,
@@ -31,6 +32,8 @@ import {
 import React from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+
+import { ThemeDrawer } from "../components/ThemeDrawer.tsx";
 
 import {
 	dailySignups,
@@ -276,7 +279,7 @@ const Theme = ({ brand, onBrandChange }: BrandProps) => {
 	const css = [":root {", ...declarations, "}"].join("\n");
 
 	return (
-		<FadeIn aria-labelledby="theme" className="py-12">
+		<FadeIn aria-labelledby="theme" className="home-theme py-12">
 			<h2 id="theme" className="typo-lg scroll-mt-6">
 				Customize the theme
 			</h2>
@@ -285,7 +288,7 @@ const Theme = ({ brand, onBrandChange }: BrandProps) => {
 				into your stylesheet after importing <code>nano-ux/theme.css</code>.
 			</p>
 			<div className="mt-6 grid items-start gap-6 md:grid-cols-2">
-				<div className="card @container grid min-w-0 gap-4 md:col-start-2 md:row-start-1">
+				<ThemeDrawer className="md:col-start-2 md:row-start-1">
 					<FormProvider {...selectForm}>
 						<SelectMulti
 							name="brand"
@@ -342,7 +345,7 @@ const Theme = ({ brand, onBrandChange }: BrandProps) => {
 					>
 						Reset theme
 					</Button>
-				</div>
+				</ThemeDrawer>
 				<Code className="dark" language="css" text={css} />
 			</div>
 		</FadeIn>
@@ -706,13 +709,7 @@ const Feedback = () => {
 
 const brandColors = [
 	"Default",
-	"Cocoa",
-	"Mint",
-	"Lime",
-	"Cyan",
-	"Ocean",
-	"Violet",
-	"Berry",
+	...productColors.map((name) => name[0].toUpperCase() + name.slice(1)),
 ];
 
 const brandOptions = brandColors.map((name) => {

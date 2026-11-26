@@ -11,6 +11,9 @@
 @source "../table";
 @source "../stories";
 
+@source inline("{bg,text,border,tint,glow,text-glow,button-tone}-{cocoa,lime,mint,seafoam,glacier,cyan,ocean,klein,violet,berry,pitaya,morello}");
+@source inline("bg-{cocoa,lime,mint,seafoam,glacier,cyan,ocean,klein,violet,berry,pitaya,morello}-tint");
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
@@ -263,95 +266,21 @@ html:has(dialog[data-nano-dialog][open]) body {
   border-color: var(--card-tint-border, var(--color-border));
 }
 
-.tint-cocoa {
-  --card-tint-color: var(--color-cocoa);
-}
-
-.tint-mint {
-  --card-tint-color: var(--color-mint);
-}
-
-.tint-mintlight {
-  --card-tint-color: var(--color-mintlight);
-}
-
-.tint-lime {
-  --card-tint-color: var(--color-lime);
-}
-
-.tint-cyan {
-  --card-tint-color: var(--color-cyan);
-}
-
-.tint-ocean {
-  --card-tint-color: var(--color-ocean);
-}
-
-.tint-violet {
-  --card-tint-color: var(--color-violet);
-}
-
-.tint-berry {
-  --card-tint-color: var(--color-berry);
-}
-
 @utility tint-* {
-  --card-tint-color: --value([color]);
+  --card-tint-color: --value(--color-*, [color]);
 }
 
-:where(
-  .glow,
-  .glow-cocoa,
-  .glow-mint,
-  .glow-mintlight,
-  .glow-lime,
-  .glow-cyan,
-  .glow-ocean,
-  .glow-violet,
-  .glow-berry
-) {
+:where(.glow) {
   @apply glow-[color:var(--theme-primary,var(--color-brand,light-dark(black,white)))];
 }
 
 @utility glow-* {
-  --glow-color: --value([color]);
+  --glow-color: --value(--color-*, [color]);
   box-shadow:
     inset 0 1px 0 light-dark(white, rgb(255 255 255 / 22%)),
     0 4px 18px light-dark(rgb(0 0 0 / 10%), rgb(255 255 255 / 8%)),
     0 0 5rem color-mix(in srgb, var(--glow-color) 9%, transparent),
     var(--glow-shadow, 0 0 transparent);
-}
-
-.glow-cocoa {
-  --glow-color: var(--color-cocoa);
-}
-
-.glow-mint {
-  --glow-color: var(--color-mint);
-}
-
-.glow-mintlight {
-  --glow-color: var(--color-mintlight);
-}
-
-.glow-lime {
-  --glow-color: var(--color-lime);
-}
-
-.glow-cyan {
-  --glow-color: var(--color-cyan);
-}
-
-.glow-ocean {
-  --glow-color: var(--color-ocean);
-}
-
-.glow-violet {
-  --glow-color: var(--color-violet);
-}
-
-.glow-berry {
-  --glow-color: var(--color-berry);
 }
 
 .robinson-map path:hover {

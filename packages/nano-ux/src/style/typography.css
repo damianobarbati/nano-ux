@@ -231,7 +231,7 @@
     }
   }
 }
-@source inline("trim-ex text-glow text-glow-{brand,cocoa,mint,mintlight,lime,cyan,ocean,violet,berry}");
+@source inline("trim-ex text-glow text-glow-brand");
 
 @utility trim-ex {
   text-box-trim: trim-both;
