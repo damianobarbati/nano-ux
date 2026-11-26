@@ -77,7 +77,7 @@ const examples: ReferenceExample[] = [
 			<iframe
 				className="h-28 w-full rounded-card border border-border bg-bg"
 				loading="lazy"
-				src={`${import.meta.env.BASE_URL}theme-preview.html`}
+				src={`${import.meta.env.BASE_URL}theme-preview`}
 				title="ThemeSelector preview"
 			/>
 		),

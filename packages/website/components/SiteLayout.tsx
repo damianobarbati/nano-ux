@@ -20,7 +20,7 @@ export const SiteLayout = ({ className, children }: SiteLayoutProps) => (
 				<a href="./#feedback">Feedback</a>
 				<a href="./#colors">Colors</a>
 				<a href="./#dashboard">Dashboard</a>
-				<a href="./documentation.html">Documentation</a>
+				<a href="./documentation">Documentation</a>
 			</Nav>
 			<a
 				href="./"
