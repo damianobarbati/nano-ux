@@ -68,7 +68,7 @@
     "@types/prismjs": "^1.26.6",
     "@types/react": "^19.3.2",
     "@types/react-dom": "^19.3.0",
-    "miral": "link:../../../miral",
+    "miral": "0.0.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-hook-form": "^7.92.0",
