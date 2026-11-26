@@ -343,7 +343,12 @@ export const Playground = (props: z.infer<typeof schema>) => {
 
 	return (
 		<FormProvider {...form}>
-			<SelectMulti name="example" options={fiveOptions} {...props} />
+			<SelectMulti
+				className="w-full max-w-80"
+				name="example"
+				options={fiveOptions}
+				{...props}
+			/>
 		</FormProvider>
 	);
 };

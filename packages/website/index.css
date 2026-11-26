@@ -5,6 +5,7 @@
 @import "@fontsource-variable/montserrat";
 @import "@fontsource-variable/nunito";
 @import "@fontsource-variable/science-gothic";
+@source "./index.tsx";
 @source "./views";
 @source "./components";
 
@@ -13,37 +14,7 @@
 }
 
 body {
-  @apply px-4 sm:px-8;
-}
-
-#root {
-  max-width: calc(var(--container-7xl) - var(--spacing) * 16);
-  margin-inline: auto;
-}
-
-.site-header {
-  padding-inline-end: clamp(
-    0px,
-    calc(3.25rem + (var(--container-7xl) - 100vw) / 2),
-    3.25rem
-  );
-}
-
-@media (width < 48rem) {
-  html {
-    overflow-x: clip;
-    overscroll-behavior-x: none;
-  }
-
-  body {
-    min-width: 0;
-    overflow-x: clip;
-  }
-
-  .prism-code {
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-  }
+  @apply mx-auto max-w-7xl px-4 sm:px-8;
 }
 
 :root.light .brand-logo {
@@ -54,15 +25,4 @@ body {
   :root:not(.dark) .brand-logo {
     content: url("/logo-light.svg");
   }
-}
-
-@media (scripting: none) {
-  #root section.opacity-0 {
-    opacity: 1;
-    translate: none;
-  }
-}
-
-.reference-kind {
-  @apply text-sm font-medium text-fg-muted;
 }

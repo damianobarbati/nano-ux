@@ -1,50 +1,39 @@
 "use client";
 
 import cx from "clsx-tw";
-import { BarChart, LineChart, MapChart, PieChart } from "echarts/charts";
+import { BarChart, LineChart, PieChart } from "echarts/charts";
 
 import {
 	GridComponent,
 	LegendComponent,
 	TooltipComponent,
-	VisualMapComponent,
 } from "echarts/components";
 
-import { type EChartsCoreOption, init, registerMap, use } from "echarts/core";
+import { type EChartsCoreOption, init, use } from "echarts/core";
 import { CanvasRenderer } from "echarts/renderers";
 import * as React from "react";
 
 use([
 	BarChart,
 	LineChart,
-	MapChart,
 	PieChart,
 	GridComponent,
 	LegendComponent,
 	TooltipComponent,
-	VisualMapComponent,
 	CanvasRenderer,
 ]);
 
 export type ChartProps = {
 	className?: string;
 	label?: string;
-	map?: Parameters<typeof registerMap>[1];
 	onSelect?: (name: string) => void;
 	option: () => EChartsCoreOption;
 };
 
-const ChartRenderer = ({
-	className,
-	label,
-	map,
-	onSelect,
-	option,
-}: ChartProps) => {
+const ChartRenderer = ({ className, label, onSelect, option }: ChartProps) => {
 	const container = React.useRef<HTMLDivElement>(null);
 	const chart = React.useRef<ReturnType<typeof init> | null>(null);
 	const optionRef = React.useRef(option);
-	const mapRef = React.useRef(map);
 	const onSelectRef = React.useRef(onSelect);
 
 	React.useEffect(() => {
@@ -65,8 +54,6 @@ const ChartRenderer = ({
 				chart.current = init(element, {
 					textStyle: { fontFamily: getComputedStyle(element).fontFamily },
 				});
-
-				if (mapRef.current) registerMap("world", mapRef.current);
 
 				chart.current.setOption(optionRef.current(), { notMerge: true });
 				chart.current.on("click", handleClick);
@@ -111,16 +98,13 @@ const ChartRenderer = ({
 
 	React.useEffect(() => {
 		optionRef.current = option;
-		mapRef.current = map;
 		onSelectRef.current = onSelect;
-
-		if (map) registerMap("world", map);
 
 		const instance = chart.current;
 		if (!instance) return;
 
 		instance.setOption(option(), { notMerge: true });
-	}, [map, onSelect, option]);
+	}, [onSelect, option]);
 
 	return (
 		<div

@@ -32,8 +32,6 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
-import { SiteLayout } from "../components/SiteLayout.tsx";
-
 import {
 	dailySignups,
 	emptyProfile,
@@ -86,7 +84,7 @@ export const Page = () => {
 	};
 
 	return (
-		<SiteLayout>
+		<>
 			<section
 				data-theme-background
 				className="grid items-center gap-8 py-12 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-16 lg:py-24"
@@ -164,12 +162,12 @@ createRoot(document.getElementById("root")).render(<App />);`}
 				</div>
 			</section>
 			<Theme brand={brand} onBrandChange={changeBrand} />
+			<Colors brand={brand} onBrandChange={changeBrand} />
 			<Typography />
 			<ProfileForm />
 			<Feedback />
-			<Colors brand={brand} onBrandChange={changeBrand} />
 			<Dashboard />
-		</SiteLayout>
+		</>
 	);
 };
 

@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 9001",
-    "build": "vite build && miral build ../nano-ux --outDir dist/preview",
+    "build": "vite build && miral build ../nano-ux --outDir dist/miral",
     "preview": "vite preview --base /nano-ux/ --host 127.0.0.1 --port 9001",
     "playground": "miral dev ../nano-ux"
   },

@@ -241,7 +241,7 @@ export const CssClassCatalog = ({ className }: CssClassCatalogProps) => {
 			{cssReferences.map(({ id, kind, title, content }) => (
 				<article key={id} id={id} className="min-w-0 scroll-mt-6">
 					<h3 className="mb-3">
-						<span className="reference-kind">{kind}</span> {title}
+						<small className="inline text-sm">{kind}</small> {title}
 					</h3>
 					{content}
 				</article>

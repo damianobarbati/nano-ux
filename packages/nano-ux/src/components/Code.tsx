@@ -9,7 +9,7 @@ import { ICopy } from "../icons.tsx";
 import { Toast } from "./Toast.tsx";
 
 const codeClassName =
-	"prism-code min-w-0 overflow-x-auto rounded-control p-6 font-mono text-sm leading-6 whitespace-pre text-fg";
+	"prism-code min-w-0 overflow-x-auto rounded-control p-6 font-mono text-sm leading-6 whitespace-pre text-fg max-md:whitespace-pre-wrap max-md:wrap-anywhere";
 
 const grammarNames: Record<string, string> = {
 	html: "markup",

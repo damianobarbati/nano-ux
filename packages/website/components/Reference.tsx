@@ -1,5 +1,5 @@
 import cx from "clsx-tw";
-import { Code, Mockup, SectionNav } from "nano-ux";
+import { Code, Mockup, SectionNav, Spinner } from "nano-ux";
 import React from "react";
 import { CssClassCatalog, cssReferenceLinks } from "./CssClassCatalog.tsx";
 import { colorOptions, ReferenceFormPreview } from "./ReferenceFormPreview.tsx";
@@ -18,6 +18,8 @@ import { ProfileForm } from "./reference/ProfileForm.tsx";
 import profileFormSource from "./reference/ProfileForm.tsx?raw";
 import { ProfileTable } from "./reference/ProfileTable.tsx";
 import profileTableSource from "./reference/ProfileTable.tsx?raw";
+import { PulseSpinner } from "./reference/PulseSpinner.tsx";
+import pulseSpinnerSource from "./reference/PulseSpinner.tsx?raw";
 import { SaveButton } from "./reference/SaveButton.tsx";
 import saveButtonSource from "./reference/SaveButton.tsx?raw";
 import signupsByCountrySource from "./reference/SignupsByCountry.tsx?raw";
@@ -255,6 +257,38 @@ const loadColors = async () => {
 
 const options = [${colorOptions.map(({ label }) => JSON.stringify(label)).join(", ")}].map((label) => ({ label, value: label.toLowerCase() }));`,
 		preview: <ReferenceFormPreview />,
+	},
+	{
+		id: "reference-spinner",
+		kind: "Component",
+		title: "Spinner",
+		description:
+			"Render Spinner while content loads. By default, it centers the medium arc spinner in the visible part of its parent. Use centered={false} for an inline indicator, as shown here.",
+		language: "tsx",
+		text: `import { Spinner } from "nano-ux";
+
+export const LoadingProfiles = () => (
+  <span role="status" className="inline-flex items-center gap-2">
+    <Spinner centered={false} size="sm" label="Loading profiles" />
+    Loading profiles…
+  </span>
+);`,
+		preview: (
+			<span role="status" className="inline-flex items-center gap-2">
+				<Spinner centered={false} size="sm" label="Loading profiles" />
+				Loading profiles…
+			</span>
+		),
+	},
+	{
+		id: "reference-spinner-provider",
+		kind: "Component",
+		title: "SpinnerProvider",
+		description:
+			'Set defaultVariant="orbit" to use the built-in orbit spinner for every Spinner inside the provider that omits variant. Register a custom renderer in variants and select it with variant="pulse" on an individual spinner.',
+		language: "tsx",
+		text: pulseSpinnerSource,
+		preview: <PulseSpinner />,
 	},
 	{
 		id: "reference-button",
@@ -683,14 +717,14 @@ export const Reference = ({ className }: ReferenceProps) => {
 								({ id, kind, title, description, language, text, preview }) => (
 									<article key={id} id={id} className="min-w-0 scroll-mt-6">
 										<h3>
-											<span className="reference-kind">{kind}</span> {title}
+											<small className="inline text-sm">{kind}</small> {title}
 										</h3>
 										<p className="mb-3">{description}</p>
 										{!preview && <Code language={language} text={text} />}
 										{!!preview && (
 											<div className="grid min-w-0 snap-x snap-mandatory auto-cols-[100%] grid-flow-col items-start gap-4 overflow-x-auto md:snap-none md:grid-flow-row md:grid-cols-2 md:overflow-visible">
 												<Code
-													className="snap-start max-md:[&_pre]:wrap-anywhere max-md:[&_pre]:whitespace-pre-wrap"
+													className="snap-start"
 													language={language}
 													text={text}
 												/>
@@ -863,7 +897,7 @@ export const Page = () => (
 									href={
 										import.meta.env.DEV
 											? "http://localhost:9000/"
-											: "./preview/"
+											: import.meta.env.BASE_URL + "miral/"
 									}
 								>
 									component catalog
@@ -913,7 +947,7 @@ export const Preview = () => <Button>Save</Button>;`}
 							</p>
 							<Code
 								language="shell"
-								text="npx -y miral build --outDir dist/preview"
+								text="npx -y miral build --outDir dist/miral"
 							/>
 						</div>
 					</section>
