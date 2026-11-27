@@ -11,8 +11,8 @@
 @source "../table";
 @source "../stories";
 
-@source inline("{bg,text,border,tint,glow,text-glow,button-tone}-{cocoa,lime,mint,seafoam,glacier,cyan,ocean,klein,violet,berry,pitaya,morello}");
-@source inline("bg-{cocoa,lime,mint,seafoam,glacier,cyan,ocean,klein,violet,berry,pitaya,morello}-tint");
+@source inline("{bg,text,border,tint,glow,text-glow,button-tone}-{cocoa,lime,fern,mint,seafoam,glacier,cyan,ocean,klein,violet,berry,pitaya,morello}");
+@source inline("bg-{cocoa,lime,fern,mint,seafoam,glacier,cyan,ocean,klein,violet,berry,pitaya,morello}-tint");
 
 @custom-variant dark (&:where(.dark, .dark *));
 

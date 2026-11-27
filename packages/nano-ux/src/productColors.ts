@@ -1,6 +1,7 @@
 export const productColors = [
 	"cocoa",
 	"lime",
+	"fern",
 	"mint",
 	"seafoam",
 	"glacier",
